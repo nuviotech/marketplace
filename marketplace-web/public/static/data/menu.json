@@ -1,0 +1,280 @@
+{
+    "menuPrimary": {
+        "menu_1": [
+            {
+                "text": "Home",
+                "url": "/",
+                "extraClass": "menu-item-has-children",
+                "subClass": "sub-menu"
+            },
+            {
+                "text": "Shop",
+                "url": "/shop",
+                "extraClass": "menu-item-has-children",
+                "subClass": "sub-menu"
+            },
+            {
+                "text": "Trending",
+                "url": "",
+                "extraClass": "menu-item-has-children has-mega-menu",
+                "subClass": "sub-menu",
+                "mega": "true",
+                "megaContent": [
+                    {
+                        "heading": "Best Seller",
+                        "megaItems": [
+                            {
+                                "text": "Electronic Best Seller",
+                                "url": "/page/Electronic_best_Seller"
+                            },
+                            {
+                                "text": "Clothings Best Seller",
+                                "url": "/page/clothings_best_seller"
+                            },
+                            {
+                                "text": "Garden & Kitchen Best Seller",
+                                "url": "/page/garden_and_kitchen_bestSeller"
+                            }
+                        ]
+                    },
+                    {
+                        "heading": "New Arrivals",
+                        "megaItems": [
+                            {
+                                "text": "Electronic New Arrivals",
+                                "url": "/page/Electronic_new_arrivals"
+                            },
+                            {
+                                "text": "Clothings New Arrivals",
+                                "url": "/page/clothings_new_arrivals"
+                            },
+                            {
+                                "text": "Garden & Kitchen New Arrivals",
+                                "url": "/page/garden_and_kitchen_new_arrivals"
+                            }
+                        ]
+                    },
+                    {
+                        "heading": "Hot Deals",
+                        "megaItems": [
+                            {
+                                "text": "Hot Deals product",
+                                "url": "/page/HotDeals"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Categories",
+                "url": "",
+                "current": "shop",
+                "extraClass": "menu-item-has-children has-mega-menu",
+                "subClass": "sub-menu",
+                "mega": "true",
+                "subMenu": [
+                    {
+                        "text": "Hot Promotions",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Electronics Gadgets",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Clothing & Apparel",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Home, Garden & Kitchen",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Wall Clocks & Watches",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Jewellery",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Babies & Moms",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Sport & Outdoor",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Mobile Accessories",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Office Accessories",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Cars/Motocycles Accessories",
+                        "url": "/category/6"
+                    },
+                    {
+                        "text": "Home Improments",
+                        "url": "/category/6"
+                    },
+                    
+                    {
+                        "text": "See All",
+                        "url": "/shop"
+                    }
+                ]
+            },
+            {
+                "text": "Product And Feature",
+                "url": "",
+                "current": "shop",
+                "extraClass": "menu-item-has-children has-mega-menu",
+                "subClass": "sub-menu",
+                "mega": "true",
+                "subMenu": [
+                    {
+                        "text": "Today's deals",
+                        "url": "/page/HotDeals"
+                    },
+                    {
+                        "text": "Become a seller",
+                        "url": "/vendor/become-a-vendor"
+                    }
+                ]
+            },
+            {
+                "text": "Become a seller",
+                "url": "/vendor/become-a-vendor",
+                "extraClass": "menu-item-has-children",
+                "subClass": "sub-menu"
+            }
+        ]
+    },
+    "product_categories": [
+        {
+            "icon": "icon-star",
+            "text": "Hot Promotions",
+            "url": "/shop"
+        },
+        {
+            "icon": "icon-laundry",
+            "text": "Electronics Gadgets",
+            "url": "/shop",
+            "extraClass": "menu-item-has-children has-mega-menu",
+            "subClass": "sub-menu",
+            "mega": true,
+            "megaContent": [
+                {
+                    "heading": "Electronic Gadgets",
+                    "megaItems": [
+                        {
+                            "text": "Home Audio & Theathers",
+                            "url": "/category/106"
+                        },
+                        {
+                            "text": "TV & Videos",
+                            "url": "/category/107"
+                        },
+                        {
+                            "text": "Camera, Photos & Videos",
+                            "url": "/category/108"
+                        },
+                        {
+                            "text": "Cellphones & Accessories",
+                            "url": "/category/109"
+                        },
+                        {
+                            "text": "Headphones",
+                            "url": "/category/110"
+                        },
+                        {
+                            "text": "Videosgames",
+                            "url": "/category/111"
+                        },
+                        {
+                            "text": "Wireless Speakers",
+                            "url": "/category/112"
+                        },
+                        {
+                            "text": "Office Electronic",
+                            "url": "/category/113"
+                        }
+                    ]
+                },
+                {
+                    "heading": "Accessories & Parts",
+                    "megaItems": [
+                        {
+                            "text": "Digital Cables",
+                            "url": "/category/114"
+                        },
+                        {
+                            "text": "Audio & Video Cables",
+                            "url": "/category/115"
+                        },
+                        {
+                            "text": "Batteries",
+                            "url": "/category/116"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "icon": "icon-shirt",
+            "text": "Clothing & Apparel",
+            "url": "/category/117"
+        },
+        {
+            "icon": "icon-lampshade",
+            "text": "Home, Garden & Kitchen",
+            "url": "/category/118"
+        },
+        {
+            "icon": "icon-diamond2",
+            "text": "Wall Clocks & Watches",
+            "url": "/category/120"
+        },
+        {
+            "icon": "icon-diamond2",
+            "text": "Jewellery",
+            "url": "/category/120"
+        },
+       
+        {
+            "icon": "icon-baby-bottle",
+            "text": "Babies & Moms",
+            "url": "/category/129"
+        },
+        {
+            "icon": "icon-baseball",
+            "text": "Sport & Outdoor",
+            "url": "/category/130"
+        },
+        {
+            "icon": "icon-smartphone",
+            "text": "Mobile Accessories",
+            "url": "/category/131"
+        },
+        {
+            "icon": "icon-book2",
+            "text": "Office Accessories",
+            "url": "/category/132"
+        },
+        {
+            "icon": "icon-car-siren",
+            "text": "Cars/Motocycles Accessories",
+            "url": "/category/133"
+        },
+        {
+            "icon": "icon-wrench",
+            "text": "Home Improments",
+            "url": "/category/134"
+        }
+       
+    ]
+}

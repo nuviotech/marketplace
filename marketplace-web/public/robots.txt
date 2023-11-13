@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://nuvio.in/
+
+# Sitemaps
+Sitemap: https://nuvio.in/sitemap.xml
