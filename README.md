@@ -2,7 +2,7 @@
 
 Our "Marketplace Software" is the #1 API based Interconnectable marketplace software , we overcome the hectic practices made by big marketplaces,and guarantee never before experience for owners to start their own marketplace under their own brand name and become pioneer in Industry, with an option to sell other sellers and products readily available and onboarded..
 
-## Marketplace-web or cms setup
+## Install Nodejs
 
 #### STEP 1 :
 Enable the NodeSource repository by running the following curl command as a user with sudo privileges :
@@ -27,7 +27,7 @@ npm --version
 #output : 8.15.0
 ```
 
-If change node version then, Install nvm by running the following command :
+Install nvm by running the following command :
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
