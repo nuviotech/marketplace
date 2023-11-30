@@ -173,10 +173,10 @@ sudo systemctl restart mysql
 sudo systemctl stop mysql
 sudo systemctl status mysql
 ```
-## setup startup.properties file
+## Setup the startup.properties file
 Add the values in startup.properties file according to you.
 
-## run startup.sh
+## Run startup.sh
 Finally run the startup.sh file.
 
 
