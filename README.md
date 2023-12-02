@@ -4,6 +4,13 @@ Our "Marketplace Software" is the #1 API based Interconnectable marketplace soft
 
 Sample application you can find is www.nuvio.in
 
+In order to upload projects to this marketplace, User needs to have account https://manageecom.com as a seller and useer can upload the products in https://manageecom.com. 
+
+Your marketplace software shows the list of sellers already onboarded on manageecom.com and provide you an option to choose sellers from your admin dashboard.
+Admin Dashboard url : http://yoursite.com:8082
+After selecting the sellers activated, a request will got seller account in manageecom.com, once sellers approves all his products will become visible on the site. 
+
+
 ## Install Nodejs
 
 #### STEP 1 :
