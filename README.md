@@ -1,6 +1,8 @@
 # Marketplace
 
-Our "Marketplace Software" is the #1 API based Interconnectable marketplace software , we overcome the hectic practices made by big marketplaces,and guarantee never before experience for owners to start their own marketplace under their own brand name and become pioneer in Industry, with an option to sell other sellers and products readily available and onboarded..
+Our "Marketplace Software" is the #1 API based Interconnectable marketplace software which collaborates with other sellers and sites for the products with an option to sell with other sellers and products readily available and onboarded.
+
+Sample application you can find is www.nuvio.in
 
 ## Install Nodejs
 
