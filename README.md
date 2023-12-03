@@ -6,9 +6,16 @@ Sample application you can find is www.nuvio.in
 
 In order to upload projects to this marketplace, User needs to have account https://manageecom.com as a seller and user can upload the products in https://manageecom.com. 
 
-Your marketplace software shows the list of sellers already onboarded on manageecom.com and provide you an option to choose sellers from your admin dashboard.
-Admin Dashboard url : http://yoursite.com:8082
-After selecting the sellers activated, a request will got seller account in manageecom.com, once sellers approves all his products will become visible on the site. 
+Your marketplace admin site shows the list of sellers already onboarded on manageecom.com and provide you an option to choose sellers from your admin dashboard.
+
+After selecting the available sellers , a request will got seller account in manageecom.com, once sellers approves your request, all his products will become visible on your site. 
+
+Below are the ports and services on which your marketplace operates when you install on localhost, You can change the ports in startup.properties
+
+Marketplace url : http://localhost:3000
+CMS to change the content on marketplace : http://localhost:1337
+Marketplace Admin URL : http://localhost:9091
+Marketplace api URL : http://localhost:8089
 
 
 ## Installation Instructions ###
