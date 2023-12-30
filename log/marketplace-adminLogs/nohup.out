@@ -1,0 +1,31 @@
+nohup: ignoring input
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.6)
+
+2023-12-30 18:28:47.385  INFO 26024 --- [           main] m.a.a.m.MarketplaceAdminApplication      : Starting MarketplaceAdminApplication v0.0.1-SNAPSHOT using Java 11.0.13 on LAPTOP-KRC3K32F with PID 26024 (D:\Nuvio\marketplace\marketplace-admin\marketplace_Admin.jar started by Rohit in D:\Nuvio\marketplace\marketplace-admin)
+2023-12-30 18:28:47.431  INFO 26024 --- [           main] m.a.a.m.MarketplaceAdminApplication      : No active profile set, falling back to 1 default profile: "default"
+2023-12-30 18:28:50.754  INFO 26024 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-12-30 18:28:51.487  INFO 26024 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 706 ms. Found 7 JPA repository interfaces.
+2023-12-30 18:28:54.724  INFO 26024 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9091 (http)
+2023-12-30 18:28:54.758  INFO 26024 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-30 18:28:54.759  INFO 26024 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.69]
+2023-12-30 18:28:55.232  INFO 26024 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-30 18:28:55.232  INFO 26024 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7580 ms
+2023-12-30 18:28:56.121  INFO 26024 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-30 18:28:56.405  INFO 26024 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-12-30 18:28:56.901  INFO 26024 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-12-30 18:28:57.283  INFO 26024 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-30 18:28:58.138  INFO 26024 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-30 18:28:58.320  INFO 26024 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-12-30 18:29:00.476  INFO 26024 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-30 18:29:00.487  INFO 26024 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-30 18:29:00.569  WARN 26024 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-30 18:29:01.799  INFO 26024 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3592c1c4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@322e49ee, org.springframework.security.web.context.SecurityContextPersistenceFilter@1e54a6b1, org.springframework.security.web.header.HeaderWriterFilter@78a8978a, org.springframework.security.web.authentication.logout.LogoutFilter@637791d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@11d2dd2d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3b24087d, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5d66e944, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4aeb0e2b, org.springframework.security.web.session.SessionManagementFilter@7d4d8579, org.springframework.security.web.access.ExceptionTranslationFilter@588545ac, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6518fdfd]
+2023-12-30 18:29:02.850  INFO 26024 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9091 (http) with context path ''
+2023-12-30 18:29:02.862  INFO 26024 --- [           main] m.a.a.m.MarketplaceAdminApplication      : Started MarketplaceAdminApplication in 16.971 seconds (JVM running for 18.682)
