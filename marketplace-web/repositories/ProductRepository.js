@@ -184,6 +184,8 @@ class ProductRepository {
        // console.log("getproductByIds (payload): "+payload);
         return reponse;
     }
+
+   
 }
 
 export default new ProductRepository();
