@@ -52,33 +52,33 @@ fi
 
 
 #Installing Mysql
-echo "Installing Mysql..."
-sudo apt update
-sudo apt install wget -y
-wget https://dev.mysql.com/get/mysql-apt-config_0.8.12-1_all.deb
-echo "Let’s search for MySQL 5,7"
-sudo dpkg -i mysql-apt-config_0.8.12-1_all.deb
+#echo "Installing Mysql..."
+#sudo apt update
+#sudo apt install wget -y
+#wget https://dev.mysql.com/get/mysql-apt-config_0.8.12-1_all.deb
+#echo "Let’s search for MySQL 5,7"
+#sudo dpkg -i mysql-apt-config_0.8.12-1_all.deb
 
-sudo apt-get update
-sudo apt-cache policy mysql-server
+#sudo apt-get update
+#sudo apt-cache policy mysql-server
 
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
-sudo apt update
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
+#sudo apt update
 
-sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
+#sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
 
-sudo mysql_secure_installation
+#sudo mysql_secure_installation
 
 # Check the exit status and proceed accordingly
-if [ $? -eq 0 ]; then
+#if [ $? -eq 0 ]; then
 	
-	mysql -u root -p 
-	sudo systemctl restart mysql
-    echo "Mysql install successfully."
-else
-    echo "Mysql encountered an error."
+#	mysql -u root -p 
+#	sudo systemctl restart mysql
+ #   echo "Mysql install successfully."
+#else
+#    echo "Mysql encountered an error."
     # Handle the error or exit the script
-    exit 1
-fi
+#    exit 1
+#fi
 
 
