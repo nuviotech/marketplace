@@ -196,7 +196,7 @@ const InvoiceDetail = () => {
                                 <div className="ps-section__header">
                                     <h3>
                                         Order ID - {odId}
-                                        <strong> {orderDetails?.orderStatus} </strong>
+                                        
                                     </h3>
                                 </div>
                                 <div className="ps-section__content">
