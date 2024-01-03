@@ -5,7 +5,6 @@ export NVM_DIR="$HOME/.nvm"
 
 systemctl restart mysql
 systemctl status mysql
-mysqldump -u root -pmarketplace@123 >test.sql
 
 MARKETPLACE_PATH=/app/marketplace-main
 echo marketplace path : $MARKETPLACE_PATH
@@ -75,6 +74,8 @@ if [ $# -eq 0 ]; then
 else
     echo "Cloud marketplace:" $1
 	echo "started startup"
+	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar $1 > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
+	sleep 10
 	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar $1 > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
 fi
 
