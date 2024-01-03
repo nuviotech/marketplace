@@ -1,4 +1,4 @@
-MARKETPLACE_PATH=$PWD
+MARKETPLACE_PATH=/app/marketplace-main
 echo marketplace path : $MARKETPLACE_PATH
 
 #kill marketplace admin
