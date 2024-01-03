@@ -200,7 +200,7 @@ Finally run the startup.sh file.
 
 ### Support
 
-For support, email suport@nuvio.in or join our Slack channel.
+For support, email suport@nuvio.in .
 
 ### License
 
