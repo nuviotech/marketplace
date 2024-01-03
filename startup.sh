@@ -5,6 +5,7 @@ export NVM_DIR="$HOME/.nvm"
 
 systemctl restart mysql
 systemctl status mysql
+mysqldump -u root -pmarketplace@123 >test.sql
 
 MARKETPLACE_PATH=/app/marketplace-main
 echo marketplace path : $MARKETPLACE_PATH
