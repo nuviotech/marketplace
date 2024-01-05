@@ -77,8 +77,6 @@ else
     echo "Cloud marketplace:" $1
 	echo "started startup"
 	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar $1 > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
-	sleep 100
-	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar $1 > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
 fi
 
 #start marketplace admin
