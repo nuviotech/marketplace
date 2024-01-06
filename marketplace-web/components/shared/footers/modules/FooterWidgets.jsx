@@ -40,24 +40,24 @@ const FooterWidgets = () => (
                     { 
                     process?.env?.NEXT_PUBLIC_FACEBOOK_LINK!='NA' &&
                     <li>
-                        <a className="facebook" target='_blank' href="https://www.facebook.com/Nuvio.in">
-                            <i className="fa fa-facebook">fa</i>
+                        <a className="facebook" target='_blank' href={process?.env?.NEXT_PUBLIC_FACEBOOK_LINK}>
+                            <i className="fa fa-facebook"></i>
                         </a>
                     </li>
                     }
                     {
                     process?.env?.NEXT_PUBLIC_TWITTER_LINK!='NA' &&
                     <li>
-                        <a className="twitter" target='_blank' href="https://twitter.com/Nuvio_Sellers">
-                            <i className="fa fa-twitter">tw</i>
+                        <a className="twitter" target='_blank' href={process?.env?.NEXT_PUBLIC_TWITTER_LINK}>
+                            <i className="fa fa-twitter"></i>
                         </a>
                     </li>
                     }
                     {
                     process?.env?.NEXT_PUBLIC_LINKEDIN_LINK!='NA' &&
                     <li>
-                        <a target='_blank' href="https://in.linkedin.com/company/nuvio-technologies-pvt-ltd">
-                            <i className="fa fa-linkedin" style={{ color: "#2e5fb2" }}>li</i>
+                        <a target='_blank' href={process?.env?.NEXT_PUBLIC_LINKEDIN_LINK}>
+                            <i className="fa fa-linkedin" style={{ color: "#2e5fb2" }}></i>
                         </a>
                     </li>
                     }
@@ -65,8 +65,8 @@ const FooterWidgets = () => (
                     {
                     process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK!='NA' &&
                     <li>
-                        <a target='_blank' className="instagram" href="https://www.instagram.com/nuvio.in/">
-                            <i className="fa fa-instagram">in</i>
+                        <a target='_blank' className="instagram" href={process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK}>
+                            <i className="fa fa-instagram"></i>
                         </a>
                     </li>
                     }

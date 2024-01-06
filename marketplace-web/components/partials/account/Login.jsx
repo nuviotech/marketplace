@@ -77,7 +77,7 @@ class Login extends Component {
                     }
                     if(action== "checkout"){
                         Router.push('/account/checkout')
-                        sessionStorage.removeItem("action");
+                       window.sessionStorage.removeItem("action");
                     }else
                         window.location.assign('/');
                 } else if (status == 1) {

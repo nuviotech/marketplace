@@ -47,19 +47,6 @@ export default function useProduct() {
     return {
         thumbnailImage: (payload) => {
             if (payload) {
-                /* if (payload.thumbnail) {
-                     return (
-                         <>
-                             <LazyLoad>
-                                 <img
-                                     src={getImageURL(payload.thumbnail)}
-                                     alt={getImageURL(payload.thumbnail)}
-                                 />
-                             </LazyLoad>
-                         </>
-                     );
-                 }*/
-
 
                 if (payload.images?.length > 0) {
                     return (
