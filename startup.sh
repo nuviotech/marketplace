@@ -81,7 +81,7 @@ fi
 
 #start marketplace admin
 cd $MARKETPLACE_PATH/marketplace-admin
-nohup java -jar marketplace_Admin.jar > $MARKETPLACE_PATH/log/marketplace-adminLogs/nohup.out 2>&1 &
+nohup java -jar marketplace_Admin-0.0.1-SNAPSHOT.jar > $MARKETPLACE_PATH/log/marketplace-adminLogs/nohup.out 2>&1 &
 echo "started marketPlace-admin"
 
 #start marketplace api
