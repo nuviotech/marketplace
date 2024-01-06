@@ -1,3 +1,4 @@
+nohup: ignoring input
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -7,37 +8,62 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v2.7.6)
 
-2023-11-11 11:07:19.996  INFO 11972 --- [           main] c.m.api.MarketplaceApiApplication        : Starting MarketplaceApiApplication v0.0.1-SNAPSHOT using Java 11.0.20.1 on rohit with PID 11972 (/home/rohit/Desktop/live_marketplace/marketplace/marketplace-api/com.marketplace.api-0.0.1-SNAPSHOT.jar started by rohit in /home/rohit/Desktop/live_marketplace/marketplace/marketplace-api)
-2023-11-11 11:07:20.009  INFO 11972 --- [           main] c.m.api.MarketplaceApiApplication        : No active profile set, falling back to 1 default profile: "default"
-2023-11-11 11:07:24.076  INFO 11972 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-11-11 11:07:24.401  INFO 11972 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 275 ms. Found 9 JPA repository interfaces.
-2023-11-11 11:07:27.427  INFO 11972 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8089 (http)
-2023-11-11 11:07:27.505  INFO 11972 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2023-11-11 11:07:27.505  INFO 11972 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.69]
-2023-11-11 11:07:27.782  INFO 11972 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2023-11-11 11:07:27.782  INFO 11972 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7511 ms
-2023-11-11 11:07:28.482  INFO 11972 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-11-11 11:07:29.175  INFO 11972 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
-2023-11-11 11:07:30.200  INFO 11972 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-11-11 11:07:30.916  INFO 11972 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-11-11 11:07:33.406  INFO 11972 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-11-11 11:07:33.761  INFO 11972 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
-2023-11-11 11:07:40.209  INFO 11972 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-11-11 11:07:40.229  INFO 11972 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-11-11 11:07:42.531  WARN 11972 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-11-11 11:07:44.552  INFO 11972 --- [           main] c.m.api.controllers.SellerController     : Admin Status : EVERYTHING OK.
-2023-11-11 11:07:44.642  INFO 11972 --- [           main] c.m.api.controllers.SellerController     : Cache count : 0
-2023-11-11 11:07:45.613  INFO 11972 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@33feda48, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6588b715, org.springframework.security.web.context.SecurityContextPersistenceFilter@61ff6a49, org.springframework.security.web.header.HeaderWriterFilter@11c713b7, org.springframework.security.web.authentication.logout.LogoutFilter@64b70f41, com.marketplace.api.jwtAuthentication.JwtAuthenticationFilter@48a663e9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6042d663, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c6a4ffd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@15a3b42, org.springframework.security.web.session.SessionManagementFilter@7741d346, org.springframework.security.web.access.ExceptionTranslationFilter@7a9ceddf, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@e3b0369]
-2023-11-11 11:07:47.330  WARN 11972 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springfra2023-11-11 11:09:46.494  INFO 4859 --- [nio-8089-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-11-11 11:09:46.618  INFO 4859 --- [nio-8089-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2023-11-11 11:09:47.795  INFO 4859 --- [nio-8089-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1173 ms
-2023-11-11 11:13:59.563  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@52f266d2 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.608  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3cbc8b (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.653  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1e5e5d5d (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.702  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5fdb7cb2 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.768  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6c66d435 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.779  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@9dbf5d6 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.783  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6503e505 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.802  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@61392bfb (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.862  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3b248c95 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2023-11-11 11:13:59.940  WARN 4859 --- [nio-8089-exec-5] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6d07bb62 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2023-12-30 18:28:47.701  INFO 20944 --- [           main] c.m.api.MarketplaceApiApplication        : Starting MarketplaceApiApplication v0.0.1-SNAPSHOT using Java 11.0.13 on LAPTOP-KRC3K32F with PID 20944 (D:\Nuvio\marketplace\marketplace-api\com.marketplace.api-0.0.1-SNAPSHOT.jar started by Rohit in D:\Nuvio\marketplace\marketplace-api)
+2023-12-30 18:28:47.710  INFO 20944 --- [           main] c.m.api.MarketplaceApiApplication        : No active profile set, falling back to 1 default profile: "default"
+2023-12-30 18:28:51.081  INFO 20944 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-12-30 18:28:51.360  INFO 20944 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 251 ms. Found 9 JPA repository interfaces.
+2023-12-30 18:28:54.613  INFO 20944 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8089 (http)
+2023-12-30 18:28:54.635  INFO 20944 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-30 18:28:54.636  INFO 20944 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.69]
+2023-12-30 18:28:54.807  INFO 20944 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-30 18:28:54.808  INFO 20944 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6926 ms
+2023-12-30 18:28:55.961  INFO 20944 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-30 18:28:56.296  INFO 20944 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-12-30 18:28:56.811  INFO 20944 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-12-30 18:28:57.191  INFO 20944 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-30 18:28:58.050  INFO 20944 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-30 18:28:58.160  INFO 20944 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-12-30 18:29:00.608  INFO 20944 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-30 18:29:00.620  INFO 20944 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-30 18:29:01.473  WARN 20944 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-30 18:29:02.218 ERROR 20944 --- [           main] c.m.api.controllers.SellerController     : ERROR (start time) : No value present
+java.util.NoSuchElementException: No value present
+	at java.base/java.util.Optional.get(Optional.java:148)
+	at com.marketplace.api.serviceClasses.MarketplaceAdminSetting.setSettings(MarketplaceAdminSetting.java:16)
+	at com.marketplace.api.controllers.SellerController.StartUpTimeAction(SellerController.java:90)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:389)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:333)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:157)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1796)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292)
+	at com.marketplace.api.MarketplaceApiApplication.main(MarketplaceApiApplication.java:12)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:65)
+2023-12-30 18:29:02.562  INFO 20944 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@dbddbe3, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7a83ccd2, org.springframework.security.web.context.SecurityContextPersistenceFilter@7cff3f1d, org.springframework.security.web.header.HeaderWriterFilter@437bd805, org.springframework.security.web.authentication.logout.LogoutFilter@677ce519, com.marketplace.api.jwtAuthentication.JwtAuthenticationFilter@60f21960, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@33a8c9c9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@510689af, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@44aa2e13, org.springframework.security.web.session.SessionManagementFilter@1f10fec6, org.springframework.security.web.access.ExceptionTranslationFilter@49fdbe2b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6f731759]
+2023-12-30 18:29:03.208  INFO 20944 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8089 (http) with context path ''
+2023-12-30 18:29:03.218  INFO 20944 --- [           main] c.m.api.MarketplaceApiApplication        : Started MarketplaceApiApplication in 17.198 seconds (JVM running for 19.083)

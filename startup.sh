@@ -1,8 +1,14 @@
+#!/bin/bash
+sudo su
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-MARKETPLACE_PATH=$PWD
+
+systemctl restart mysql
+systemctl status mysql
+
+MARKETPLACE_PATH=/app/marketplace-main
 echo marketplace path : $MARKETPLACE_PATH
 
 # kill all process
@@ -61,20 +67,30 @@ if [ ! -d $MARKETPLACE_PATH/log/marketplace-cmsLogs ]; then
   echo "marketplace-webLogs directory created."
 fi
 
- 
 #set application.properties values run startup.jar
-nohup java -jar $MARKETPLACE_PATH/startup.jar  > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
-echo "started startup"
+# Check if at least one argument is provided
+if [ $# -eq 0 ]; then
+    echo "Standalone marketplace."
+	echo "started startup"
+	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar  > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
+else
+    echo "Cloud marketplace:" $1
+	echo "started startup"
+	nohup java -jar $MARKETPLACE_PATH/startup-0.0.1-SNAPSHOT.jar $1 > $MARKETPLACE_PATH/log/marketplace-startupLogs/nohup.out 2>&1 &
+fi
+echo "creating files..."
+sleep 2m
+echo "done"
 
 #start marketplace admin
 cd $MARKETPLACE_PATH/marketplace-admin
 nohup java -jar marketplace_Admin-0.0.1-SNAPSHOT.jar > $MARKETPLACE_PATH/log/marketplace-adminLogs/nohup.out 2>&1 &
-echo "started marketPlace-admin"
+echo "started marketplace-admin"
 
 #start marketplace api
 cd $MARKETPLACE_PATH/marketplace-api
 nohup java -jar com.marketplace.api-0.0.1-SNAPSHOT.jar > $MARKETPLACE_PATH/log/marketplace-apiLogs/nohup.out 2>&1 &
-echo "started marketPlace-api" 
+echo "started marketplace-api" 
 
 #start marketplace web
 cd $MARKETPLACE_PATH/marketplace-web
