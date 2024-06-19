@@ -28,6 +28,12 @@ const FooterSecond = ({ classes }) => {
                                             </Link>
                                         </li>
                                         <li>
+                                            <Link href="/page/add_affiliate_accnt">
+                                                <a>Affiliate Marketing</a>
+                                            </Link>
+                                        </li>
+
+                                        <li>
                                             <Link href="/page/blank">
                                                 <a>Shipping</a>
                                             </Link>

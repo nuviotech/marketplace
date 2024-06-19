@@ -9,9 +9,9 @@ export const ProductGroupWithCarousel = ({ products, type = 'normal' }) => {
         return (
             <Slider
                 {...carouselFullwidth}
-                infinite={products.length > 7 ? true : false}
+                infinite={products?.length > 7 ? true : false}
                 className='ps-carousel outside'>
-                {products.map((item) => (
+                {products?.map((item) => (
                     <div className='ps-carousel-item' key={item?.product_ref_id}>
                         <Product product={item} />
                     </div>
@@ -22,10 +22,10 @@ export const ProductGroupWithCarousel = ({ products, type = 'normal' }) => {
         return (
             <Slider
                 {...carouselStandard}
-                infinite={products.length > 5 ? true : false}
+                infinite={products?.length > 5 ? true : false}
                 className='ps-carousel outside'>
-                {products.map((item) => (
-                    <div className='ps-carousel-item' key={item.id}>
+                {products?.map((item) => (
+                    <div className='ps-carousel-item' key={item?.id}>
                         <Product product={item} />
                     </div>
                 ))}

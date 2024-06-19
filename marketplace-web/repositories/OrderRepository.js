@@ -16,6 +16,7 @@ export const getOrderProductDetails = async (orderProductId) => {
                 return response.data;
             },
             (error) => {
+             
                 logOut();
                 //dis(logOut());
                 //window.location.assign("/account/login")

@@ -76,7 +76,7 @@ const ModuleProductHasVariants = ({ ecomerce, currency, product }) => {
     }
 
     function handleSelectColor(e, colorId) {
-        if (product && product.variants.length > 0) {
+        if (product && product?.variants?.length > 0) {
             const existVariant = product.variants.find(
                 (item) => item.id === colorId
             );
@@ -129,8 +129,8 @@ const ModuleProductHasVariants = ({ ecomerce, currency, product }) => {
     }
 
     if (product) {
-        if (product.variants.length > 0) {
-            let colorSelectionArea = product.variants.map((item) => {
+        if (product?.variants?.length > 0) {
+            let colorSelectionArea = product?.variants?.map((item) => {
                 return (
                     <div
                         className={`ps-variant ps-variant--image ${
@@ -154,7 +154,7 @@ const ModuleProductHasVariants = ({ ecomerce, currency, product }) => {
                 );
             });
             if (sizeItems !== null) {
-                sizeSelectionArea = sizeItems.map((item) => {
+                sizeSelectionArea = sizeItems?.map((item) => {
                     return (
                         <div
                             className={`ps-variant ps-variant--size ${

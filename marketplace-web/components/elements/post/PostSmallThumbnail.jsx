@@ -19,7 +19,7 @@ const PostSmallThumbnail = ({ post }) => {
         }
 
         if (post.categories) {
-            if (post.categories.length > 0) {
+            if (post.categories?.length > 0) {
                 categoriesView = post.categories.map((item) => (
                     <Link
                         href="/category/[slug]"

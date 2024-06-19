@@ -7,7 +7,7 @@ const WidgetSaleOnSite = () => {
             <p>
                 <i className="icon-store"></i> Sell on Nuvio?
                 <Link href="https://nuviosellers.com/signUp">
-                    <a> Register Now !</a>
+                    <a> Register Now !!</a>
                 </Link>
             </p>
         </aside>

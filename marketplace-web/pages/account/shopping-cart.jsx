@@ -36,15 +36,24 @@ const ShoppingCartScreen = ({ ecomerce }) => {
                 <>
                     <div className="ps-section__content">
                         <ModuleEcomerceCartItems cartItems={products} />
+
                         <div className="ps-section__cart-actions">
+                            <div className='d-block d-md-none w-100'>
+                            <Link  href="/account/checkout" >
+                                <a className="ps-btn ps-btn--fullwidth">
+                                    Proceed to checkout
+                                </a>
+                            </Link>
+                            </div>
                             <Link href="/shop">
                                 <a className="ps-btn">Back to Shop</a>
                             </Link>
                         </div>
+
                     </div>
                     <div className="ps-section__footer">
                         <div className="row justify-space-between">
-                            {/*
+                            {/*                             
                             <div className="col-xl-8 col-lg-4 col-md-12 col-sm-12 col-12 ">
                                 <div className="row">
                                     <div className="col-lg-6">

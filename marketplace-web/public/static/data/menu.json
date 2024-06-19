@@ -5,8 +5,9 @@
                 "text": "Home",
                 "url": "/",
                 "extraClass": "menu-item-has-children",
-                "subClass": "sub-menu"
+                "subClass": "sub-menu" 
             },
+            
             {
                 "text": "Shop",
                 "url": "/shop",
@@ -75,51 +76,51 @@
                 "subMenu": [
                     {
                         "text": "Hot Promotions",
-                        "url": "/category/6"
+                        "url": "/search?keyword=wall%20clock&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Electronics Gadgets",
-                        "url": "/category/6"
+                        "url": "/category/17?page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Clothing & Apparel",
-                        "url": "/category/6"
+                        "url": "/search?keyword=cloth&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Home, Garden & Kitchen",
-                        "url": "/category/6"
+                        "url": "/category/7?page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Wall Clocks & Watches",
-                        "url": "/category/6"
+                        "url": "/search?keyword=wall%20clock&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Jewellery",
-                        "url": "/category/6"
+                        "url": "/search?keyword=Jewellery&page=1&price_lt=0&price_gt="
                     },
                     {
                         "text": "Babies & Moms",
-                        "url": "/category/6"
+                        "url": "/search?keyword=toys&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Sport & Outdoor",
-                        "url": "/category/6"
+                        "url": "/category/5?page=1&price_lt=0&price_gt="
                     },
                     {
                         "text": "Mobile Accessories",
-                        "url": "/category/6"
+                        "url": "/search?keyword=mobile&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Office Accessories",
-                        "url": "/category/6"
+                        "url": "/search?keyword=office&page=1&price_lt=0&price_gt="
                     },
                     {
                         "text": "Cars/Motocycles Accessories",
-                        "url": "/category/6"
+                        "url": "/search?keyword=cars&page=1&price_lt=0&price_gt=0"
                     },
                     {
                         "text": "Home Improments",
-                        "url": "/category/6"
+                        "url": "/search?keyword=home&page=1&price_lt=0&price_gt=0"
                     },
                     
                     {
@@ -173,35 +174,31 @@
                     "megaItems": [
                         {
                             "text": "Home Audio & Theathers",
-                            "url": "/category/106"
+                            "url": "/search?keyword=audio&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "TV & Videos",
-                            "url": "/category/107"
+                            "url": "/search?keyword=tv&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Camera, Photos & Videos",
-                            "url": "/category/108"
+                            "url": "/search?keyword=camera&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Cellphones & Accessories",
-                            "url": "/category/109"
+                            "url": "/search?keyword=mobile&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Headphones",
-                            "url": "/category/110"
+                            "url": "/search?keyword=headphone&page=1&price_lt=0&price_gt=0"
                         },
                         {
-                            "text": "Videosgames",
-                            "url": "/category/111"
-                        },
-                        {
-                            "text": "Wireless Speakers",
-                            "url": "/category/112"
+                            "text": "Games",
+                            "url": "/search?keyword=games&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Office Electronic",
-                            "url": "/category/113"
+                            "url": "/search?keyword=Office&page=1&price_lt=0&price_gt=0"
                         }
                     ]
                 },
@@ -210,15 +207,15 @@
                     "megaItems": [
                         {
                             "text": "Digital Cables",
-                            "url": "/category/114"
+                            "url": "/search?keyword=light&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Audio & Video Cables",
-                            "url": "/category/115"
+                            "url": "/search?keyword=audio&page=1&price_lt=0&price_gt=0"
                         },
                         {
                             "text": "Batteries",
-                            "url": "/category/116"
+                            "url": "/search?keyword=Batteries&page=1&price_lt=0&price_gt=0"
                         }
                     ]
                 }
@@ -227,53 +224,53 @@
         {
             "icon": "icon-shirt",
             "text": "Clothing & Apparel",
-            "url": "/category/117"
+            "url": "/category/7?page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-lampshade",
             "text": "Home, Garden & Kitchen",
-            "url": "/category/118"
+            "url": "/category/8?page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-diamond2",
             "text": "Wall Clocks & Watches",
-            "url": "/category/120"
+            "url": "/search?keyword=Wall%20Clock&page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-diamond2",
             "text": "Jewellery",
-            "url": "/category/120"
+            "url": "/search?keyword=Jewellery&page=1&price_lt=0&price_gt=0"
         },
        
         {
             "icon": "icon-baby-bottle",
             "text": "Babies & Moms",
-            "url": "/category/129"
+            "url": "/search?keyword=Babies&page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-baseball",
             "text": "Sport & Outdoor",
-            "url": "/category/130"
+            "url": "/category/5?page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-smartphone",
             "text": "Mobile Accessories",
-            "url": "/category/131"
+            "url": "/search?keyword=mobile&page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-book2",
             "text": "Office Accessories",
-            "url": "/category/132"
+            "url": "/search?keyword=Office&page=1&price_lt=0&price_gt="
         },
         {
             "icon": "icon-car-siren",
             "text": "Cars/Motocycles Accessories",
-            "url": "/category/133"
+            "url": "/search?keyword=cars&page=1&price_lt=0&price_gt=0"
         },
         {
             "icon": "icon-wrench",
             "text": "Home Improments",
-            "url": "/category/134"
+            "url": "/search?keyword=home&page=1&price_lt=0&price_gt=0"
         }
        
     ]

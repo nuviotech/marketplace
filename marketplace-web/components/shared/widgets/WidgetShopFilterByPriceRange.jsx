@@ -18,13 +18,13 @@ const WidgetShopFilterByPriceRange = () => {
         /*  const params = {
             price_gt: value[0],
         };*/
-        Router.push(`/shop?price_gt=${value[0]}&price_lt=${value[1]}&page=1`);
+        Router.push(`?price_gt=${value[0]}&price_lt=${value[1]}&page=1&slug=${query?.slug}`);
         /*this.props.dispatch(getProductsByPrice(params));*/
     }
 
     function underPriceProduct(value){
         
-        Router.push(`/shop?price_gt=0&price_lt=${value}&page=1`);
+        Router.push(`?price_gt=0&price_lt=${value}&page=1&slug=${query?.slug}`);
     }
 
     return (

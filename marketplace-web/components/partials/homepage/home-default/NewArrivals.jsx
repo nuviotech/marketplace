@@ -12,11 +12,11 @@ const NewArrivals = ({ collectionSlug }) => {
     // Views
     let productItemView;
     if (!loading) {
-        if (productItems && productItems.length > 0) {
-            productItemView = productItems.map((item) => (
+        if (productItems && productItems?.length > 0) {
+            productItemView = productItems?.map((item) => (
                 <div
                     className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 "
-                    key={item.id}>
+                    key={item?.id}>
                     <ProductHorizontal product={item} />
                 </div>
             ));

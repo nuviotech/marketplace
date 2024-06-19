@@ -7,6 +7,7 @@ import {
     setWishlistTtems,
     setCartItems,
 } from '~/store/ecomerce/action';
+import { removeCouponDetails } from '~/store/auth/action';
 
 export default function useEcomerce() {
     const dispatch = useDispatch();
@@ -71,6 +72,7 @@ export default function useEcomerce() {
                 }
                 setCookie('cart', cart, { path: '/' });
                 dispatch(setCartItems(cart));
+                removeCouponDetails()
             }
             return cart;
         },
@@ -87,12 +89,14 @@ export default function useEcomerce() {
                 }
                 setCookie('cart', cart, { path: '/' });
                 dispatch(setCartItems(cart));
+                removeCouponDetails()
             }
             return cart;
         },
 
         addItem: (newItem, items, group) => {
             let newItems = [];
+            removeCouponDetails()
             if (items) {
                 newItems = items;
                 const existItem = items.find((item) => item.id === newItem.id);
@@ -125,6 +129,7 @@ export default function useEcomerce() {
 
         removeItem: (selectedItem, items, group) => {
             let currentItems = items;
+            removeCouponDetails()
             if (currentItems.length > 0) {
                 const index = currentItems.findIndex(
                     (item) => item.id === selectedItem.id
@@ -148,6 +153,7 @@ export default function useEcomerce() {
         },
 
         removeItems: (group) => {
+            removeCouponDetails()
             if (group === 'wishlist') {
                 setCookie('wishlist', [], { path: '/' });
                 dispatch(setWishlistTtems([]));

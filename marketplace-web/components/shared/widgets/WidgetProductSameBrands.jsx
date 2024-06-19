@@ -7,6 +7,7 @@ import ProductRepository from '~/repositories/ProductRepository';
 import { useRouter } from 'next/router';
 
 const WidgetProductSameBrands = ({ collectionSlug }) => {
+
     const [productItems, setProductItems] = useState(null);
     const [loading, setLoading] = useState(true);
     const Router = useRouter();
@@ -28,7 +29,7 @@ const WidgetProductSameBrands = ({ collectionSlug }) => {
 
     useEffect(() => {
         getProducts();
-    },collectionSlug );
+    },[collectionSlug] );
 
     // Views
     let productItemsView;

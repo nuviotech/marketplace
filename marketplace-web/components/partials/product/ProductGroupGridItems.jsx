@@ -73,9 +73,9 @@ const ProductGroupGridItems = ({
 
     if (!loading && productItems) {
         if (productItems.length > 0) {
-            const items = productItems.map((item) => {
+            const items = productItems?.map((item) => {
                 return (
-                    <div className={classes} key={item.id}>
+                    <div className={classes} key={item?.id}>
                         <Product product={item} />
                     </div>
                 );

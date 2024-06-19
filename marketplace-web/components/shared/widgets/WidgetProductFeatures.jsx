@@ -7,7 +7,7 @@ const WidgetProductFeatures = () => {
                 <i className="icon-network"></i> Shipping worldwide
             </p>
             <p>
-                <i className="icon-3d-rotate"></i> Free 7-day return if
+                <i className="icon-3d-rotate"></i> Free 30-day return if
                 eligible, so easy
             </p>
             <p>

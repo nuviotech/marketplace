@@ -18,7 +18,7 @@ const SiteFeatures = () => (
                         <i className="icon-sync"></i>
                     </div>
                     <div className="ps-block__right">
-                        <h4>7 Days Return</h4>
+                        <h4>30 Days Return</h4>
                         <p>If goods have problems</p>
                     </div>
                 </div>

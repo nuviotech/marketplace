@@ -24,40 +24,40 @@ const ModuleEcomerceCartItems = ({ ecomerce, cartItems }) => {
 
     // View
     let cartItemsViews;
-    if (cartItems && cartItems.length > 0) {
-        const items = cartItems.map((item) => (
-            <tr key={item.id}>
+    if (cartItems && cartItems?.length > 0) {
+        const items = cartItems?.map((item) => (
+            <tr key={item?.id}>
                 <td>
                     <ProductCart product={item} />
                 </td>
                 <td data-label="price" className="price">
-                    ₹{item.sale_price}
+                    ₹{item?.sale_price}
                 </td>
                 <td data-label="quantity">
                     <div className="form-group--number">
                         <button
                             className="up"
-                            onClick={(e) => handleIncreaseItemQty(e, item.id)}>
+                            onClick={(e) => handleIncreaseItemQty(e, item?.id)}>
                             +
                         </button>
                         <button
                             className="down"
-                            onClick={(e) => handleDecreaseItemQty(e, item.id)}>
+                            onClick={(e) => handleDecreaseItemQty(e, item?.id)}>
                             -
                         </button>
                         <input
                             className="form-control"
                             type="text"
-                            placeholder={item.quantity}
+                            placeholder={item?.quantity}
                             disabled={true}
                         />
                     </div>
                 </td>
                 <td data-label="total">
-                    <strong>₹{(item.sale_price * item.quantity).toFixed(2)}</strong>
+                    <strong>₹{(item?.sale_price * item?.quantity).toFixed(2)}</strong>
                 </td>
                 <td>
-                    <a href="#" onClick={(e) => handleRemoveItem(e, item.id)}>
+                    <a href="#" onClick={(e) => handleRemoveItem(e, item?.id)}>
                         <i className="icon-cross"></i>
                     </a>
                 </td>

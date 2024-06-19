@@ -56,23 +56,16 @@ export function convertSlugsQueryString(payload) {
 
 export function StrapiProductPriceExpanded(product) {
     let view;
-    if (product.is_sale === true) {
-        view = (
-            <p className="ps-product__price sale">
-                ₹{formatCurrency(product.price)}
-                <del className="ml-2">
-                    ₹{formatCurrency(product.sale_price)}
-                </del>
-                <small>18% off</small>
-            </p>
-        );
-    } else {
-        view = (
-            <p className="ps-product__price">
-                ₹{formatCurrency(product.sale_price)}
-            </p>
-        );
-    }
+    view = (
+        <p className="ps-product__price sale">
+            ₹{formatCurrency(product.sale_price)}
+            <del className="ml-2">
+                ₹{formatCurrency(product.price )}
+            </del>
+           
+        </p>
+    );
+
     return view;
 }
 
@@ -81,9 +74,9 @@ export function StrapiProductThumbnail(product) {
 
     if (product.thumbnail) {
 
-        {/* href="/product/[pid]" as={`/product/${product.title.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product.id}`} */}
+        {/* href="/product/[pid]" as={`/product/${product.title.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product.id}`} */ }
         view = (
-            <Link href="/product/[pid]" as={`/product/${product.title.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product.id}`} >
+            <Link href="/product/[pid]" as={`/product/${product.title.replaceAll("/", " | ").replaceAll(" ", "-")}&pid=${product.id}`} >
                 <a>
                     <LazyLoad>
                         <img
@@ -96,7 +89,7 @@ export function StrapiProductThumbnail(product) {
         );
     } else {
         view = (
-            <Link href="/product/[pid]" as={`/product/${product.title.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product.id}`}>
+            <Link href="/product/[pid]" as={`/product/${product.title.replaceAll("/", " | ").replaceAll(" ", "-")}&pid=${product.id}`}>
                 <a>
                     <LazyLoad>
                         <img src="/static/img/not-found.jpg" alt="martfury" />

@@ -5,7 +5,7 @@ const BreadCrumb = ({ breacrumb }) => {
     return (
         <div className="ps-breadcrumb 2">
             <ul className="breadcrumb">
-                {breacrumb.map(item => {
+                {breacrumb?.map(item => {
                     if (!item.url) {
                         return <li key={item.text}>{item.text}</li>;
                     } else {

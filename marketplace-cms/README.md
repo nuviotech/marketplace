@@ -10,7 +10,7 @@ Homepage: [Nouthemes](https://themeforest.net/user/nouthemes)
 **Strapi 3 doesn't support Node 16**
 
 ## Credentials
-Email: admin@admin.com
+Email: admin@gmail.com
 
 Password: Admin@123
 # marketplace-cms

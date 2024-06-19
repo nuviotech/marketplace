@@ -38,10 +38,10 @@ const HomeDefaultProductListing = ({ collectionSlug, title ,bestSellerSlug, most
 
     const sectionLinksView = sectionLinks.map((link) => (
         <li
-            className={currentCollection === link.name ? 'active' : ''}
-            key={link.name}>
+            className={currentCollection === link?.name ? 'active' : ''}
+            key={link?.name}>
             <a href="#" onClick={(e) => handleChangeTab(e, link)}>
-                {link.title}
+                {link?.title}
             </a>
         </li>
     ));

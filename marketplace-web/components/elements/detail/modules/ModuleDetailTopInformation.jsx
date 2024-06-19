@@ -3,10 +3,12 @@ import Link from 'next/link';
 import Rating from '~/components/elements/Rating';
 import SEO from "@bradgarropy/next-seo"
 import Head from 'next/head';
+import { Rate } from 'antd';
 
 const ModuleDetailTopInformation = ({props ,product }) => {
     // Views
     let priceView;
+
     var description = "Nuvio Seller | "+product.title+" | price : "+product.sale_price;
 
     
@@ -30,6 +32,11 @@ const ModuleDetailTopInformation = ({props ,product }) => {
                         <a className="ml-2 text-capitalize">{product.brand}</a>
                     </Link>
                 </p>
+                {
+                   ( product?.totalRatingRation!=null && product?.totalRatingRation?.split(":")[0]>0 ) &&
+                   <Rate allowHalf defaultValue={product?.totalRatingRation?.split(":")[0]} disabled />
+                }
+               
                 {/*                 
                 <div className="ps-product__rating">
                     <Rating />

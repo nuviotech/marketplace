@@ -1,5 +1,3 @@
-// author : Rohit 
-
 import { Component } from "react";
 import { login, userIsLogin } from "~/store/auth/action";
 import { connect } from 'react-redux';

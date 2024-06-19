@@ -8,18 +8,18 @@ const ModuleDetailActionsMobile = ({ ecomerce, product }) => {
     const Router = useRouter();
     const handleAddItemToCart = (e) => {
         e.preventDefault();
-        addItem({ id: product.id, quantity: 1 }, ecomerce.cartItems, 'cart');
+        addItem({ id: product?.id, quantity: 1 }, ecomerce?.cartItems, 'cart');
         Router.push('/account/shopping-cart');
     };
 
     const handleBuyNow = (e) => {
         e.preventDefault();
-        addItem({ id: product.id, quantity: 1 }, ecomerce.cartItems, 'cart');
+        addItem({ id: product?.id, quantity: 1 }, ecomerce?.cartItems, 'cart');
         Router.push('/account/checkout');
     };
 
     return (
-        <div className="ps-product__actions-mobile">
+        <div className="ps-product__actions-mobile" style={{position:"fixed",bottom:"70px",zIndex:"100"}}>
             <a
                 className="ps-btn ps-btn--black"
                 href="#"

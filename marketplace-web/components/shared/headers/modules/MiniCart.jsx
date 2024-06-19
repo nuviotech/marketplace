@@ -36,7 +36,7 @@ const MiniCart = ({ ecomerce }) => {
                 <div className="ps-cart__items">{productItems}</div>
                 <div className="ps-cart__footer">
                     <h3>
-                        Sub Total:
+                        Sub Total :
                         <strong>₹{amount ? amount : 0}</strong>
                     </h3>
                     <figure>

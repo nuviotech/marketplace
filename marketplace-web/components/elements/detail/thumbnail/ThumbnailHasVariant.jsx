@@ -75,7 +75,7 @@ class ThumbnailHasVariant extends Component {
         const { product } = this.props;
         const { photoIndex, isOpen } = this.state;
         const productImages = [];
-        product.images.map((variant) => {
+        product?.images?.map((variant) => {
             productImages.push(`${baseUrl}${variant.url}`);
         });
 
@@ -130,27 +130,27 @@ class ThumbnailHasVariant extends Component {
                         mainSrc={productImages[photoIndex]}
                         nextSrc={
                             productImages[
-                                (photoIndex + 1) % productImages.length
+                                (photoIndex + 1) % productImages?.length
                             ]
                         }
                         prevSrc={
                             productImages[
-                                (photoIndex + productImages.length - 1) %
-                                    productImages.length
+                                (photoIndex + productImages?.length - 1) %
+                                    productImages?.length
                             ]
                         }
                         onCloseRequest={() => this.setState({ isOpen: false })}
                         onMovePrevRequest={() =>
                             this.setState({
                                 photoIndex:
-                                    (photoIndex + productImages.length - 1) %
-                                    productImages.length,
+                                    (photoIndex + productImages?.length - 1) %
+                                    productImages?.length,
                             })
                         }
                         onMoveNextRequest={() =>
                             this.setState({
                                 photoIndex:
-                                    (photoIndex + 1) % productImages.length,
+                                    (photoIndex + 1) % productImages?.length,
                             })
                         }
                     />

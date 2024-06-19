@@ -5,7 +5,7 @@ const baseDomain = process.env.NEXT_PUBLIC_STRAPI_PANEL_URL // API for products
 export const basePostUrl =  process.env.NEXT_PUBLIC_STRAPI_PANEL_URL; // API for post
 export const baseStoreURL =  process.env.NEXT_PUBLIC_STRAPI_PANEL_URL; // API for vendor(store)
 
-export const policyMakerUrl = "http://localhost:9001";//change the name policy maker  url
+export const policyMakerUrl = process.env.NEXT_PUBLIC_POLICYMAKER_API_BASE_URL;//change the name policy maker  url
 export const marketplaceUrl = process.env.NEXT_PUBLIC_MARKETPLACE_API_BASE_URL;//marketplace api url
 
 

@@ -21,7 +21,7 @@ const BlogItemsGridView = ({ collectionSlug, columns }) => {
             };
             APIPosts = await PostRepository.getPosts(queries);
         }
-        console.log(APIPosts);
+        //console.log(APIPosts);
 
         if (APIPosts) {
             setTimeout(function () {

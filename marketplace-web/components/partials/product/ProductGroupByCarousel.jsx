@@ -109,7 +109,7 @@ const ProductGroupByCarousel = ({
         if (productItems && productItems.length > 0) {
             const slideItems = productItems.map((item) => {
                 if(item!==null)
-                    {return <Product product={item} key={item?.product_ref_id} />}
+                    {return <Product product={item} key={item?.product_ref_id} height={140} star={false} />}
         });
             if (layout !== 'standard') {
                 productItemsView = (

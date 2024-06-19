@@ -16,11 +16,11 @@ const ModuleProductProgressbar = ({ product }) => {
                     <span style={{ width: '100%' }}></span>
                 )}
             </div>
-            {product.inventory - product.depot >= 0 ? (
+            {/* {product.inventory - product.depot >= 0 ? (
                 <p>Sold: {product.inventory - product.depot}</p>
             ) : (
                 <p>Sold: {product.inventory}</p>
-            )}
+            )} */}
         </div>
     );
 };

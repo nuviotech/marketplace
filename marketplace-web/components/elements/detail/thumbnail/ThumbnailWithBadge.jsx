@@ -16,7 +16,7 @@ const ThumbnailWithBadge = ({ product, vertical = true }) => {
 
     useEffect(() => {
         let images = [];
-        if (product && product.images.length > 0) {
+        if (product && product?.images?.length > 0) {
             product.images.map((item) => {
                 images.push(`${baseUrl}${item.url}`);
             });
@@ -72,7 +72,7 @@ const ThumbnailWithBadge = ({ product, vertical = true }) => {
 
     //Views
     let lightboxView, variantCarouselView, imagesView, galleryImagesView;
-    if (productImages.length > 0) {
+    if (productImages?.length > 0) {
         imagesView = productImages.map((item) => (
             <div className="item" key={item}>
                 <img src={item} alt={item} />
@@ -123,11 +123,11 @@ const ThumbnailWithBadge = ({ product, vertical = true }) => {
         lightboxView = (
             <Lightbox
                 mainSrc={productImages[photoIndex]}
-                nextSrc={productImages[(photoIndex + 1) % productImages.length]}
+                nextSrc={productImages[(photoIndex + 1) % productImages?.length]}
                 prevSrc={
                     productImages[
-                        (photoIndex + productImages.length - 1) %
-                            productImages.length
+                        (photoIndex + productImages?.length - 1) %
+                            productImages?.length
                     ]
                 }
                 onCloseRequest={() => {
@@ -135,8 +135,8 @@ const ThumbnailWithBadge = ({ product, vertical = true }) => {
                 }}
                 onMovePrevRequest={() => {
                     setPhotoIndex(
-                        (photoIndex + productImages.length - 1) %
-                            productImages.length
+                        (photoIndex + productImages?.length - 1) %
+                            productImages?.length
                     );
                 }}
                 onMoveNextRequest={() => {

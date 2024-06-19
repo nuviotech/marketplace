@@ -45,7 +45,7 @@ class HeaderMobile extends Component {
                                 <img
                                     src="/static/img/nuvioseller.png"
                                     alt="martfury"
-                                    style={{width:48 ,height:42}}
+                                    style={{height:32}}
                                 />
                             </a>
                         </Link>

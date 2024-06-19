@@ -4,11 +4,10 @@ import useProduct from '~/hooks/useProduct';
 
 const ProductOnCart = ({ product, children }) => {
     const { thumbnailImage, title } = useProduct();
-
     return (
         <div className="ps-product--cart-mobile">
             <div className="ps-product__thumbnail">
-                <Link href="/product/[pid]" as={`/product/${product.title.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product.id}`}>
+                <Link href="/product/[pid]" as={`/product/${product?.title?.replaceAll("/"," | ").replaceAll(" ","-")}&pid=${product?.id}`}>
                     <a>{thumbnailImage(product)}</a>
                 </Link>
             </div>
@@ -16,7 +15,7 @@ const ProductOnCart = ({ product, children }) => {
                 {title(product)}
                 <p>
                     <small>
-                    ₹{product.price} x {product.quantity}
+                    <del style={{fontSize:"10px"}} className='text-danger mr-2'>₹{product?.price} </del> ₹{product?.sale_price} x {product?.quantity}
                     </small>
                 </p>{' '}
                 {children}

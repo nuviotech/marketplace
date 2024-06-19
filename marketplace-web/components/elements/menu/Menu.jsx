@@ -7,7 +7,7 @@ const Menu = ({ source, className }) => {
     // Views
     let menuView;
     if (source) {
-        menuView = source.map((item) => {
+        menuView = source?.map((item) => {
             if (item.subMenu) {
                 return <MenuDropdown source={item} key={item.text} />;
             } else if (item.megaContent) {

@@ -12,11 +12,10 @@ import SkeletonProduct from '~/components/elements/skeletons/SkeletonProduct';
 
 
 
-const ProductItems = ({ products, columns = 4 }) => {
+const ProductItems = ({ products, columns = 4,total }) => {
     
     const [listView, setListView] = useState(true);
     const [productItems, setProductItems] = useState(null);
-    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState(
         'col-xl-4 col-lg-4 col-md-3 col-sm-6 col-6'
@@ -49,7 +48,6 @@ const ProductItems = ({ products, columns = 4 }) => {
 
     useEffect(() => {
         handleSetColumns();
-        setTotal(products.length);
         setProductItems(products);
         
     }, [products]);
@@ -60,8 +58,8 @@ const ProductItems = ({ products, columns = 4 }) => {
     if (!loading) {
         if (productItems && productItems.length > 0) {
             if (listView) {
-                const items = productItems.map((item) => (
-                    <div className={classes} key={item.id}>
+                const items = productItems?.map((item) => (
+                    <div className={classes} key={item?.id}>
                         <Product product={item} />
                     </div>
                 ));

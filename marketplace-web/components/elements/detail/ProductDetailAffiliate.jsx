@@ -16,12 +16,12 @@ const ProductDetailAffiliate = ({ product }) => {
                     <ModuleDetailTopInformation product={product} />
                     <ModuleProductDetailDescription product={product} />
                     <div className="ps-product__shopping">
-                        <a
+                        {/* <a
                             className="ps-btn"
                             href="https://www.amazon.com/Premium-Military-Sunglasses-Polarized-protection/dp/B01GVRZ1BS/"
                             target="_blank">
                             Purchase on Amazon
-                        </a>
+                        </a> */}
                         <div className="ps-product__actions">
                             <a href="#">
                                 <i className="icon-heart"></i>

@@ -30,18 +30,17 @@ const Wishlist = ({ ecomerce }) => {
             <div className="table-responsive">
                 <table className="table ps-table--whishlist">
                     <thead>
-                        <tr>
+                        <tr className='text-left'>
                             <th></th>
-                            <th>Product name</th>
-                            <th>Unit Price</th>
-                            <th>Vendor</th>
-                            <th></th>
+                            <th >Product name</th>
+                            <th className='text-left'>Unit Price</th>
+                            <th className='text-right'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {products.map((product) => (
                             <tr key={product.id}>
-                                <td>
+                                <td className='text-left'>
                                     <a
                                         href="#"
                                         onClick={(e) =>
@@ -50,11 +49,13 @@ const Wishlist = ({ ecomerce }) => {
                                         <i className="icon-cross"></i>
                                     </a>
                                 </td>
+
                                 <td>
                                     <ProductCart product={product} />
                                 </td>
-                                <td className="price">₹{product.price}</td>
-                                <td>{product.vendor}</td>
+
+                                <td className="price text-left">₹{product?.sale_price}</td>
+                               
                                 <td>
                                     <a
                                         className="ps-btn"

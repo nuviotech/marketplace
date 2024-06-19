@@ -18,8 +18,8 @@ const HomeDefaultDealOfDay = ({ collectionSlug }) => {
     // Views
     let productItemsView;
     if (!loading) {
-        if (productItems && productItems.length > 0) {
-            const slideItems = productItems.map((item) => {
+        if (productItems && productItems?.length > 0) {
+            const slideItems = productItems?.map((item) => {
                 if(item!==null)
                     {return <ProductDealOfDay product={item} key={item?.product_ref_id} />}
         });

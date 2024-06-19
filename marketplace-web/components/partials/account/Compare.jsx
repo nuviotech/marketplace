@@ -34,7 +34,7 @@ const Compare = ({ ecomerce }) => {
                     <h1>Compare Product</h1>
                 </div>
                 <div className="ps-section__content">
-                    {products && products.length === 0 ? (
+                    {products && products?.length === 0 ? (
                         <div className="alert alert-danger" role="alert">
                             Compare list is empty!
                         </div>
@@ -46,7 +46,7 @@ const Compare = ({ ecomerce }) => {
                                         <td className="heading" rowSpan="2">
                                             Product
                                         </td>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => (
                                                 <td key={product.id}>
                                                     <a
@@ -66,7 +66,7 @@ const Compare = ({ ecomerce }) => {
                                         )}
                                     </tr>
                                     <tr>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => (
                                                 <td key={product.id}>
                                                     <div className="ps-product--compare">
@@ -99,7 +99,7 @@ const Compare = ({ ecomerce }) => {
                                     </tr>
                                     <tr>
                                         <td className="heading">Rating</td>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => (
                                                 <td key={product.id}>
                                                     <Rate
@@ -114,7 +114,7 @@ const Compare = ({ ecomerce }) => {
                                     </tr>
                                     <tr>
                                         <td className="heading">Price</td>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => {
                                                 if (product.sale === true) {
                                                     return (
@@ -146,7 +146,7 @@ const Compare = ({ ecomerce }) => {
                                     </tr>
                                     <tr>
                                         <td className="heading">Sold By</td>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => (
                                                 <td key={product.id}>
                                                     <Link href="/vendor/store-list">
@@ -160,7 +160,7 @@ const Compare = ({ ecomerce }) => {
                                     </tr>
                                     <tr>
                                         <td className="heading"></td>
-                                        {products && products.length > 0 ? (
+                                        {products && products?.length > 0 ? (
                                             products.map((product) => (
                                                 <td key={product.id}>
                                                     <button

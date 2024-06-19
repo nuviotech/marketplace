@@ -47,7 +47,7 @@ class ProductRepository {
     }
 
     async getProducts(params) {
-       //alert("get product "+JSON.stringify(params));
+    //    alert("get product "+JSON.stringify(params));
       // alert("payload : "+params)
 
         const reponse = await Repository.get(
@@ -80,7 +80,6 @@ class ProductRepository {
                 return response.data;
             })
             .catch((error) => ({ error: JSON.stringify(error) }));
-            console.log("get all brands are call. : "+JSON.stringify(reponse));
         return reponse;
     }
 
@@ -99,13 +98,14 @@ class ProductRepository {
         return reponse;
     }
 
-    async getTotalRecords(price_gt,price_lt) {
-        const reponse = await Repository.get(`${marketplaceUrl}/products/count?price_gt=${price_gt}&price_lt=${price_lt}`)
+    async getTotalRecords(params) {
+       
+        const reponse = await Repository.get(`${marketplaceUrl}/products/count?price_gt=${params?.price_gt}&price_lt=${params?.price_lt}&_key=${params?.key}&_value=${params?.value}`)
             .then((response) => {
                 return response.data;
             })
             .catch((error) => ({ error: JSON.stringify(error) }));
-        //console.log("total record call "+JSON.stringify(reponse));    
+        console.log("total record call "+JSON.stringify(reponse));    
         return reponse;
     }
     
@@ -120,9 +120,10 @@ class ProductRepository {
         return reponse;
     }
 
+
     async getProductsByCategory(payload) {
         const reponse = await Repository.get(
-            `${marketplaceUrl}/product-categories?slug=${payload}`
+            `${marketplaceUrl}/product-categories?slug=${payload?.slug}&_limit=${payload?._limit}&_start=${payload?._start}&price_lt=${payload?.price_lt}&price_gt=${payload?.price_gt}`
         )
             .then((response) => {
                 if (response.data) {
@@ -138,17 +139,17 @@ class ProductRepository {
             .catch(() => {
                 return null;
             });
-        //console.log("@@@@@@@@@@@ getProductsByCategory "+JSON.stringify(reponse));
         return reponse;
     }
 
+    
     async getProductsByBrand(payload) {
        // alert("## "+payload)
         const reponse = await Repository.get(
             `${marketplaceUrl}/brands?slug=${payload}`
         )
             .then((response) => {
-                console.warn(JSON.stringify(response.data))
+               // console.warn(JSON.stringify(response.data))
                 if (response.data) {
                     if (response.data.length > 0) {
                         //console.log("brd;  "+response.data[0])

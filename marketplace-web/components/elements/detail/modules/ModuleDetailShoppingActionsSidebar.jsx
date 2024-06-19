@@ -10,8 +10,8 @@ const ModuleDetailShoppingActionsSidebar = ({ ecomerce, product }) => {
     function handleAddItemToCart(e) {
         e.preventDefault();
         addItem(
-            { id: product.id, quantity: quantity },
-            ecomerce.cartItems,
+            { id: product?.id, quantity: quantity },
+            ecomerce?.cartItems,
             'cart'
         );
     }
@@ -19,7 +19,7 @@ const ModuleDetailShoppingActionsSidebar = ({ ecomerce, product }) => {
     function handleAddItemToCompare(e) {
         e.preventDefault();
         e.preventDefault();
-        addItem({ id: product.id }, ecomerce.compareItems, 'compare');
+        addItem({ id: product?.id }, ecomerce?.compareItems, 'compare');
         const modal = Modal.success({
             centered: true,
             title: 'Success!',
@@ -30,7 +30,7 @@ const ModuleDetailShoppingActionsSidebar = ({ ecomerce, product }) => {
 
     function handleAddItemToWishlist(e) {
         e.preventDefault();
-        addItem({ id: product.id }, ecomerce.wishlistItems, 'wishlist');
+        addItem({ id: product?.id }, ecomerce?.wishlistItems, 'wishlist');
         const modal = Modal.success({
             centered: true,
             title: 'Success!',

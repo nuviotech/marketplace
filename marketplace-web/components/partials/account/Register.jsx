@@ -5,11 +5,16 @@ import { login } from '../../../store/auth/action';
 import { marketplaceUrl } from '~/repositories/Repository';
 import axios from 'axios';
 
-import { Form, Input, Modal, Select } from 'antd';
+import { Checkbox, Form, Input, Modal, Select } from 'antd';
 import { connect } from 'react-redux';
 import TextArea from 'antd/lib/input/TextArea';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { saveUserDetails } from '~/repositories/UserDeatils';
+import { MathCaptcha } from '../commons/MathCaptcha';
 
 class Register extends Component {
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -19,32 +24,77 @@ class Register extends Component {
             password: null,
             password2: null,
             phone: null,
-           // city: null,
+            reportingAccountId: this?.props?.affiliate_account_id,
+            isCheckTermAndConditions: false,
+            cflag: null,
+            // city: null,
             //state: "Nan",
             //country: null,
             //shippingAddress: null
+            reportingAccntDetails: []
         };
+        this.fetchData = this.fetchData.bind(this);
+
+
     }
 
+    onChangeCatcha = value => {
+        this.setState({ cflag: value });
+    }
+
+    handleCaptchaSuccess = ()=>{
+        this.setState({ cflag: true });
+    }
+
+    fetchData() {
+        fetch(marketplaceUrl + '/getReportingAccountDetails')
+            .then(response => response.json())
+            .then(data => this.setState({ reportingAccntDetails: data }));
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+
+    getData = () => {
+        var reportingAccountDetails = [];
+        this.state?.reportingAccntDetails?.map(data => {
+            var obj = {
+                value: data?.reportingAccountId,
+                label: data?.reportingAccountName,
+            }
+            reportingAccountDetails.push(obj);
+        })
+        return reportingAccountDetails;
+    }
+    onChange = (value) => {
+        this.setState({ reportingAccountId: value });
+    };
+
+    onCheckBoxChange = (e) => {
+        this.setState({ isCheckTermAndConditions: e.target.checked })
+    };
 
     handleSubmit = async (e) => {
         // e.preventDefault();
         //  console.log(JSON.stringify(this.state))
+        const urlRegex = /(https?:\/\/[^\s]+)/gi;
 
-        if (this.state.firstName == '' || this.state.lastName == '') {
+        if (this.state.firstName == '' || this.state.lastName == '' || urlRegex.test(this.state.firstName)) {
             const modal = Modal.error({
                 centered: true,
                 title: 'Invalid input!',
                 content: `Please enter first name or last name.`,
             });
             modal.update;
-        } else if (this.state.phone.length < 10) {
+        } else if (this.state.phone.length < 10 || this.state.phone.length > 10 || urlRegex.test(this.state.phone)) {
             const modal = Modal.error({
                 centered: true,
                 title: 'Invalid input!',
                 content: `Please enter correct phone number.`,
             });
-        } else if (this.state.password.length < 4 || this.state.password.length > 20) {
+        } else if (this.state.password.length < 4 || this.state.password.length > 20 || urlRegex.test(this.state.password)) {
             const modal = Modal.error({
                 centered: true,
                 title: 'Invalid password!',
@@ -58,74 +108,24 @@ class Register extends Component {
                 content: `enter the same password in password field or confirm password field.`,
             });
             modal.update;
+        } else if (!this.state.isCheckTermAndConditions) {
+            const modal = Modal.error({
+                centered: true,
+                title: 'Accept terms and conditions',
+                content: `Accept the terms and condtions .`,
+            });
+            modal.update;
+        }else if(this.state.cflag==null){
+            const modal = Modal.error({
+                centered: true,
+                title: 'Solve the math captcha !!',
+                content: `Please solve the puzzle before submitting.`,
+            });
+            modal.update;
         } else {
-            await axios.post(`${marketplaceUrl}/saveUser`, this.state).then(
-                (response) => {
-                    var statusCode = response.data;
-                    if (statusCode == '-1') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Invalid input!',
-                            content: `Please enter valid first name or last name.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '-2') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Invalid input!',
-                            content: `Please enter valid first name or last name.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '-3') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Invalid input!',
-                            content: `Please enter valid first name or last name.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '-4') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Invalid input!',
-                            content: `Please enter valid first name or last name.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '-5') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Email already exists!!',
-                            content: `Please try with another email id, this email already present.`,
-                        });
-                        modal.update;
-                    }else if(statusCode=='-6'){
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Invalid state!!',
-                            content: `please select the state.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '1') {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Server Error!!',
-                            content: `Something went wrong on server.`,
-                        });
-                        modal.update;
-                    } else if (statusCode == '0') {
-                        const modal = Modal.success({
-                            centered: true,
-                            title: 'Successfully Registered !',
-                            content: `You'r Information is successfully saved on server, please login with credentials..`,
-                        });
-                        modal.update;
-                        Router.push('/account/login');
-                    }
-                },
-                (error) => {
-                    console.error("Register user (error) : " + error);
-                    alert("Something went wrong on server!!");
-                }
-            )
+            if (this?.props?.affiliate_account_id)
+                this.setState({ reportingAccountId: this?.props?.affiliate_account_id });
+                saveUserDetails(this.state,"",Router);
         }
 
         this.props.form?.validateFields((err, values) => {
@@ -138,6 +138,7 @@ class Register extends Component {
     };
 
     render() {
+
         return (
 
             <div className="ps-my-account">
@@ -169,7 +170,8 @@ class Register extends Component {
                                                 rules={[
                                                     {
                                                         required: true,
-                                                        message: 'Enter your first name!',
+                                                        message: 'first name is not valid !!',
+                                                        pattern: new RegExp(/^[a-zA-Z '.-]*$/)
                                                     },
                                                 ]}>
                                                 <Input
@@ -190,7 +192,8 @@ class Register extends Component {
                                                 rules={[
                                                     {
                                                         required: true,
-                                                        message: 'Enter your last name!!',
+                                                        message: 'last name is not valid !!',
+                                                        pattern: new RegExp(/^[a-zA-Z '.-]*$/)
                                                     },
                                                 ]}>
                                                 <Input
@@ -213,8 +216,8 @@ class Register extends Component {
                                         rules={[
                                             {
                                                 required: true,
-                                                message:
-                                                    'Please input your email!',
+                                                message: 'email address is not valid !!',
+                                                pattern: new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
                                             },
                                         ]}>
                                         <Input
@@ -233,7 +236,9 @@ class Register extends Component {
                                             {
                                                 required: true,
                                                 message:
-                                                    'Please input your contact!',
+                                                    'invalid contact number !!',
+                                                pattern: new RegExp("^(\\+91[\\-\\s]?)?[0]?(91)?[789]\\d{9}$")
+
                                             },
                                         ]}>
                                         <Input
@@ -246,76 +251,7 @@ class Register extends Component {
                                     </Form.Item>
                                 </div>
 
-                               {/* <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <Form.Item
-                                                name="city"
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message: 'Enter your city!',
-                                                    },
-                                                ]}>
-                                                <Input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Enter the city"
-                                                    name="fname"
-                                                    onChange={(event) => { this.setState({ city: event.target.value }) }}
 
-                                                />
-                                            </Form.Item>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            {/*<Form.Item
-                                                name="country"
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message: 'Enter your country !!',
-                                                    },
-                                                ]}>
-                                                <Input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Enter the country"
-                                                    name="last_name"
-                                                    onChange={(event)=> {this.setState({country:event.target.value})} }
-
-                                                />
-                                            </Form.Item>
-                                            *}
-                                            
-
-                                        </div>
-                                    </div>
-                                </div>
-                                */}
-                                {/*
-                                <div className="form-group">
-                                    <Form.Item
-                                        name="shippingAddress"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    'Please enter your address!',
-                                            },
-                                        ]}>
-                                        <TextArea
-                                            rows='5'
-                                            className="form-control"
-                                            type="text"
-                                            placeholder="Enter address"
-                                            onChange={(event) => { this.setState({ shippingAddress: event.target.value }) }}
-
-                                        />
-                                    </Form.Item>
-                                </div>
-                                    */}
                                 <div className="form-group form-forgot">
                                     <Form.Item
                                         name="password"
@@ -331,7 +267,6 @@ class Register extends Component {
                                             type="password"
                                             placeholder="Password..."
                                             onChange={(event) => { this.setState({ password: event.target.value }) }}
-
                                         />
                                     </Form.Item>
                                 </div>
@@ -355,6 +290,37 @@ class Register extends Component {
                                         />
                                     </Form.Item>
                                 </div>
+
+                                <div className="form-group">
+                                    <Select
+                                        showSearch
+                                        placeholder="select reporting accounts"
+                                        optionFilterProp="children"
+                                        value={this.props.affiliate_account_id}
+                                        style={{ width: "100%" }}
+                                        onChange={this.onChange}
+                                        options={this.getData()}
+
+                                    />
+                                </div>
+
+
+                                {/* <ReCAPTCHA
+                                    sitekey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITEKEY}
+                                    onChange={this.onChangeCatcha}
+                                    size="normal"
+                                /> */}
+
+                                <MathCaptcha onInvalid={()=>{this.setState({ cflag: null });}} onSuccess={this.handleCaptchaSuccess} />
+
+
+                                <Checkbox className='my-2' onChange={this.onCheckBoxChange}>
+                                    Accept Terms And Conditions
+                                    <Link href="/page/terms_and_conditions">
+                                        <span style={{ color: "blue" }}> Read</span>
+                                    </Link>
+                                </Checkbox>
+
                                 <div className="form-group submit">
                                     <button
                                         type="submit"

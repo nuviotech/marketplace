@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Link from 'next/link';
-import { logOut } from '../../../../store/auth/action';
+import { getLoginType, logOut } from '../../../../store/auth/action';
 import { Dropdown, Menu } from 'antd';
 class AccountQuickLinks extends Component {
     constructor(props) {
@@ -40,15 +40,36 @@ class AccountQuickLinks extends Component {
                 url: '/account/wishlist',
             },
         ];
+
+        const accountLinks1 = [
+            {
+                text: 'Account Information',
+                url: '/account/Affiliate_marketing/user-information',
+            },
+        ]
         const menu = (
             <Menu>
-                {accountLinks.map(link => (
-                    <Menu.Item key={link.url}>
-                        <Link href={link.url}>
-                            <a>{link.text}</a>
-                        </Link>
-                    </Menu.Item>
-                ))}
+                {
+                    getLoginType() === "normal_account" &&
+                    accountLinks.map(link => (
+
+                        <Menu.Item key={link.url}>
+                            <Link href={link.url}>
+                                <a>{link.text}</a>
+                            </Link>
+                        </Menu.Item>
+                    ))}
+
+                {
+                    getLoginType() === "affiliate_account" &&
+                    accountLinks1.map(link => (
+
+                        <Menu.Item key={link.url}>
+                            <Link href={link.url}>
+                                <a>{link.text}</a>
+                            </Link>
+                        </Menu.Item>
+                    ))}
 
                 <Menu.Item>
                     <a href="#" onClick={this.handleLogout.bind(this)}>

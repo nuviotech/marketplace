@@ -19,7 +19,7 @@ const PostGrid = ({ post }) => {
         }
 
         if (post.post_categories) {
-            if (post.post_categories.length > 0) {
+            if (post?.post_categories?.length > 0) {
                 categoriesView = post.post_categories.map((item) => (
                     <Link
                         href="/category/[slug]"

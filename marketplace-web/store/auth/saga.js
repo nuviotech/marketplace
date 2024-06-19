@@ -1,6 +1,5 @@
 import { all, put, takeEvery } from 'redux-saga/effects';
 import {notification } from 'antd';
-
 import { actionTypes, loginSuccess, logOutSuccess } from './action';
 /*
 const modalSuccess2 = type => {

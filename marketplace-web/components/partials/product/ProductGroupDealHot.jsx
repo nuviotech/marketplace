@@ -26,12 +26,12 @@ const ProductGroupDealHot = ({ collectionSlug }) => {
     let productItemsView, relatedView;
     if (!loading) {
         if (productItems && productItems.length > 0) {
-            const slideItems = productItems.map((item) => (
-                <ProductDealHot product={item} key={item.id} />
+            const slideItems = productItems?.map((item) => (
+                <ProductDealHot product={item} key={item?.id} />
             ));
             const relatedItems = productItems.map((item, index) => {
                 if (index > 1 && index < 6) {
-                    return <ProductHorizontal product={item} key={item.id} />;
+                    return <ProductHorizontal product={item} key={item?.id} />;
                 }
             });
             productItemsView = (

@@ -24,11 +24,11 @@ const FooterWidgets = () => (
 
                 <p>Whatsapp us 24/7</p>
                 <div className='mb-5'>
-                <FloatingWhatsApp phoneNumber={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} accountName={`${process?.env?.NEXT_PUBLIC_FOOTER_WEBSITE_NAME} seller`} />
-                
-                <ReactWhatsapp number={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} message="Hi" element={"div"} >
-                    <WhatsappIcon size={35} round="true"></WhatsappIcon>
-                </ReactWhatsapp>
+                    {/* <FloatingWhatsApp phoneNumber={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} accountName={`${process?.env?.NEXT_PUBLIC_FOOTER_WEBSITE_NAME} seller`} /> */}
+
+                    <ReactWhatsapp number={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} message="Hi" element={"div"} >
+                        <WhatsappIcon size={35} round="true"></WhatsappIcon>
+                    </ReactWhatsapp>
 
                 </div>
 
@@ -37,38 +37,38 @@ const FooterWidgets = () => (
                     <a href={`mailto:${process?.env?.NEXT_PUBLIC_EMAIL}`}>{process?.env?.NEXT_PUBLIC_EMAIL}</a>
                 </p>
                 <ul className="ps-list--social">
-                    { 
-                    process?.env?.NEXT_PUBLIC_FACEBOOK_LINK!='NA' &&
-                    <li>
-                        <a className="facebook" target='_blank' href={process?.env?.NEXT_PUBLIC_FACEBOOK_LINK}>
-                            <i className="fa fa-facebook"></i>
-                        </a>
-                    </li>
+                    {
+                        process?.env?.NEXT_PUBLIC_FACEBOOK_LINK != 'NA' &&
+                        <li>
+                            <a className="facebook" target='_blank' href={process?.env?.NEXT_PUBLIC_FACEBOOK_LINK}>
+                                <i className="fa fa-facebook"></i>
+                            </a>
+                        </li>
                     }
                     {
-                    process?.env?.NEXT_PUBLIC_TWITTER_LINK!='NA' &&
-                    <li>
-                        <a className="twitter" target='_blank' href={process?.env?.NEXT_PUBLIC_TWITTER_LINK}>
-                            <i className="fa fa-twitter"></i>
-                        </a>
-                    </li>
+                        process?.env?.NEXT_PUBLIC_TWITTER_LINK != 'NA' &&
+                        <li>
+                            <a className="twitter" target='_blank' href={process?.env?.NEXT_PUBLIC_TWITTER_LINK}>
+                                <i className="fa fa-twitter"></i>
+                            </a>
+                        </li>
                     }
                     {
-                    process?.env?.NEXT_PUBLIC_LINKEDIN_LINK!='NA' &&
-                    <li>
-                        <a target='_blank' href={process?.env?.NEXT_PUBLIC_LINKEDIN_LINK}>
-                            <i className="fa fa-linkedin" style={{ color: "#2e5fb2" }}></i>
-                        </a>
-                    </li>
+                        process?.env?.NEXT_PUBLIC_LINKEDIN_LINK != 'NA' &&
+                        <li>
+                            <a target='_blank' href={process?.env?.NEXT_PUBLIC_LINKEDIN_LINK}>
+                                <i className="fa fa-linkedin" style={{ color: "#2e5fb2" }}></i>
+                            </a>
+                        </li>
                     }
 
                     {
-                    process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK!='NA' &&
-                    <li>
-                        <a target='_blank' className="instagram" href={process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK}>
-                            <i className="fa fa-instagram"></i>
-                        </a>
-                    </li>
+                        process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK != 'NA' &&
+                        <li>
+                            <a target='_blank' className="instagram" href={process?.env?.NEXT_PUBLIC_INSTAGRAM_LINK}>
+                                <i className="fa fa-instagram"></i>
+                            </a>
+                        </li>
                     }
                 </ul>
             </div>
@@ -85,6 +85,11 @@ const FooterWidgets = () => (
                 <li>
                     <Link href="/page/terms_of_service">
                         <a>Terms Of Service</a>
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/page/add_affiliate_accnt">
+                        <a>Affiliate Marketing</a>
                     </Link>
                 </li>
                 <li>

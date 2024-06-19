@@ -37,7 +37,7 @@ const MasterLayout = ({ children }) => {
             {children}
             <PageLoader />
             <NavigationList />
-            <BackTop>
+            <BackTop style={{margin:"0 0px 40px 0px"}}>
                 <button className="ps-btn--backtop">
                     <i className="icon-arrow-up" />
                 </button>

@@ -57,7 +57,7 @@ class RelatedProductFullwidth extends Component {
                     <Slider {...carouselSetting} className="ps-carousel">
                         {relatedProduct.map(product => {
                             return (
-                                <Product product={product} key={product.id} />
+                                <Product product={product} key={product?.id} />
                             );
                         })}
                     </Slider>

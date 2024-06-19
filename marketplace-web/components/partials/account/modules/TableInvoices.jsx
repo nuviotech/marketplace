@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Divider, Tag, Button, Modal, Form, Input, Select } from 'antd';
 import Link from 'next/link';
-import { getToken } from '~/store/auth/action';
+import { getToken, userIsLogin } from '~/store/auth/action';
 import { marketplaceUrl } from '~/repositories/Repository';
 import axios from 'axios';
 import { returnPolicyByUser } from '~/repositories/UserDeatils';
@@ -10,7 +10,7 @@ import { returnPolicyByUser } from '~/repositories/UserDeatils';
 class TableInvoices extends Component {
     constructor(props) {
         super(props);
-         //alert(JSON.stringify(props.data.orders))
+        //alert(JSON.stringify(props.data.orders))
         /*
         this.state = {
             action: 'N',
@@ -27,36 +27,33 @@ class TableInvoices extends Component {
 
     }
     render() {
-        /*
-            You can change data by API
-            example: https://ant.design/components/table/
-        */
+
         const tableData = [];
 
-       
+
         const strAscending = this.props.data.orders?.sort((a, b) =>
-        a.orderDate < b.orderDate ? 1 : -1,
-      );    
-      strAscending?.map((data) => {
+            a.orderDate < b.orderDate ? 1 : -1,
+        );
+        strAscending?.map((data) => {
             //  var r=data.razorpayOrderDetails?.replace("\\","");
             //console.log(data.paymentDetails.rzPaymentId);
-           /* data.products.map((item)=>{
-                var obj = {
-                    id: item.orderProductId,
-                    categoryId: item.categoryId,
-                    paymentId: data.paymentDetails?.rzPaymentId,
-                    invoiceId: item.orderProductId,
-                    razorpayId: JSON.parse(data.razorpayOrderDetails)?.id,
-                    title: item.product_name,
-                    dateCreate: "" + new Date(data.orderDate).toISOString().split('T')[0],
-                    amount: item.sole_price,
-                    paymentStatus: data.paymentStatus,
-                    status: data.orderStatus,
-                    under_return_policy:item.underReturnPolicy
-                }
-                tableData.push(obj);
-            })
-            */
+            /* data.products.map((item)=>{
+                 var obj = {
+                     id: item.orderProductId,
+                     categoryId: item.categoryId,
+                     paymentId: data.paymentDetails?.rzPaymentId,
+                     invoiceId: item.orderProductId,
+                     razorpayId: JSON.parse(data.razorpayOrderDetails)?.id,
+                     title: item.product_name,
+                     dateCreate: "" + new Date(data.orderDate).toISOString().split('T')[0],
+                     amount: item.sole_price,
+                     paymentStatus: data.paymentStatus,
+                     status: data.orderStatus,
+                     under_return_policy:item.underReturnPolicy
+                 }
+                 tableData.push(obj);
+             })
+             */
             var obj = {
                 id: data.orderId,
                 razorpayId: JSON.parse(data.razorpayOrderDetails)?.id,
@@ -67,61 +64,61 @@ class TableInvoices extends Component {
             }
             tableData.push(obj);
         })
-/*
-        //main returnOrder function
-        const returnOrder = async () => {
-            if (this.state.orderProductId == '' || this.state.categoryId == 0 || this.state.paymentId == 0 || this.state.amount == 0) {
-                alert("something went wrong !!");
-                this.setState({ open: false });
-                return;
-            }
-
-            const data = {
-                email: this.state.email,
-                reason: this.state.reason,
-                paymentId: this.state.paymentId,
-                amt: this.state.amount,
-                orderProductId: this.state.orderProductId,
-                categoryId: this.state.categoryId,
-                userId: this.props.data.userId,
-                productName:this.state.productName
-            }
-           // alert(JSON.stringify(data))
-            //this.setState({ action: await returnPolicyByUser(data) });
-
-            if (this.state.action == '0') {
-                Modal.success({
-                    centered: true,
-                    title: 'Success Information..',
-                    content: `Now your order is under return policy, please wait for some time...`,
-                });
-                this.setState({ open: false });
-            } else if (this.state.action == "1") {
-                Modal.warning({
-                    centered: true,
-                    title: 'Opps, too late !!',
-                    content: `Your return policy period is expired !!`,
-                });
-                this.setState({ open: false });
-            } else if (this.state.action == "-1") {
-                Modal.error({
-                    centered: true,
-                    title: 'Opps, Something wrong !!',
-                    content: `Server is down , please try later.`,
-                });
-                this.setState({ open: false });
-            }
-        }
-
-        const openModel = (oid, catId, payId, amt,title) => {
-            this.setState({ orderProductId: oid });
-            this.setState({ categoryId: catId });
-            this.setState({ paymentId: payId });
-            this.setState({ amount: amt });
-            this.setState({productName: title})
-            this.setState({ open: true });
-        }
-*/
+        /*
+                //main returnOrder function
+                const returnOrder = async () => {
+                    if (this.state.orderProductId == '' || this.state.categoryId == 0 || this.state.paymentId == 0 || this.state.amount == 0) {
+                        alert("something went wrong !!");
+                        this.setState({ open: false });
+                        return;
+                    }
+        
+                    const data = {
+                        email: this.state.email,
+                        reason: this.state.reason,
+                        paymentId: this.state.paymentId,
+                        amt: this.state.amount,
+                        orderProductId: this.state.orderProductId,
+                        categoryId: this.state.categoryId,
+                        userId: this.props.data.userId,
+                        productName:this.state.productName
+                    }
+                   // alert(JSON.stringify(data))
+                    //this.setState({ action: await returnPolicyByUser(data) });
+        
+                    if (this.state.action == '0') {
+                        Modal.success({
+                            centered: true,
+                            title: 'Success Information..',
+                            content: `Now your order is under return policy, please wait for some time...`,
+                        });
+                        this.setState({ open: false });
+                    } else if (this.state.action == "1") {
+                        Modal.warning({
+                            centered: true,
+                            title: 'Opps, too late !!',
+                            content: `Your return policy period is expired !!`,
+                        });
+                        this.setState({ open: false });
+                    } else if (this.state.action == "-1") {
+                        Modal.error({
+                            centered: true,
+                            title: 'Opps, Something wrong !!',
+                            content: `Server is down , please try later.`,
+                        });
+                        this.setState({ open: false });
+                    }
+                }
+        
+                const openModel = (oid, catId, payId, amt,title) => {
+                    this.setState({ orderProductId: oid });
+                    this.setState({ categoryId: catId });
+                    this.setState({ paymentId: payId });
+                    this.setState({ amount: amt });
+                    this.setState({productName: title})
+                    this.setState({ open: true });
+                }
+        */
         /*
             //payment code here
             const loadScript = (src) => {
@@ -230,19 +227,23 @@ class TableInvoices extends Component {
         //const tableData = this.props.data.orders;
         //alert(JSON.stringify(tableData));
         const tableColumn = [
-            {
-                title: 'Id',
-                dataIndex: 'id',
-                rowKey: 'id',
-                key: 'id',
-                width: '30px',
-                render: (text, record) => (
-                    <Link href={`/account/orderDetails?odId=${record.id}`}>
-                        {record.id}
-                    </Link>
-                    
-                ),
-            },
+            // {
+            //     title: 'Id',
+            //     dataIndex: 'id',
+            //     rowKey: 'id',
+            //     key: 'id',
+            //     width: '30px',
+            //     render: (text, record) => (
+            //         <>
+            //             <Link href={`/account/orderDetails?odId=${record.id}`}>
+            //                 {
+            //                     <span className='d-none d-md-block'>{record.id}</span>
+            //                 }
+            //             </Link>
+            //         </>
+            //     ),
+            // },
+            
             /*{
                 title: 'Title',
                 dataIndex: 'title',
@@ -274,11 +275,11 @@ class TableInvoices extends Component {
                 rowKey: 'status',
                 width: '60px',
                 render: (text, record) => (
-                    record.status=='success'?
+                    record.status == 'success' ?
                         <span className='alert-success px-4 py-2'>PAID</span>
-                    :
+                        :
                         <span className='alert-danger p-2'>UNPAID</span>
-                    
+
                 ),
             },
             {
@@ -290,10 +291,10 @@ class TableInvoices extends Component {
                 render: (text, record) => (
                     <span className="text-right">
                         {
-                                                           
-                            record.paymentStatus == "unpaid" ?
-                                <button onClick={() => {removeOrder(record.id) }} className="btn btn-outline-danger">Remove</button>
-                                : (record.under_return_policy==="0") ?
+
+                            (record.paymentStatus == "unpaid" && record.paymentType == 'Online Payment') ?
+                                <button onClick={() => { removeOrder(record.id) }} className="btn btn-outline-danger">Remove</button>
+                                : (record.under_return_policy === "0") ?
                                     <button onClick={() => { openModel(record.id, record.categoryId, record.paymentId, record.amount, record.title) }} className="btn btn-outline-warning">Return</button>
                                     :
                                     <Link href={`/account/orderDetails?odId=${record.id}`} ><button className='btn btn-outline-info'>View Details</button></Link>
@@ -305,7 +306,7 @@ class TableInvoices extends Component {
         ];
         return (
             <>
-               {/* <Modal
+                {/* <Modal
                     open={this.state.open}
                     title="Return policy"
 

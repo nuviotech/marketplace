@@ -23,16 +23,12 @@ class NavigationList extends Component {
             cartDrawer: false,
             searchDrawer: false,
             categoriesDrawer: false,
-            keyword:'',
+            keyword: '',
 
         };
     }
 
-   
-    
-
     handleDrawerClose() {
-
         this.setState({
             menuDrawer: false,
             cartDrawer: false,
@@ -101,80 +97,79 @@ class NavigationList extends Component {
                             </span>
                         </div>
                         <div className="ps-panel__content">
-                            
-            <Menu
-                mode="inline"
-                openKeys={this.state.openKeys}
-                onOpenChange={this.onOpenChange}
-                className="menu--mobile-2">
-                {menu_data.menuPrimary.menu_1.map((item) => {
-                    if (item.subMenu) {
-                        return (
-                            <SubMenu
-                                key={item.text}
-                                title={
-                                    <Link href={item.url}>
-                                        <a>{item.text}</a>
-                                    </Link>
-                                }>
-                                {item.subMenu.map((subItem) => (
-                                    <Menu.Item key={subItem.text}>
-                                        <Link href={subItem.url}>
-                                            <h6 style={{fontSize:"14px",fontWeight:"100",padding:"12px 0px"}} onClick={()=>{this.handleDrawerClose()}}>{subItem.text}</h6>
-                                        </Link>
-                                    </Menu.Item>
-                                ))}
-                            </SubMenu>
-                        );
-                    } else if (item.megaContent) {
-                        return (
-                            <SubMenu
-                                key={item.text}
-                                title={
-                                    <Link href={item.url}>
-                                        <a>{item.text}</a>
-                                    </Link>
-                                }>
-                                {item.megaContent.map((megaItem) => (
-                                    <SubMenu
-                                        key={megaItem.heading}
-                                        title={<span>{megaItem.heading}</span>}>
-                                        {megaItem.megaItems?.map(
-                                            (megaSubItem) => (
-                                                <Menu.Item
-                                                    key={megaSubItem.text}>
-                                                    <Link href={megaSubItem.url}>
-                                                        <h6 style={{fontSize:"14px",padding:"12px 0px"}}  onClick={()=>{this.handleDrawerClose()}}>
-                                                            {megaSubItem.text}
-                                                        </h6>
+                            <Menu
+                                mode="inline"
+                                openKeys={this.state.openKeys}
+                                onOpenChange={this.onOpenChange}
+                                className="menu--mobile-2">
+                                {menu_data.menuPrimary.menu_1.map((item) => {
+                                    if (item.subMenu) {
+                                        return (
+                                            <SubMenu
+                                                key={item.text}
+                                                title={
+                                                    <Link href={item.url}>
+                                                        <a>{item.text}</a>
                                                     </Link>
-                                                </Menu.Item>
-                                            )
-                                        )}
-                                    </SubMenu>
-                                ))}
-                            </SubMenu>
-                        );
-                    } else {
-                        return (
-                            <Menu.Item key={item.text}>
-                                {item.type === 'dynamic' ? (
-                                    <Link
-                                        href={`${item.url}/[pid]`}
-                                        as={`${item.url}/${item.endPoint}`}>
-                                        <a onClick={()=>{this.handleDrawerClose()}}>{item.text}</a>
-                                    </Link>
-                                ) : (
-                                    <Link href={item.url} as={item.alias}>
-                                        <h5 style={{fontSize:"17px",padding:"20px 0px"}} onClick={()=>{this.handleDrawerClose()}}>{item.text}</h5>
-                                    </Link>
-                                )}
-                            </Menu.Item>
-                        );
-                    }
-                })}
-            </Menu>
-        
+                                                }>
+                                                {item.subMenu.map((subItem) => (
+                                                    <Menu.Item key={subItem.text}>
+                                                        <Link href={subItem.url}>
+                                                            <h6 style={{ fontSize: "14px", fontWeight: "100", padding: "12px 0px" }} onClick={() => { this.handleDrawerClose() }}>{subItem.text}</h6>
+                                                        </Link>
+                                                    </Menu.Item>
+                                                ))}
+                                            </SubMenu>
+                                        );
+                                    } else if (item.megaContent) {
+                                        return (
+                                            <SubMenu
+                                                key={item.text}
+                                                title={
+                                                    <Link href={item.url}>
+                                                        <a>{item.text}</a>
+                                                    </Link>
+                                                }>
+                                                {item.megaContent.map((megaItem) => (
+                                                    <SubMenu
+                                                        key={megaItem.heading}
+                                                        title={<span>{megaItem.heading}</span>}>
+                                                        {megaItem.megaItems?.map(
+                                                            (megaSubItem) => (
+                                                                <Menu.Item
+                                                                    key={megaSubItem.text}>
+                                                                    <Link href={megaSubItem.url}>
+                                                                        <h6 style={{ fontSize: "14px", padding: "12px 0px" }} onClick={() => { this.handleDrawerClose() }}>
+                                                                            {megaSubItem.text}
+                                                                        </h6>
+                                                                    </Link>
+                                                                </Menu.Item>
+                                                            )
+                                                        )}
+                                                    </SubMenu>
+                                                ))}
+                                            </SubMenu>
+                                        );
+                                    } else {
+                                        return (
+                                            <Menu.Item key={item.text}>
+                                                {item.type === 'dynamic' ? (
+                                                    <Link
+                                                        href={`${item.url}/[pid]`}
+                                                        as={`${item.url}/${item.endPoint}`}>
+                                                        <a onClick={() => { this.handleDrawerClose() }}>{item.text}</a>
+                                                    </Link>
+                                                ) : (
+                                                    <Link href={item.url} as={item.alias}>
+                                                        <h5 style={{ fontSize: "17px", padding: "20px 0px" }} onClick={() => { this.handleDrawerClose() }}>{item.text}</h5>
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                        );
+                                    }
+                                })}
+                            </Menu>
+
 
                         </div>
                     </div>
@@ -195,7 +190,7 @@ class NavigationList extends Component {
                             </span>
                         </div>
                         <div className="ps-panel__content">
-                            <PanelCartMobile />
+                            <PanelCartMobile handleDrawerClose={() => { this.handleDrawerClose() }} />
                         </div>
                     </div>
                 </Drawer>
@@ -215,33 +210,12 @@ class NavigationList extends Component {
                             </span>
                         </div>
                         <div className="ps-panel__content">
-                            
-
-                            <div className="ps-panel__search-results">
-                                
-                                    <div className="form-group--nest">
-                                        <input
-                                            className="form-control"
-                                            type="text"
-                                            placeholder="Search something ..."
-                                            onChange={(e) => this.setState({keyword : e.target.value})}
-                                        />
-                                        <Link href={`/search?keyword=${this.state.keyword}`}>
-                                            <button onClick={() => { this.handleDrawerClose() }}>
-                                                <i className="icon-magnifier"></i>
-                                            </button>
-                                        </Link>
-                                        
-                            
-                                    </div>
-                            
-                            </div>
-
+                            <PanelSearch handleDrawerClose={() => { this.handleDrawerClose() }} />
                         </div>
                     </div>
                 </Drawer>
                 <Drawer
-                    style={{width:"60%"}}
+                    style={{ width: "50%" }}
                     className="ps-panel--mobile"
                     placement="left"
                     closable={false}
@@ -257,7 +231,7 @@ class NavigationList extends Component {
                             </span>
                         </div>
                         <div className="ps-panel__content">
-                            <PanelCategories  />
+                            <PanelCategories handleDrawerClose={() => { this.handleDrawerClose() }} />
                         </div>
                     </div>
                 </Drawer>

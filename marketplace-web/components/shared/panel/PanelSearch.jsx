@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Router from 'next/router';
 import NavigationList from '../navigation/NavigationList';
 
-const PanelSearch = () => {
+const PanelSearch = ({handleDrawerClose}) => {
     const [keyword, setKeyword] = useState('');
 
     function handleSubmit(e) {
@@ -27,8 +27,8 @@ const PanelSearch = () => {
                         placeholder="Search something..."
                         onChange={(e) => setKeyword(e.target.value)}
                     />
-                    <button>
-                        <i className="icon-magnifier"></i>
+                    <button onClick={handleDrawerClose}>
+                        <i  className="icon-magnifier"></i>
                     </button>
                 </div>
             </form>

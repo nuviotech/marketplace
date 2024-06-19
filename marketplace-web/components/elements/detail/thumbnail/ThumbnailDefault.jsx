@@ -24,12 +24,11 @@ const ThumbnailDefault = ({ product, vertical = true }) => {
 
     useEffect(() => {
         let images = [];
-        if (product && product.images.length > 0) {
-            product.images.map((item) => {
+        if (product && product?.images?.length > 0) {
+            product?.images?.map((item) => {
                // images.push(`${baseUrl}${item.url}`);
-               images.push(`${item.url}`);
+               images?.push(`${item?.url}`);
             });
-            console.log("Images array -> "+images);
             setProductImages(images);
         }
         setGallery(galleryCarousel.current);
@@ -82,14 +81,13 @@ const ThumbnailDefault = ({ product, vertical = true }) => {
 
     //Views
     let lightboxView, variantCarouselView, imagesView, galleryImagesView;
-    if (productImages.length > 0) {
-        imagesView = productImages.map((item) => (
+    if (productImages?.length > 0) {
+        imagesView = productImages?.map((item) => (
             <div className="item" key={item}>
-                {console.log("Images path : "+item)}
                 <img src={item} alt={item} />
             </div>
         ));
-        galleryImagesView = productImages.map((item, index) => (
+        galleryImagesView = productImages?.map((item, index) => (
             <div className="item" key={item}>
                 <a href="#" onClick={(e) => handleOpenLightbox(e, index)}>
                     <img src={item} alt={item} />
@@ -134,11 +132,11 @@ const ThumbnailDefault = ({ product, vertical = true }) => {
         lightboxView = (
             <Lightbox
                 mainSrc={productImages[photoIndex]}
-                nextSrc={productImages[(photoIndex + 1) % productImages.length]}
+                nextSrc={productImages[(photoIndex + 1) % productImages?.length]}
                 prevSrc={
                     productImages[
-                        (photoIndex + productImages.length - 1) %
-                            productImages.length
+                        (photoIndex + productImages?.length - 1) %
+                            productImages?.length
                     ]
                 }
                 onCloseRequest={() => {
@@ -146,12 +144,12 @@ const ThumbnailDefault = ({ product, vertical = true }) => {
                 }}
                 onMovePrevRequest={() => {
                     setPhotoIndex(
-                        (photoIndex + productImages.length - 1) %
-                            productImages.length
+                        (photoIndex + productImages?.length - 1) %
+                            productImages?.length
                     );
                 }}
                 onMoveNextRequest={() => {
-                    setPhotoIndex((photoIndex + 1) % productImages.length);
+                    setPhotoIndex((photoIndex + 1) % productImages?.length);
                 }}
             />
         );

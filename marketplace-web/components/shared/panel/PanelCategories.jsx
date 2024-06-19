@@ -6,7 +6,7 @@ import NavigationList from '../navigation/NavigationList';
 
 const { SubMenu } = Menu;
 
-function PanelCategories() {
+function PanelCategories({handleDrawerClose}) {
     
     const [categories, setCategories] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -68,15 +68,13 @@ function PanelCategories() {
 
     
         return (
-
-            
             <Menu
                 mode="inline"
                 >
                 {categories?.map(category => (
                     <Menu.Item key={category.categoryId}>
                         <Link href={`/category/${category.categoryId}`}>
-                           <h6>{category.name}</h6> 
+                           <h6 onClick={handleDrawerClose}>{category.name}</h6> 
                         </Link>
                     </Menu.Item>
                 ))}

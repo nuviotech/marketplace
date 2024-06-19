@@ -9,7 +9,7 @@ import { generateTempArray } from '~/utilities/common-helpers';
 import SkeletonProduct from '~/components/elements/skeletons/SkeletonProduct';
 import useGetProducts from '~/hooks/useGetProducts';
 
-const ShopItems = ({ columns = 4, pageSize = 12 }) => {
+const ShopItems = ({ columns = 4, pageSize = 20 }) => {
     const Router = useRouter();
     const { page } = Router.query;
     const { query } = Router;
@@ -27,13 +27,17 @@ const ShopItems = ({ columns = 4, pageSize = 12 }) => {
     }
 
     function handlePagination(page, pageSize) {
-        Router.push(`/shop?page=${page}&price_gt=${query.price_gt}&price_lt=${query.price_lt}`);
+        if(query.price_gt){
+            Router.push(`/shop?page=${page}&price_gt=${query.price_gt}&price_lt=${query.price_lt}&action=${query?.action}`);
+        }else{
+            Router.push(`/shop?page=${page}&action=${query?.action}`);
+        }
     }
 
     async function getTotalRecords(params) {
         var responseData;
         if(params.price_gt){
-             responseData = await ProductRepository.getTotalRecords(params.price_gt,params.price_lt);
+             responseData = await ProductRepository.getTotalRecords(params);
         }else{
             responseData = await ProductRepository.getTotalRecords();
         }
@@ -64,18 +68,19 @@ const ShopItems = ({ columns = 4, pageSize = 12 }) => {
     }
 
     useEffect(() => {
-
+     
         let params;
         if(query.action){
+           
             params = {
-                _start: page * pageSize,
+                _start: page ,
                 _limit: pageSize,
                 action: query.action
             };
         }else if(query.price_lt){
            // alert(query.price_lt)
            params = {
-                _start: page * pageSize,
+                _start: page ,
                 _limit: pageSize,
                 price_lt:query.price_lt,
                 price_gt:query.price_gt
@@ -83,7 +88,7 @@ const ShopItems = ({ columns = 4, pageSize = 12 }) => {
         }else if (query) {
             if (query.page) {
                 params = {
-                    _start: page * pageSize,
+                    _start: page ,
                     _limit: pageSize,
                 };
             } else {
@@ -108,7 +113,7 @@ const ShopItems = ({ columns = 4, pageSize = 12 }) => {
                const items = productItems.map((item) => (
                     
                     <div className={classes} key={item?.id}>
-                        <Product product={item} />
+                        <Product product={item} height={"195px"} start={true} />
                     </div>
                 ));
                 
@@ -168,7 +173,7 @@ const ShopItems = ({ columns = 4, pageSize = 12 }) => {
             <div className="ps-shopping__footer text-center">
                 <div className="ps-pagination">
                     <Pagination
-                        total={total - 1}
+                        total={total }
                         pageSize={pageSize}
                         responsive={true}
                         showSizeChanger={false}

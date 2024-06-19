@@ -1,0 +1,14 @@
+{
+    "name": "nuvio",
+    "short_name": "nuvio sellers",
+    "icons": [
+       {
+          "src": "/static/img/favicon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+       }
+    ],
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "display": "standalone"
+ }
