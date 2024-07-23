@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { marketplaceUrl } from '~/repositories/Repository';
@@ -13,17 +13,19 @@ import GuestUserForm from './GuestUserForm';
 
 const FormCheckoutInformation = ({ ecomerce, coupon }) => {
     var userLoginStatus = userIsLogin();
-    
+
     //const { currentUser } = useContext(AuthContext);
     const [currentUser, setCurrentUser] = useState({});
     const [loader, setLoader] = useState(false)
     const [codIsEnabled, setCodIsEnabled] = useState(false);
+    const [minimumPurchaseAmt, setMinimumPurchaseAmt] = useState(null);
+    const [businessType, setBusinessType] = useState(null);
     const [state, setState] = useState({});
     const [review, setReview] = useState({ state: "select state" });
     const { removeItems } = useEcomerce();
 
     const [inputErrors, setInputErrors] = useState({ isError: false, type: null, message: null });
-   // var flag = ecomerce + currentUser;
+    // var flag = ecomerce + currentUser;
     //no use guestUserData function yet 
     const guestUserData = (data) => {
         setReview({
@@ -38,7 +40,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
     }
 
     const numberCheck = (e) => {
-        
+
         const phoneRegex = /^[789]\d{9}$/;
         if (phoneRegex.test(e)) {
             setInputErrors({ isError: false, type: null, message: null });
@@ -81,8 +83,10 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
             if (ecomerce.cartItems) {
                 const user = await userData();
                 setCurrentUser(user);
-                const codStatus = await identifyCodStatus();
-                setCodIsEnabled(codStatus);
+                const marketplaceSetupInfo = await identifyCodStatus();
+                setCodIsEnabled(marketplaceSetupInfo?.cod);
+                setMinimumPurchaseAmt(marketplaceSetupInfo?.minimumPurchaseAmt)
+                setBusinessType(marketplaceSetupInfo?.businessType)
                 getProducts(ecomerce.cartItems, 'cart');
                 setDefaultValues();
             }
@@ -105,7 +109,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
         totalAmount = calculateAmount(products);
     }
 
-    const handleLoginSubmit = (event) => {
+    const handlePlaceOrder = (event) => {
         event.preventDefault();
         const dt = new FormData(event.currentTarget);
         const orderInformation = {
@@ -121,12 +125,22 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
             "token": getToken(),
             "state": dt.get("state"),
             "couponCode": coupon,
-        //    "orderTotalAmtBeforeApplyingCoupon": orderTotalAmt,
-            "paymentType": dt.get("paymentType")
+            //    "orderTotalAmtBeforeApplyingCoupon": orderTotalAmt,
+            "paymentType": dt.get("paymentType"),
+            "gstin":dt.get("gstin")
         }
 
-        
-        if (orderInformation.products.length == 0) {
+        if (minimumPurchaseAmt == null) {
+            Modal.error({
+                centered: true,
+                title: 'something went wrong, minimum purchase amount not fetched from server!!',
+            });
+        } else if (totalAmount < minimumPurchaseAmt) {
+            Modal.error({
+                centered: true,
+                title: 'Total bill must be greater than or equal to ' + minimumPurchaseAmt,
+            });
+        } else if (orderInformation.products.length == 0) {
             Modal.error({
                 centered: true,
                 title: 'your shopping cart is empty!!',
@@ -214,6 +228,17 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                             centered: true,
                             title: 'Sorry, Cash on Delivery not available!!',
                         });
+                    }else if(response.data === 'gstin_required'){
+                        Modal.error({
+                            centered: true,
+                            title: 'GSTIN number is required!',
+                        });
+                    }else if(response?.data?.startsWith("Your order from")){
+                        Modal.error({
+                            centered: true,
+                            title: 'Insufficient Minimum Order Value',
+                            content:response?.data
+                        });
                     } else {
                         const modal = Modal.error({
                             centered: true,
@@ -221,6 +246,8 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                             content: `Oops! It seems that something unexpected occurred on our end. We apologize for any inconvenience this may have caused. Our team has been notified and is working diligently to fix the issue. Please try again later, or feel free to contact our support team if you need immediate assistance. Thank you for your understanding.`,
                         });
                         modal.update;
+                        console.error(JSON.stringify(response?.data));
+
                     }
 
                 }
@@ -404,7 +431,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
 
         <form
             className="ps-form__billing-info"
-            onSubmit={(e) => { handleLoginSubmit(e) }}>
+            onSubmit={(e) => { handlePlaceOrder(e) }}>
             {userLoginStatus ?
                 <div>
                     <div className="mx-2">
@@ -486,16 +513,44 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                         />
 
                     </div>
-                    <div className="form-group">
-                        {/* <small className='text-muted'>Apartment, suite, etc. </small> */}
-                        <input type="text"
-                            className="form-control"
-                            name="apprt"
-                            placeholder='Apartment, suite, etc. (optional)'
-                        // onChange={(e) => {
-                        //     setReview({ ...review, apprtment_name: e.target.value })
-                        // }}
-                        />
+
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                <input type="text"
+                                    className="form-control"
+                                    name="apprt"
+                                    placeholder='Apartment, suite, etc. (optional)'
+
+                                />
+
+                            </div>
+                        </div>
+
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                {
+                                    businessType === 'b2b' ?
+                                        <input type="text"
+                                            className="form-control"
+                                            name="gstin"
+                                            pattern='^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}Z[A-Z\d]{1}$'
+                                            required="true"
+                                            placeholder='GSTIN number'
+                                        />
+                                        :
+                                        <input type="text"
+                                            className="form-control"
+                                            name="gstin"
+                                            pattern='^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}Z[A-Z\d]{1}$'
+                                            placeholder='GSTIN number (optional)'
+
+                                        />
+                                }
+
+
+                            </div>
+                        </div>
 
                     </div>
                     <div className="row">

@@ -20,7 +20,7 @@ const return_policy = () => {
 
     return (
         <PageContainer footer={<FooterDefault />} title="Return Policy">
-            <SEO title="Return Policy" description="Return Policy" keywords={["Nuvio, nuvio seller, Return Policy"]} />
+            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | Return Policy"} description="Return Policy" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" Return Policy", "Return Policy"]} />
 
             <div className="ps-page--single">
                 <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />

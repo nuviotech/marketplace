@@ -35,25 +35,6 @@ function App({ Component, pageProps }) {
     return (
         <>
             <AuthContextProvider>
-                {/*<Head>
-                    <title>Nuvio Sellers</title>
-                    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-                    <meta
-                        name="viewport"
-                        content="width=device-width, initial-scale=1.0"
-                    />
-                    <meta name="format-detection" content="telephone=no" />
-                    <meta name="apple-mobile-web-app-capable" content="yes" />
-                   {/* <meta name="author" content="nuvio" />
-                    <meta
-                        name="keywords"
-                        content="Nuvio,nuvio sellers , eCommerce, Template"
-                    />
-                    <meta
-                        name="description"
-                        content="Nuvio sellers | eCommerce"
-                    />
-    </Head>*/}
 
                 <Head>
 
@@ -66,7 +47,10 @@ function App({ Component, pageProps }) {
                     <meta name="format-detection" content="telephone=no" />
                     <meta name="apple-mobile-web-app-capable" content="yes" />
                 </Head>
-                <SEO title="Nuvio Sellers" description="Nuvio sellers | eCommerce" keywords={["Nuvio", "nuvio sellers", "ecommerce"]} />
+                <SEO 
+                    title={process.env.NEXT_PUBLIC_WEBSITE_NAME} 
+                    description={`Shop at ${process.env.NEXT_PUBLIC_WEBSITE_NAME} for electronics, fashion, home goods, and more. Enjoy fast shipping and great deals on all your favorite products.`} 
+                    keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME, process.env.NEXT_PUBLIC_WEBSITE_NAME+" shop",process.env.NEXT_PUBLIC_WEBSITE_NAME+" online store", "ecommerce","Online shopping","Shopping website"]} />
                 <CookiesProvider>
                     <MasterLayout>
 
@@ -75,7 +59,8 @@ function App({ Component, pageProps }) {
                 </CookiesProvider>
             </AuthContextProvider>
 
-            <script src="https://smtpjs.com/v3/smtp.js"></script>
+
+            {/* <script src="https://smtpjs.com/v3/smtp.js"></script> */}
 
             <link rel='preload' as="script" href="https://www.googletagmanager.com/gtag/js?id=G-B7SC7YX3EL"></link>
             <script>

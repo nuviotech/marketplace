@@ -20,7 +20,7 @@ const Shipping_Delivery = () => {
 
     return (
         <PageContainer footer={<FooterDefault />} title="shipping and delivery">
-            <SEO  description="shipping and delivery" keywords={["Nuvio, nuvio seller,shipping and delivery"]} />
+            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | shipping and delivery"} description="Shipping and delivery policy" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" shipping and delivery", "shipping and delivery"]} />
 
             <div className="ps-page--single">
                 <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />

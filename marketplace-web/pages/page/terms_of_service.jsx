@@ -19,7 +19,7 @@ const terms_of_service = () => {
 
     return (
         <PageContainer footer={<FooterDefault />} title="Terms Of Services">
-            <SEO title="Terms of services" description="terms of services" keywords={["Nuvio, nuvio seller, terms of services"]} />
+            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | Terms of services"} description="Terms of services" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" Terms of services", "Terms of services"]} />
 
             <div className="ps-page--single">
                 <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />

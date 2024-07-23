@@ -1,17 +1,43 @@
-import React from 'react';
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { marketplaceUrl } from '~/repositories/Repository';
 
-const Shipping_And_Delivery = () => (
-    <div className="ps-section--custom">
-        <div className="container">
-            <div className="ps-section__header">
-                <h1>Shipping And Delivery</h1>
-            </div>
-            <div className="ps-section__content">
-                <p className='mt-2'>For International buyers, orders are shipped and delivered through registered international courier companies and/or International speed post only. For domestic buyers, orders are shipped through registered domestic courier companies and /or speed post only. Orders are delivered in 3-5 working days. </p>
-                <p className="mt-2">Delivery of all orders will be to the address provided by the buyer. Delivery of our services will be confirmed on your mail ID as specified during registration. For any issues in utilizing our services you may contact our helpdesk on <b>8928268145</b> or <a href="mailTO:support@nuvio.in">support@nuvio.in</a></p>
-            </div>
+const Shipping_And_Delivery = () => {
+    const [policy, setPolicy] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchPolicy = async () => {
+            try {
+                const result = await Axios.get(`${marketplaceUrl}/getPolicy/marketplace_shipping_and_delivery_policy_for_website`);
+                setPolicy(result.data);
+            } catch (error) {
+                console.error("Related product(error): ", error);
+                setError("An error occurred while fetching the policy.");
+            }
+        };
+
+        fetchPolicy();
+    }, []);
+
+    return (
+        <div>
+            {policy ? (
+                <div className="ps-section--custom">
+                    <div className="container">
+                        <div className="ps-section__header">
+                            <h1>Shipping And Delivery</h1>
+                        </div>
+                        <div>{policy.split("##").map(point => {
+                            return <div className='my-2'>{point}</div>
+                        })}</div>
+                    </div>
+                </div>
+            ) : (
+                <div>Loading...</div>
+            )}
         </div>
-    </div>
-);
+    );
 
+}
 export default Shipping_And_Delivery;

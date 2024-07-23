@@ -19,7 +19,7 @@ const Privacy_policy = () => {
 
     return (
         <PageContainer footer={<FooterDefault />} title="Privacy Policy">
-            <SEO title="Privacy Policy" description="Privacy Policy" keywords={["Nuvio, nuvio seller, Privacy Policy"]} />
+            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | Privacy Policy"} description="Privacy Policy" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" privacy policy", "Privacy Policy"]} />
 
             <div className="ps-page--single">
                 <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />

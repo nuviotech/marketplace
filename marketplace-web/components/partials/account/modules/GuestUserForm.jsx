@@ -58,7 +58,7 @@ export default function GuestUserForm({ guestUserData, coupon }) {
             const modal = Modal.error({
                 centered: true,
                 title: 'Invalid password!',
-                content: `password must be greter than 4 character or less than 20 character.`,
+                content: `password must be greater than 4 character or less than 20 character.`,
             });
             modal.update;
         } else if (state.password != state.password2) {

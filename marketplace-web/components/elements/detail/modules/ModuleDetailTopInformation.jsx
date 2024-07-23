@@ -9,7 +9,7 @@ const ModuleDetailTopInformation = ({props ,product }) => {
     // Views
     let priceView;
 
-    var description = "Nuvio Seller | "+product.title+" | price : "+product.sale_price;
+    var description = process.env.NEXT_PUBLIC_WEBSITE_NAME+" | "+product.title+" | price : "+product.sale_price;
 
     
         priceView = (

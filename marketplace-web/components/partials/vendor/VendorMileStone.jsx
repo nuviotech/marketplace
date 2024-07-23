@@ -6,7 +6,7 @@ const VendorMileStone = () => (
             <div className="ps-section__header">
                 <p>How it works</p>
                 <h4>
-                    Easy to start selling online on Nuvio.in just 4 simple steps
+                    Easy to start selling online on {process.env.NEXT_PUBLIC_FOOTER_WEBSITE_NAME} just 4 simple steps
                 </h4>
             </div>
             <div className="ps-section__content">

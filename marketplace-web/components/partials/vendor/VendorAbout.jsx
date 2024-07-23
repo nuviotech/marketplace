@@ -4,7 +4,7 @@ const VendorAbout = () => (
     <div className="ps-section--vendor ps-vendor-about">
         <div className="container">
             <div className="ps-section__header">
-                <p>WHY SELL ON NUVIO</p>
+                <p className='text-upper'>WHY SELL ON {process.env.NEXT_PUBLIC_WEBSITE_NAME}</p>
                 <h4>
                     Join a marketplace where nearly 50 million buyers around <br /> the world shop
                     for unique items
@@ -22,7 +22,7 @@ const VendorAbout = () => (
                                 <div className="ps-block__desc" data-mh="about-desc">
                                     <p>
                                         It doesn’t take much to list your items and once you make a
-                                        sale, Nuvio.in’s transaction fee is just 2.5%.
+                                        sale, {process.env.NEXT_PUBLIC_FOOTER_WEBSITE_NAME}’s transaction fee is just 2.5%.
                                     </p>
                                 </div>
                                 <a href="#">Learn more</a>

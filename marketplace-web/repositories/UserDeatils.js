@@ -143,7 +143,7 @@ export const saveUserDetails = async (state, pathValue, router) => {
                         const modal = Modal.success({
                             centered: true,
                             title: `All Set!`,
-                            content: `Your account is ready to go. Dive into Nuvio and discover our exclusive offers and latest arrivals.`,
+                            content: `Your account is ready to go. Dive into ${process.env.NEXT_PUBLIC_WEBSITE_NAME} and discover our exclusive offers and latest arrivals.`,
                         });
                         modal.update;
                         router.push('/shop');
@@ -167,7 +167,7 @@ export const saveUserDetails = async (state, pathValue, router) => {
 
 export const identifyCodStatus = async () => {
     if (userIsLogin()) {
-        const data = await axios.get(`${marketplaceUrl}/getCodStatus`, {
+        const data = await axios.get(`${marketplaceUrl}/getMarketplaceSetupInfo`, {
             headers: {
                 Authorization: "Bearer " + getToken(),
             }
