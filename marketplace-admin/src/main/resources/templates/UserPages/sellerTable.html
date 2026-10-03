@@ -1,0 +1,285 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Sellers</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Sellers</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <div class="mb-4">
+                              <a  th:href="@{/marketplace/getSeller?status=active&page=0}" class="btn btn-sm btn-outline-primary  mr-2 ">ACTIVE SELLERS</a>
+                              <a th:href="@{/marketplace/getSeller?status=seller_request&page=0}" class="btn btn-sm btn-outline-primary mr-2">PENDING SELLERS</a>
+                              <a th:href="@{/marketplace/getSeller?status=inactive&page=0}" class="btn btn-sm btn-outline-primary mr-2">INACTIVE SELLERS</a>
+                              <a th:href="@{/marketplace/allSellers?page=0}" class="btn btn-sm btn-outline-primary mr-2">OTHER SELLERS</a>
+                           </div>
+                           <!-- DataTales Example seller_request -->
+                           <div class="card shadow mb-4">
+                              <div style="display: flex; justify-content: space-between; align-items: center" th:if="${!(status.equals('seller_request') || status.equals('pending'))}" class="card-header py-3">
+                                 <h6 class="m-0 font-weight-bold text-primary"><span th:text="${status}"></span> <span>Sellers</span></h6>
+                                 <div th:if="${status.equals('all')}"  class="col-12 col-sm-6">
+                                    <div class="button-group" >
+                                       <form th:action="@{/marketplace/allSellers}">
+                                          <input type="hidden" value="categories" name="searchKey" />
+                                          <input type="hidden" th:value="${currentPage}" name="page" />
+                                          <div class="input-group mb-3">
+                                             <input required="required"
+                                                readonly
+                                                placeholder="find seller by categories.."
+                                                class="categoryInput form-control dropdown-toggle"
+                                                data-toggle="dropdown"> <input
+                                                type="hidden"
+                                                id="categorysInput" name="searchValue" />
+                                             <ul class="dropdown-menu catDrop ">
+                                                <li th:each="category : ${categories}"><a href="#"
+                                                   class="small ml-4 mt-0  text-muted"
+                                                   th:attr="data-value=${category}"
+                                                   tabIndex="-1"><input type="checkbox" />&nbsp;<span
+                                                   class="" th:text="${category}"></span></a></li>
+                                             </ul>
+                                             <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary" >GO</button>
+                                                <button type="reset" class="btn btn-danger" >Cancel</button>
+                                             </div>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div th:if="${status.equals('seller_request') || status.equals('pending')}" class="card-header py-3">
+                                 <a th:href="@{/marketplace/getSeller?status=seller_request&page=0}" class="btn btn-sm btn-outline-dark mr-2">PENDING SELLERS FROM YOU</a>
+                                 <a th:href="@{/marketplace/getSeller?status=pending&page=0}" class="btn btn-sm btn-outline-dark mr-2">PENDING SELLERS</a>
+                              </div>
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class=" table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>Name</th>
+                                             <!-- th>Company Name</th>
+                                                < th th:if="${status.equals('all') || status.equals('pending')}">Company URL</th>
+                                                 <th th:if="${status.equals('active') || status.equals('seller_request')}">URL Endpoint</th-->
+                                             <th>Email</th>
+                                             <th>Contact</th>
+                                             <th>Categories</th>
+                                             <th th:if="${status.equals('active')}">MOV</th>
+                                             <th class="text-center" th:if="${status.equals('all') || status.equals('active') || status.equals('seller_request') }">Action</th>
+                                             <th th:if="${status.equals('pending') || status.equals('inactive')}">Status</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="seller : ${sellers}" >
+                                             <td style="cursor: pointer;" th:attr="onclick=|viewSellerInfo('${seller.toString()}')|" ><span th:text="${seller.firstName}"></span> <span th:text="${seller.lastName}"></span></td>
+                                             <!-- td th:text="${seller.nameOfCompany}"></td>
+                                                <td th:if="${status.equals('all') || status.equals('pending') }" th:text="${seller.componyUrl}"></td>
+                                                 <td th:if="${status.equals('active') || status.equals('seller_request')}" th:text="${seller.apiEndpoint}"></td-->
+                                             <td style="cursor: pointer;" th:attr="onclick=|viewSellerInfo('${seller.toString()}')|" th:text="${seller.emailAddr}"></td>
+                                             <td th:text="${seller.phoneNumber}"></td>
+                                             <td><span th:if="${seller.categories!=null}"> <span th:each="cat : ${seller.categories.split(',')}"><span class="badge badge-pill badge-info m-1 py-1 px-2" th:text="${cat}"></span></span></span></td>
+                                            
+                                             <td th:if="${status.equals('active')}" style="display:flex;justify-content: space-between;"> <span th:text="${seller.minimumOrderValue}" th:id="${seller.sellerID}" ></span> <span class="text-primary" style="cursor: pointer;" th:attr="onclick=|showEditMOV('${seller.emailAddr}','${seller.sellerID}')|"><i class="feather icon-edit"></i></span> </td>
+                                             <td class="text-center" th:if="${!status.equals('pending') && !status.equals('inactive') }">
+                                                <a th:if="${status.equals('all')}" th:href="@{'/marketplace/activeTheSeller?id='+${seller.emailAddr}}" class="btn btn-sm btn-primary">Activate</a>
+                                                <a th:if="${status.equals('seller_request')}" th:href="@{'/marketplace/activeTheSeller?id='+${seller.emailAddr}}" class="btn btn-sm btn-primary">Accept Request</a>
+                                                <a th:if="${status.equals('seller_request')}" th:href="@{'/marketplace/deactiveTheSeller?id='+${seller.emailAddr}}" class="btn btn-sm btn-danger">Decline Request</a>
+                                                <a th:if="${status.equals('active')}" th:href="@{'/marketplace/deactiveTheSeller?id='+${seller.emailAddr}}" class="btn btn-sm btn-danger">Deactivate</a>
+                                             </td>
+                                             <td th:if="${status.equals('pending')}"><span class="text-warning">Pending...</span></td>
+                                             <td th:if="${status.equals('inactive')}"><span class="text-danger">Inactive</span></td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/allSellers?page='+${currentPage-1} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/allSellers?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/allSellers?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                        <script>
+                           function viewSellerInfo(data,currentPage){
+                           	var seller=JSON.parse(data);
+                           	const catArray = seller.categories.split(','); // Split the sentence into words
+                           	var cathtml="";
+                           catArray.map(cat=>{
+                           cathtml+="<span class='badge badge-pill badge-info m-1 py-2 px-2' >"+cat+"</span>"
+                           })
+                           
+                           var tPCount= "0";
+                           if(seller.productCount<0){
+                           tPCount = "<span class='badge badge-pill badge-danger m-1 py-1 px-2' >product count unavailable</span>"
+                           }else if(seller.productCount == 0){
+                           tPCount = "<span class='badge badge-pill badge-warning m-1 py-1 px-2' >no products available</span>"
+                           }else{
+                           tPCount = "<a href='/marketplace/getSellerProducts/"+seller.emailAddr+"/"+seller.productCount+"?page=0'><span class='badge badge-pill badge-success m-1 py-1 px-2' >"+seller.productCount+" products available</span></a>"
+                           }
+                           
+                           	var html=`
+                           	
+                           	<div style="text-align: left;" class="card mt-4 p-2">
+                           		<div class="text-center">
+                           			<h5><b>Seller Details</b></h5>
+                           		</div>
+                           		
+                           		<h6><b>Name : </b>${seller.firstName} ${seller.lastName}</h6>
+                           		<h6><b>Email : </b>${seller.emailAddr}</h6> 
+                           		<h6><b>Contact : </b>${seller.phoneNumber}</h6>
+                           		<div>
+                           			${tPCount}
+                           		</div>
+                           		<hr/>
+                           		<h6><b>Company Name : </b>${seller.nameOfCompany}</h6>
+                           		<h6><b>Company URL : </b>${seller.componyUrl}</h6>
+                           		<h6><b>Company Type : </b>${seller.TypeOfCompany}</h6>
+                           		
+                           		<hr/>
+                           		<h6><b>API Endpoint : </b>${seller.apiEndpoint}</h6>
+                           		<h6><b>State : <b/>${seller.state}</h6>
+                           		<h6><b>Address : <b/>${seller.bussinessAddr}</h6>
+                           		<hr/>
+                           		<div>
+                           		${cathtml}
+                           		</div>
+                           	</div>			
+                           	`
+                           	Swal.fire({
+                           width: 480,
+                           position: "top",
+                           padding: '0.3em',
+                           html:html,
+                           showCloseButton: true,
+                           showConfirmButton: false,
+                           backdrop: `
+                           rgba(0,0,0,0.6)
+                           `
+                           });
+                           }
+                           
+                           
+                        </script>
+                        <script>
+                           var options = [];
+                           
+                           $('.catDrop a')
+                           		.on(
+                           				'click',
+                           				function(event) {
+                           					var $target = $(event.currentTarget), val = $target
+                           							.attr('data-value'), $inp = $target
+                           							.find('input'), idx;
+                           
+                           					if ((idx = options.indexOf(val)) > -1) {
+                           						options.splice(idx, 1);
+                           						setTimeout(function() {
+                           							$inp.prop('checked', false)
+                           						}, 0);
+                           					} else {
+                           						options.push(val);
+                           						setTimeout(function() {
+                           							$inp.prop('checked', true)
+                           						}, 0);
+                           					}
+                           
+                           					$(event.target).blur();
+                           					console.log(options);
+                           					$(".categoryInput").val(options.join(" | "));
+                           					$("#categorysInput").val(options.join("&"));
+                           					return false;
+                           				});
+                        </script>
+                        
+                        
+                         <script>
+                           function showEditMOV(sellerEmail,sellerID){
+                           	Swal.fire({
+                           		  title: 'Edit the minimum order value of '+sellerEmail,
+                           		  input: 'text',
+                           		  inputAttributes: {
+                           		    autocapitalize: 'off'
+                           		  },
+                           		  showCancelButton: true,
+                           		  confirmButtonText: 'Enter minimum order value',
+                           		  showLoaderOnConfirm: true,
+                           		  preConfirm: (mov) => {
+                           			if(isNaN(mov) || mov>1000000){
+                           				Swal.fire("Info","MOV must be a less than 1000000","info");
+                           				return null;
+                           			}else{
+                           			    return fetch(`/marketplace/editSellerMOV?mov=${mov}&sellerEmail=${sellerEmail}`)
+                           			      .then(response => {
+										        if (!response.ok) {
+										            throw new Error(response.statusText);
+										        }
+										        return response.json(); // Parse the JSON response
+										    })
+										    .then(data => {
+										        if(data===0){
+										        	return mov;
+										        }else{
+										        	Swal.fire("Something wrong!!","MOV not changed.","error");
+										        	return null;
+										        }
+										        
+										    }).catch(error => {
+                           			        Swal.showValidationMessage(
+                           			          `Request failed: ${error}`
+                           			        )
+                           			      })
+                           			}
+                           		  },
+                           		  allowOutsideClick: () => !Swal.isLoading()
+                           		}).then((result) => {
+                           		  if (result.value!=null) {	
+                           			$("#"+sellerID).html(result.value);
+                           			    Swal.fire({
+                           			      title: `minimum order value changed successfully.`,
+                           			    })         				     
+                           		  }
+                           		})
+                           }
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

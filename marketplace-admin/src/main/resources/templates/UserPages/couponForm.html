@@ -1,0 +1,156 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Coupon Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/coupons?page=0}">Coupon Table</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Add New Coupon</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container-fluid">
+                           <div >
+                              <div class="text-center">
+                                 <h3><b>ADD COUPONS</b></h3>
+                              </div>
+                              <div class="row my-3">
+                                 <div class="card py-4 col-12 col-md-6 offset-md-3">
+                                    <form th:action="@{/marketplace/saveCouponDetails}" method="post" th:object="${coupon}">
+                                       <label class="mb-0">Coupon code</label>
+                                       <input required="required" class="form-control" name="couponCode" th:value="${coupon.couponCode}" placeholder="coupon code" />
+                                       <label class="mt-3 mb-0">Coupon discount type</label>
+                                       <select required="required" name="discountType" th:value="${coupon.discountType}" class="form-control">
+                                          <option value="NA">NA</option>
+                                          <option value="Percentage-based">Percentage-based discount</option>
+                                       </select>
+                                       <label class="mt-3 mb-0">Coupon discount amount</label>
+                                       <input required="required" name="discountAmount" th:value="${coupon.discountAmount}" class="form-control" placeholder="discount amount" />
+                                       <div class="row">
+                                          <div class="col-12 col-md-6">
+                                             <label class="mt-3 mb-0">Minimum purchase amount</label>
+                                             <input required="required" name="minimumPurchasetAmt" th:value="${coupon.minimumPurchasetAmt}" class="form-control" placeholder="discount amount" />
+                                          </div>
+                                          <div class="col-12 col-md-6">
+                                             <label class="mt-3 mb-0">Limited to the first n users </label>
+                                             <input required="required" name="firstLimitedUser" th:value="${coupon.firstLimitedUser}" class="form-control" placeholder="discount amount" />
+                                          </div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-12 col-md-6">
+                                             <label class="mt-3 mb-0">Coupon start date</label>
+                                             <input name="sDate" th:value="${coupon.startDate}" required="required" type="date" class="form-control" placeholder="discount amount" />
+                                             <span th:if="${alert.equals('invalidDate')}" class="text-danger">invalid start date !!</span>
+                                          </div>
+                                          <div class="col-12 col-md-6">
+                                             <label class="mt-3 mb-0">Coupon end date</label>
+                                             <input name="eDate" th:value="${coupon.endDate}" required="required" type="date" class="form-control" placeholder="discount amount" />
+                                             <span th:if="${alert.equals('invalidDate')}" class="text-danger">invalid end date !!</span>
+                                          </div>
+                                       </div>
+                                       <label class="mt-3 mb-0">select conditions</label>
+                                       <input type="hidden" id="hiddenInput" name="condions" value="">
+                                       <div class="dropdown">
+                                          <input th:value="${coupon.condions}"
+                                             class="text-left form-control dropdown-toggle"
+                                             type="button" 
+                                             id="multiSelectDropdown"
+                                             data-toggle="dropdown" 
+                                             aria-expanded="false"
+                                             placeholder="select conditions"
+                                             >
+                                          <ul class="dropdown-menu p-3" >
+                                             <li>
+                                                <h6> 
+                                                   <input type="checkbox" 
+                                                      value="Applicable to all products in the store"> 
+                                                   Applicable to all products in the store
+                                                </h6>
+                                             </li>
+                                             <li>
+                                                <h6> 
+                                                   <input type="checkbox" 
+                                                      value="One-time use per customer"> 
+                                                   One-time use per customer
+                                                </h6>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                       <label class="mt-3 mb-0">Coupon description</label>
+                                       <textarea name="description" th:value="${coupon.description}" row="3"  class="form-control"  ></textarea>
+                                       <div class="text-right mt-4">
+                                          <a class="btn btn-dark" href="/marketplace/coupons">Back</a>
+                                          <button type="reset" class="btn btn-warning">Clear</button>
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <script> 
+                           const chBoxes = 
+                               document.querySelectorAll('.dropdown-menu input[type="checkbox"]'); 
+                           const dpBtn =  
+                               document.getElementById('multiSelectDropdown'); 
+                           let mySelectedListItems = []; 
+                           const hiddenInput = document.getElementById('hiddenInput');
+                           
+                           
+                           function handleCB() { 
+                               mySelectedListItems = []; 
+                               let mySelectedListItemsText = ''; 
+                           
+                               chBoxes.forEach((checkbox) => { 
+                                   if (checkbox.checked) { 
+                                       mySelectedListItems.push(checkbox.value); 
+                                       mySelectedListItemsText += checkbox.value + ', '; 
+                                   } 
+                               }); 
+                               
+                               hiddenInput.value = mySelectedListItemsText;
+                               
+                               dpBtn.value = 
+                                   mySelectedListItems.length > 0 
+                                       ? mySelectedListItemsText.slice(0, -2) : 'Select'; 
+                           } 
+                           
+                           chBoxes.forEach((checkbox) => { 
+                               checkbox.addEventListener('change', handleCB); 
+                           }); 
+                        </script>    
+                        <script th:if="${alert.equals('invalidDate')}">Swal.fire({
+                           icon:'error',
+                           title: 'Inavalid Date !!',
+                           width: 550,
+                           padding: '1em',
+                           text:"invalid start date and end date entry!!",
+                           backdrop: `
+                             rgba(0,0,0,0.3)
+                           `
+                           });
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

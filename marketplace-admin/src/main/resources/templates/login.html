@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="nuvio">
+
+<link rel="icon" type="image/x-icon" th:href="@{/webImages/default.png}" />
+<title th:text="${title}"></title>
+
+
+
+<!-- fontawesome icon -->
+	<link rel="stylesheet" th:href="@{/webAssets/fonts/fontawesome/css/fontawesome-all.min.css}">
+	<!-- vendor css -->
+	<link rel="stylesheet" th:href="@{/webAssets/css/style.css}">
+
+
+</head>
+
+<body class="bg-gradient-primary" onload="setCookieData()">
+
+	<div class="container">
+
+		<!-- Outer Row -->
+		<div class="row justify-content-center">
+
+			<div class="col-xl-10 col-lg-12 col-md-9">
+
+				<div class="card o-hidden border-0 shadow-lg my-5">
+					<div class="card-body p-0">
+						<!-- Nested Row within Card Body -->
+
+						<div class="row">
+
+							<div class="col-lg-6 d-none d-lg-block text-center ">
+
+								<img class="ml-4 mt-3  img-fluid" th:src="@{/webAssets/images/Tablet.gif}" />
+
+							</div>
+							<div class="col-lg-6">
+								<div class="p-5">
+									<div class="text-center">
+										<h1 class="h4 text-gray-900 mb-4"><b>Admin Panel</b></h1>
+									</div>
+									<div th:if="${param.error}" class=" mb-2 pt-1 pb-0 text-danger">
+										<p>
+											<i class="fa-solid fa-triangle-exclamation"></i> &nbsp;
+											Invalid email or password !!
+										</p>
+									</div>
+									<div th:if="${param.logout}"
+										class="mb-1 pt-1 pb-0 text-success">
+										<p>You'r successfully logout !!</p>
+									</div>
+									<div th:if="${param.msg}" class="mb-1 pt-1 pb-0 text-success">
+										<p>Please login with new credentials..</p>
+									</div>
+									<form th:action="@{/do_login}"
+										th:onsubmit="return submitUserForm()" method="post" class="user">
+										<div class="form-group">
+											<input type="email" name="username"
+												class="form-control form-control-user"
+												id="exampleInputEmail" aria-describedby="emailHelp"
+												placeholder="Enter your marketplace registered email here">
+										</div>
+										<div class="form-group">
+											<input type="password" name="password"
+												class="form-control form-control-user"
+												id="exampleInputPassword" placeholder="Password">
+										</div>
+										
+					  
+							          <div  class="form-outline text-center mt-2" id="captchaPreview">
+							          	<small>loading...</small><input type="hidden" disabled="disabled" id="captchaGeneratedValue">
+							          </div>
+									  <div class="input-group">
+										  <input name="captcha" required id="enteredCaptcha" type="text" class="form-control" placeholder="Enter captcha here.." aria-label="Recipient's username" aria-describedby="button-addon2">
+										  <div class="input-group-append">
+										    <button id="captchaPreviewRefresh" class="btn btn-outline-secondary" type="button">Refresh</button>
+										  </div>
+									  </div>
+	 
+										
+										<!-- div class="text-center">
+											<div class="g-recaptcha "
+												th:data-sitekey="${vCaptchaSiteKey}"
+												data-callback="verifyCaptcha"></div>
+										</div -->
+										 
+										<!-- Google recaptcha -->
+										<div id="g-recaptcha-error"></div>
+
+
+										<div class="form-group">
+											<div class="custom-control custom-checkbox small mt-2">
+												<input onclick="storeCredentials()" type="checkbox"
+													class="custom-control-input" id="customCheck"> <label
+													class="custom-control-label" for="customCheck">Remember
+													Me</label>
+											</div>
+										</div>
+										<button type="submit"
+											class="btn btn-primary btn-user btn-block">Login</button>
+									</form>
+									<hr>
+									<div class="text-center">
+										<a class="small" href="/forgotePassword">Forgot
+											Password?</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="js/script.js"></script>
+	<script src="js/sb-admin-2.min.js"></script>
+	
+	
+	
+	<script>
+		var recaptcha_response = '';
+		function submitUserForm() {
+			var userCaptcha=document.getElementById("enteredCaptcha").value;
+		  	if(captchaValue != userCaptcha){
+		  		document.getElementById('g-recaptcha-error').innerHTML = '<span style="color:red;">enter correct captcha</span>';
+		  		return false;
+		  	}
+		    /*if(recaptcha_response.length == 0) {
+		        document.getElementById('g-recaptcha-error').innerHTML = '<span style="color:red;">Please check the captcha.</span>';
+		        return false;
+		    }*/
+		    return true;
+		}
+		 
+		function verifyCaptcha(token) {
+		    recaptcha_response = token;
+		    document.getElementById('g-recaptcha-error').innerHTML = '';
+		}
+		
+		storeCredentials = () =>{
+			var email = document.getElementById('exampleInputEmail').value;
+			var password = document.getElementById('exampleInputPassword').value;
+			document.cookie = "myEmail="+email+";path=localhost:9091";
+			document.cookie = "myPass="+password+";path=localhost:9091";
+		}
+		setCookieData = () => {
+			document.getElementById('exampleInputEmail').value=getCookie("myEmail");
+			document.getElementById('exampleInputPassword').value=getCookie("myPass");
+		}
+		
+		function getCookie(cname) {
+			  let name = cname + "=";
+			  let decodedCookie = decodeURIComponent(document.cookie);
+			  let ca = decodedCookie.split(';');
+			  for(let i = 0; i <ca.length; i++) {
+			    let c = ca[i];
+			    while (c.charAt(0) == ' ') {
+			      c = c.substring(1);
+			    }
+			    if (c.indexOf(name) == 0) {
+			      return c.substring(name.length, c.length);
+			    }
+			  }
+			  return "";
+			}
+	</script>
+
+</body>
+
+</html>

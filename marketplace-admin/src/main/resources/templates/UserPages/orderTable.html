@@ -1,0 +1,215 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Orders</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Orders</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <!-- Page Status Filters -->
+                           <div class="mb-4 d-flex flex-wrap align-items-center">
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=all}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'all') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">ALL ORDERS</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=pending}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'pending') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">PENDING</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=processing}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'processing') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">PROCESSING</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=packed}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'packed') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">PACKED</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=shipped}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'shipped') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">SHIPPED</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=delivered}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'delivered') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">DELIVERED</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=cancelled}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'cancelled') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">CANCELLED</a>
+                              <a th:href="@{/marketplace/orderDetails?page=0&action=returned}"
+                                 th:classappend="${action != null && #strings.equalsIgnoreCase(action, 'returned') ? 'btn-primary' : 'btn-outline-primary'}"
+                                 class="btn btn-sm mr-2 mb-2">RETURNED</a>
+                           </div>
+                           <!-- DataTales Example -->
+                           <div class="card shadow mb-4">
+                              <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap">
+                                 <h6 class="m-0 font-weight-bold text-primary"><span>Orders</span></h6>
+                                 <form id="bulkUpdateForm" th:action="@{/marketplace/bulkUpdateOrderStatus}" method="post" class="form-inline m-0">
+                                    <input type="hidden" name="page" th:value="${currentPage}" />
+                                    <input type="hidden" name="action" th:value="${action}" />
+                                    <div id="bulkHiddenIdsContainer"></div>
+                                    <label class="mr-2 font-weight-bold my-1" style="font-size: 13px;">Bulk Status:</label>
+                                    <select name="status" class="form-control form-control-sm mr-2 my-1" style="width: 140px;">
+                                       <option value="PENDING">PENDING</option>
+                                       <option value="PROCESSING">PROCESSING</option>
+                                       <option value="PACKED">PACKED</option>
+                                       <option value="SHIPPED">SHIPPED</option>
+                                       <option value="DELIVERED">DELIVERED</option>
+                                       <option value="CANCELLED">CANCELLED</option>
+                                       <option value="RETURNED">RETURNED</option>
+                                    </select>
+                                    <button type="button" onclick="submitBulkUpdate()" class="btn btn-sm btn-primary my-1">Update Selected</button>
+                                 </form>
+                              </div>
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th class="text-center" style="width: 30px;"><input type="checkbox" id="selectAllCheckbox" onclick="event.stopPropagation(); toggleSelectAll(this);" /></th>
+                                             <th>Name</th>
+                                             <th>Contact</th>
+                                             <th>Address</th>
+                                             <th>Date</th>
+                                             <th>City</th>
+                                             <th>Order ID</th>
+                                             <th>Product Id</th>
+                                             <th>Seller Id</th>
+                                             <th>GSTIN</th>
+                                             <th>P.Type</th>
+                                             <th>Payment</th>
+                                             <th>Status</th>
+                                             <th>Action</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="order : ${orderProducts}">
+                                             <td class="text-center"><input type="checkbox" th:value="${order?.orderProductId}" class="order-row-checkbox" onclick="event.stopPropagation(); updateSelectAllState();" /></td>
+                                             <td><span th:text="${order?.invoiceDetails?.invoiceOrderId?.fname}"></span> <span th:text="${order?.invoiceDetails?.invoiceOrderId?.lname}"></span></td>
+                                             <td th:text="${order?.invoiceDetails?.invoiceOrderId?.contactNumber}"></td>
+                                             <td th:text="${order?.invoiceDetails?.invoiceOrderId?.shippingAddressPrimary}"></td>
+                                             <td style="width:20px" th:text="${order?.invoiceDetails?.invoiceOrderId?.orderDate}"></td>
+                                             <td th:text="${order?.invoiceDetails?.invoiceOrderId?.city+', '+order?.invoiceDetails?.invoiceOrderId?.postalCode}"></td>
+                                             <td><strong th:text="${order?.invoiceDetails?.invoiceOrderId?.orderId}"></strong></td>
+                                             <td th:text="${order?.id}"></td>
+                                             <td class="text-center" th:text="${order?.sellerId}"></td>
+                                             <td><span th:text="${order?.invoiceDetails?.invoiceOrderId?.gstin}"></span></td>
+                                             <td><span th:text="${order?.invoiceDetails?.invoiceOrderId?.paymentType}"></span><br/> <span th:if="${(order?.invoiceDetails?.invoiceOrderId?.paymentType.equals('Cash on Delivery') && order?.invoiceDetails?.invoiceOrderId?.codPrepaidAmountPercentage>0 )}" th:text="${''+order?.invoiceDetails?.invoiceOrderId?.codPrepaidAmountPercentage+'% '+order?.invoiceDetails?.invoiceOrderId?.codPrepaidPaymentStatus }">TH</span></td>
+                                             <td th:text="${order?.invoiceDetails?.invoiceOrderId?.paymentStatus}"></td>
+                                             <td>
+                                                <form th:action="@{/marketplace/updateOrderStatus}" method="post" class="d-flex align-items-center">
+                                                   <input type="hidden" name="orderProductId" th:value="${order?.orderProductId}" />
+                                                   <input type="hidden" name="page" th:value="${currentPage}" />
+                                                   <input type="hidden" name="action" th:value="${action}" />
+                                                   <select name="status" class="form-control form-control-sm mr-1" style="width: 120px; display: inline-block;">
+                                                      <option value="PENDING" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'PENDING')}">PENDING</option>
+                                                      <option value="PROCESSING" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'PROCESSING')}">PROCESSING</option>
+                                                      <option value="PACKED" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'PACKED')}">PACKED</option>
+                                                      <option value="SHIPPED" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'SHIPPED')}">SHIPPED</option>
+                                                      <option value="DELIVERED" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'DELIVERED')}">DELIVERED</option>
+                                                      <option value="CANCELLED" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'CANCELLED')}">CANCELLED</option>
+                                                      <option value="RETURNED" th:selected="${order?.status != null && #strings.equalsIgnoreCase(order.status, 'RETURNED')}">RETURNED</option>
+                                                   </select>
+                                                   <button type="submit" class="btn btn-sm btn-success p-1" style="font-size: 11px;">Save</button>
+                                                </form>
+                                             </td>
+                                            
+                                             <td th:if="${order?.invoiceDetails?.invoiceOrderId?.paymentType.equals('Online Payment') && order?.invoiceDetails?.invoiceOrderId?.paymentStatus.equals('unpaid')}"><p class="text-danger">Failed</p></td>
+                                             <td th:unless="${order?.invoiceDetails?.invoiceOrderId?.paymentType.equals('Online Payment') && order?.invoiceDetails?.invoiceOrderId?.paymentStatus.equals('unpaid')}"><button class="btn btn-sm btn-primary">Place</button></td>
+                                             
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/orderDetails?page='+${currentPage-1}+'&action='+${action} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'alert-primary' : ''"
+                                    th:href="@{'/marketplace/orderDetails?page='+${i-1}+'&action='+${action} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/orderDetails?page='+${currentPage+1}+'&action='+${action} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <script th:inline="javascript">
+            function toggleSelectAll(masterCheckbox) {
+               var checkboxes = document.querySelectorAll('.order-row-checkbox');
+               for (var i = 0; i < checkboxes.length; i++) {
+                  checkboxes[i].checked = masterCheckbox.checked;
+               }
+            }
+
+            function updateSelectAllState() {
+               var masterCheckbox = document.getElementById('selectAllCheckbox');
+               if (!masterCheckbox) return;
+               var checkboxes = document.querySelectorAll('.order-row-checkbox');
+               if (checkboxes.length === 0) {
+                  masterCheckbox.checked = false;
+                  return;
+               }
+               var allChecked = true;
+               for (var i = 0; i < checkboxes.length; i++) {
+                  if (!checkboxes[i].checked) {
+                     allChecked = false;
+                     break;
+                  }
+               }
+               masterCheckbox.checked = allChecked;
+            }
+
+            function submitBulkUpdate() {
+               var checkedBoxes = document.querySelectorAll('.order-row-checkbox:checked');
+               if (checkedBoxes.length === 0) {
+                  alert('Please select at least one order to update.');
+                  return;
+               }
+               var container = document.getElementById('bulkHiddenIdsContainer');
+               if (!container) {
+                  alert('Error: Bulk update container not found.');
+                  return;
+               }
+               container.innerHTML = '';
+               for (var i = 0; i < checkedBoxes.length; i++) {
+                  var hidden = document.createElement('input');
+                  hidden.type = 'hidden';
+                  hidden.name = 'orderProductIds';
+                  hidden.value = checkedBoxes[i].value;
+                  container.appendChild(hidden);
+               }
+               document.getElementById('bulkUpdateForm').submit();
+            }
+         </script>
+      </section>
+   </body>
+</html>

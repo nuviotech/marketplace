@@ -9,6 +9,9 @@ import CustomerBought from '~/components/partials/product/CustomerBought';
 import RelatedProduct from '~/components/partials/product/RelatedProduct';
 import PageContainer from '~/components/layouts/PageContainer';
 import Newsletters from '~/components/partials/commons/Newletters';
+import axios from 'axios';
+import { marketplaceUrl } from '~/repositories/Repository';
+import { userIsLogin, getToken } from '~/store/auth/action';
 
 const ProductDefaultPage = () => {
     const router = useRouter();
@@ -21,6 +24,8 @@ const ProductDefaultPage = () => {
         const responseData = await ProductRepository.getProductsById(pid);
         if (responseData) {
             setProduct(responseData);
+            // Track product view asynchronously without blocking UI
+            trackProductView(responseData);
             setTimeout(
                 function () {
                     setLoading(false);
@@ -29,6 +34,41 @@ const ProductDefaultPage = () => {
             );
         }
     }
+
+    /**
+     * Track product view in recently viewed products list
+     * Does not block UI if API fails
+     */
+    const trackProductView = (productData) => {
+        if (!userIsLogin() || !productData) {
+            return; // Don't track for guests
+        }
+
+        try {
+            axios.post(
+                `${marketplaceUrl}/addRecentlyViewedProduct`,
+                {
+                    productId: productData.id,
+                    productName: productData.title,
+                    productPrice: productData.sale_price || productData.price || 0,
+                    productImage: productData.images?.[0]?.url || '',
+                    categoryId: productData.category_id || 0,
+                },
+                {
+                    headers: {
+                        Authorization: "Bearer " + getToken(),
+                    },
+                    timeout: 5000, // 5 second timeout to not block rendering
+                }
+            ).catch((error) => {
+                // Silently fail - don't break product page if tracking fails
+                console.debug("Recently viewed product tracking failed (non-critical)", error.message);
+            });
+        } catch (error) {
+            // Silently fail - don't break product page if tracking fails
+            console.debug("Recently viewed product tracking error (non-critical)", error.message);
+        }
+    };
 
     useEffect(() => {
         getProduct(pid);

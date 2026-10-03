@@ -1,0 +1,144 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Referrals Orders</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/dashboard}"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/reportingAccountDetails?page=0}">Affiliate Accounts</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Referrals</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           
+                           <div class="card shadow my-4">
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class=" table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>#ID</th>
+                                             <th>Affiliate Id</th>
+                                             <th>Buyer Id</th>
+                                             <th>Order Id</th>
+                                             <th>Commission Rate</th>
+                                             <th>Amount</th>
+                                             <th>Payment</th>
+                                             <th class="text-center">Action</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="rOrder : ${referralOrders}">
+                                             <td><span th:text="${rOrder.getReferralOrderId()}"></span></td>
+                                             <td><span th:text="${rOrder.getAffiliateMarketerId()}"></span></td>
+                                             <td><span th:text="${rOrder.getBuyerId()}"></span></td>
+                                             <td><span th:text="${rOrder.getOrderId()}"></span></td>
+                                             <td><span th:text="${rOrder.getCommissionRate()+'%'}"></span></td>
+                                             <td><span>₹</span><span th:text="${rOrder.getPurchasedAmount()}"></span></td>
+                                             <td><span th:id="${rOrder.getReferralOrderId()}" th:text="${rOrder.getPaymentSettlement()}"></span></td>
+                                             <td class="text-center">
+                                               <button class='btn btn-sm btn-primary' th:attr="onclick=|distributeComission('${rOrder.getReferralOrderId()}','${rOrder.getPaymentSettlement()}')|" >Mark As Distributed</button>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/reportingAccountDetails?page='+${currentPage-1} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/reportingAccountDetails?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/reportingAccountDetails?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <script type="text/javascript">
+         	function distributeComission(refferalOrderId,type){
+         		if(type==='Y'){
+         			Swal.fire({
+		        	      title: "Already Distributed",
+		        	      text: "The commission has already marked as distributed.",
+		        	      icon: "info"
+		        	    });
+         			return ;
+         		}
+		         Swal.fire({
+		        	  title: "Confirm Distribution",
+		        	  text: "Are you sure you want to mark this commission as distributed? This action cannot be reversed.",
+		        	  icon: "warning",
+		        	  showCancelButton: true,
+		        	  confirmButtonColor: "#3085d6",
+		        	  cancelButtonColor: "#d33",
+		        	  confirmButtonText: "Yes, Distribute!"
+		        	}).then((result) => {
+		        		
+			        	  if (result.isConfirmed) {
+			        		  return fetch(`/marketplace/makeReferalOrderAsDistributed/${refferalOrderId}`)
+	           			      .then(response => {
+							        if (!response.ok) {
+							            throw new Error(response.statusText);
+							        }
+							        return response.json(); // Parse the JSON response
+							    })
+							    .then(data => {
+							        if(data===0){
+							        	Swal.fire({
+							        	      title: "Distribution Successful",
+							        	      text: "The commission has been successfully marked as distributed.",
+							        	      icon: "success"
+							        	    });
+							        	$("#"+refferalOrderId).html("Y");
+							        }else{
+							        	Swal.fire("Something wrong!!","something went wrong on server site, status not changed.","error");
+							        	return null;
+							        }
+							        
+							    }).catch(error => {
+	           			        Swal.showValidationMessage(
+	           			          `Request failed: ${error}`
+	           			        )
+	           			      })
+		        	  }
+		        	});
+         	}
+         </script>
+      </section>
+   </body>
+</html>

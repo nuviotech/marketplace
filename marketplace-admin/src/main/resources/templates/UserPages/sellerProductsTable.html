@@ -1,0 +1,87 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Sellers</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/getSeller?status=active&page=0}">Sellers</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Seller Products</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="container-fluid">
+                        </div>
+                        <div class="card shadow mb-4">
+                           <div class="card-body">
+                              <div class="table-responsive">
+                                 <table class=" table table-bordered table-hover" id="dataTable" width="100%"
+                                    cellspacing="0">
+                                    <thead >
+                                       <tr>
+                                          <th>Image</th>
+                                          <th>Title</th>
+                                          <th>Price</th>
+                                          <th>SKU</th>
+                                          <th>Brand</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr th:each="product : ${sellerProducts}">
+                                          <td style="width:67px;"><img th:src="${product.getImages().get(0).getUrl()}" height="70" width="auto" alt="Description"></td>
+                                          <td style="white-space: normal !important;word-wrap: break-word; max-width: 300px;" th:text="${product.getTitle()}"></td>
+                                          <td><span><del class="text-danger" th:text="'₹'+${product.getPrice()}"></del></span> <span class="text-success" th:text="'₹'+${product.getSale_price()}"></span></td>
+                                          <td th:text="${product.getSku()}" ></td>
+                                          <td th:text="${product.getBrand()}" ></td>
+                                          <td></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/getSellerProducts/'+${sellerId}+'/'+${totalProducts}+'?page='+${currentPage-1} }"
+                                    tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/getSellerProducts/'+${sellerId}+'/'+${totalProducts}+'?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/getSellerProducts/'+${sellerId}+'/'+${totalProducts}+'?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

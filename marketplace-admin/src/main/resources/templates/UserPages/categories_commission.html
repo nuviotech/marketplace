@@ -1,0 +1,108 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Categories Commission</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Categories Commission</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <!-- DataTales Example -->
+                           <div class="card shadow mb-4">
+                              <div class="card-header py-3">
+                                 <h6 class="m-0 font-weight-bold text-primary"><span ></span> <span>categories</span></h6>
+                              </div>
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>#ID</th>
+                                             <th>Categories name</th>
+                                             <th>Commission</th>
+                                             <th class="text-center">Action</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="cc : ${categories_commission}">
+                                             <td><span th:text="${cc.ccid}"></span></td>
+                                             <td th:text="${cc.categoriesName}"></td>
+                                             <td><span th:text="${cc.categoriesCommission}+' %'" th:id="${cc.ccid}"></span></td>
+                                             <td class="text-center"><a th:attr="onclick=|showEditCategoriesCommission('${cc.ccid}','${cc.categoriesName}')|" class="btn btn-sm btn-warning">Edit</a></td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <script>
+                           function showEditCategoriesCommission(id,name){
+                           	Swal.fire({
+                           		  title: 'Edit the commision of '+name+" "+id,
+                           		  input: 'text',
+                           		  inputAttributes: {
+                           		    autocapitalize: 'off'
+                           		  },
+                           		  showCancelButton: true,
+                           		  confirmButtonText: 'Set Commission',
+                           		  showLoaderOnConfirm: true,
+                           		  preConfirm: (login) => {
+                           			if(isNaN(login) || login>25){
+                           				Swal.fire("Info","commission must be a less than 25%","info");
+                           				return null;
+                           			}else{
+                           			    return fetch(`/marketplace/editCategoriesCommission?commission=${login}&catId=${id}`)
+                           			      .then(response => {
+                           			        if (!response.ok) {
+                           			          throw new Error(response.statusText)
+                           			        }
+                           			        return login;
+                           			      })
+                           			      .catch(error => {
+                           			        Swal.showValidationMessage(
+                           			          `Request failed: ${error}`
+                           			        )
+                           			      })
+                           			}
+                           		  },
+                           		  allowOutsideClick: () => !Swal.isLoading()
+                           		}).then((result) => {
+                           			
+                           		  if (result.value!=null) {			  
+                           			$("#"+id).html(result.value+" %");
+                           			    Swal.fire({
+                           			      title: `categories commission updated`,
+                           			      
+                           			    })         				     
+                           		  }
+                           		})
+                           }
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

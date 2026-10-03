@@ -1,0 +1,147 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Email Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/emailTemplates?page=0}">Email Table</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Email Configurations</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container">
+                           <div class=" px-3 py-4">
+                              <div class="row">
+                                 <div class="col-sm-12 col-md-6">
+                                    <div class="card px-3 pt-3 my-2">
+                                       <h5 class="text-dark">
+                                          <b>General Email Configuration </b>
+                                       </h5>
+                                       <form th:action="@{/marketplace/saveEmailConfigDetails}" method="post">
+                                          <label class="mb-0 mt-1">Sender name</label>
+                                          <input th:value=${generalEmailConfig.senderName} class="form-control" type="text" name="senderName" />
+                                          <label class="mb-0 mt-3">Sender email</label> 
+                                          <input th:value=${generalEmailConfig.senderEmail} class="form-control" type="text" name="email" /> 
+                                          <label class="mb-0 mt-3">Sender email passsword</label>
+                                          <input th:value=${generalEmailConfig.password} class="form-control" type="text" name="password" />
+                                          <input type="hidden" value="GENERAL" name="type" />
+                                          <div class="text-right mt-4 mb-0">
+                                             <button type="submit" class="btn btn-primary px-5">Save Configuration</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-12 col-md-6">
+                                    <div class="card px-3 pt-3 my-2">
+                                       <h5 class="text-dark">
+                                          <b>Sales Representative Email Config.</b>
+                                       </h5>
+                                       <form th:action="@{/marketplace/saveEmailConfigDetails}" method="post">
+                                          <label class="mb-0 mt-1">Sender name</label> <input
+                                             th:value=${salesRepresentativeEmailConfig.senderName} class="form-control" type="text" name="senderName" />
+                                          <label class="mb-0 mt-3">Sender email</label> <input
+                                             th:value=${salesRepresentativeEmailConfig.senderEmail} class="form-control" type="text" name="email" /> <label
+                                             class="mb-0 mt-3">Sender email passsword</label> <input
+                                             th:value=${salesRepresentativeEmailConfig.password} class="form-control" type="text" name="password" />
+                                          <input type="hidden" value="SALES_REPRENSENTATIVE" name="type" />
+                                          <div class="text-right mt-4 mb-0">
+                                             <button type="submit" class="btn btn-primary px-5">Save Configuration</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-12 col-md-6">
+                                    <div class="card px-3 pt-3 my-3">
+                                       <h5 class="text-dark">
+                                          <b>Support Email Configuration</b>
+                                       </h5>
+                                       <form th:action="@{/marketplace/saveEmailConfigDetails}" method="post">
+                                          <label class="mb-0 mt-1">Sender name</label> <input
+                                             th:value=${supportEmailConfig.senderName} class="form-control" type="text" name="senderName" />
+                                          <label class="mb-0 mt-3">Sender email</label> <input
+                                             th:value=${supportEmailConfig.senderEmail} class="form-control" type="text" name="email" /> <label
+                                             class="mb-0 mt-3">Sender email passsword</label> <input
+                                             th:value=${supportEmailConfig.password} class="form-control" type="text" name="password" />
+                                          <input type="hidden" value="SUPPORT" name="type" />
+                                          <div class="text-right mt-4 mb-0">
+                                             <button type="submit" class="btn btn-primary px-5">Save Configuration</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-12 col-md-6">
+                                    <div class="card px-3 pt-3 my-3">
+                                       <h5 class="text-dark">
+                                          <b>Custom 1 Email Configuration</b>
+                                       </h5>
+                                       <form th:action="@{/marketplace/saveEmailConfigDetails}" method="post">
+                                          <label class="mb-0 mt-1">Sender name</label> <input
+                                             th:value=${custom1EmailConfig.senderName} class="form-control" type="text" name="senderName" />
+                                          <label class="mb-0 mt-3">Sender email</label> <input
+                                             th:value=${custom1EmailConfig.senderEmail} class="form-control" type="text" name="email" /> <label
+                                             class="mb-0 mt-3">Sender email passsword</label> <input
+                                             th:value=${custom1EmailConfig.password} class="form-control" type="text" name="password" />
+                                          <input type="hidden" value="CUSTOM_ONE" name="type" />
+                                          <div class="text-right mt-4 mb-0">
+                                             <button type="submit" class="btn btn-primary px-5">Save Configuration</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-12 col-md-6">
+                                    <div class="card px-3 pt-3 my-3">
+                                       <h5 class="text-dark">
+                                          <b>Custom 2 Email Configuration</b>
+                                       </h5>
+                                       <form th:action="@{/marketplace/saveEmailConfigDetails}" method="post">
+                                          <label class="mb-0 mt-1">Sender name</label> <input
+                                             th:value=${custom2EmailConfig.senderName} class="form-control" type="text" name="senderName" />
+                                          <label class="mb-0 mt-3">Sender email</label> <input
+                                             th:value=${custom2EmailConfig.senderEmail} class="form-control" type="text" name="email" /> <label
+                                             class="mb-0 mt-3">Sender email passsword</label> <input
+                                             th:value=${custom2EmailConfig.password} class="form-control" type="text" name="password" />
+                                          <input type="hidden" value="CUSTOM_TWO" name="type" />
+                                          <div class="text-right mt-4 mb-0">
+                                             <button type="submit" class="btn btn-primary px-5">Save Configuration</button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <script th:if="${alert.equals('success')}">Swal.fire({
+                           icon:'success',
+                           title: 'Email configuration saved !!',
+                           width: 550,
+                           padding: '1em',
+                           text:"Email details is successfully saved.",
+                           backdrop: `
+                             rgba(0,0,0,0.3)
+                           `
+                           });
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

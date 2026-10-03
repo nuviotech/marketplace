@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more about files to ignore.
 
 # dependencies
 /node_modules
@@ -15,20 +15,29 @@
 # production
 /build
 
+# Environment / local configuration
+.env*
+env.local
+env.download
+
 # misc
 .DS_Store
-.env*
-.env.local
+
+# IDE
 /.idea
 .idea
+
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# package lock
 package-lock.json
 
+# Now
 .now
 
-
+# Public generated files
 /public/robot.txt
 /public/sitemap.xml

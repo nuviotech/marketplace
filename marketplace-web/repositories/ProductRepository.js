@@ -23,7 +23,11 @@ class ProductRepository {
         const result = await axios.get(`${marketplaceUrl}/getRelatedProduct?keywords=${keywords}`)
         .then(
             (response)=>{
-                return response.data;
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                return data;
             },
             (error)=>{
                 console.error("Related product(error) : "+error);
@@ -39,7 +43,11 @@ class ProductRepository {
             `${marketplaceUrl}/searchRecords?keyword=${serializeQuery(params)}`
         )
             .then((response) => {
-                return response.data;
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                return data;
             })
             .catch((error) => ({ error: JSON.stringify(error) }));
           //console.log("get Recorder quesry: products?  : "+JSON.stringify(response) );
@@ -47,27 +55,41 @@ class ProductRepository {
     }
 
     async getProducts(params) {
-    //    alert("get product "+JSON.stringify(params));
-      // alert("payload : "+params)
+    try {
+        const response = await Repository.get(
+            `${marketplaceUrl}/products?${serializeQuery(
+                params
+            )}`
+        );
 
-        const reponse = await Repository.get(
-            `${marketplaceUrl}/products?${serializeQuery(params)}`
-        )
-            .then((response) => {
-                if (response.data && response.data.length > 0) {
-                    return response.data;
-                } else {
-                    return null;
-                }
-            })
+        let data = response.data;
 
-            .catch((error) => {
-                console.log(JSON.stringify(error));
-                return null;
-            });
-        //console.log(serializeQuery(params)+" *****get all products : "+JSON.stringify(reponse));    
-        return reponse;
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                data = [];
+            }
+        }
+
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        if (data && typeof data === 'object') {
+            return data;
+        }
+
+        return [];
+    } catch (error) {
+        console.error(
+            '### GET PRODUCTS ERROR ###',
+            error
+        );
+
+        return [];
     }
+}
 
     async getBrands() {
         //`${baseUrl}/brands`
@@ -77,7 +99,11 @@ class ProductRepository {
             }
         })
             .then((response) => {
-                return response.data;
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                return data;
             })
             .catch((error) => ({ error: JSON.stringify(error) }));
         return reponse;
@@ -91,34 +117,159 @@ class ProductRepository {
             }
         })
             .then((response) => {
-                return response.data;
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                return data;
             })
             .catch((error) => ({ error: JSON.stringify(error) }));
         //console.log("get all categorys are call. : "+JSON.stringify(reponse));
         return reponse;
     }
 
-    async getTotalRecords(params) {
-       
-        const reponse = await Repository.get(`${marketplaceUrl}/products/count?price_gt=${params?.price_gt}&price_lt=${params?.price_lt}&_key=${params?.key}&_value=${params?.value}`)
-            .then((response) => {
-                return response.data;
-            })
-            .catch((error) => ({ error: JSON.stringify(error) }));
-        console.log("total record call "+JSON.stringify(reponse));    
-        return reponse;
+    async getTotalRecords(params = {}) {
+    try {
+        const queryParams = new URLSearchParams();
+
+        /*
+         * Price filter
+         */
+        if (
+            params.price_gt !== undefined &&
+            params.price_gt !== '' &&
+            params.price_gt !== 'undefined'
+        ) {
+            queryParams.append(
+                'price_gt',
+                params.price_gt
+            );
+        }
+
+        if (
+            params.price_lt !== undefined &&
+            params.price_lt !== '' &&
+            params.price_lt !== 'undefined'
+        ) {
+            queryParams.append(
+                'price_lt',
+                params.price_lt
+            );
+        }
+
+        /*
+         * Search/category filters
+         */
+        if (
+            params.key !== undefined &&
+            params.key !== '' &&
+            params.key !== 'undefined'
+        ) {
+            queryParams.append(
+                '_key',
+                params.key
+            );
+        }
+
+        if (
+            params.value !== undefined &&
+            params.value !== '' &&
+            params.value !== 'undefined'
+        ) {
+            queryParams.append(
+                '_value',
+                params.value
+            );
+        }
+
+        if (
+            params.title_contains !== undefined &&
+            params.title_contains !== '' &&
+            params.title_contains !== 'undefined'
+        ) {
+            queryParams.append(
+                'title_contains',
+                params.title_contains
+            );
+        }
+
+        const url =
+            `${marketplaceUrl}/products/count?` +
+            queryParams.toString();
+
+        console.log(
+            '### PRODUCT COUNT URL ###',
+            url
+        );
+
+        const response =
+            await Repository.get(url);
+
+        let data = response.data;
+
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                data = Number(data);
+            }
+        }
+
+        console.log(
+            '### PRODUCT COUNT RESPONSE ###',
+            data
+        );
+
+        if (typeof data === 'number') {
+            return data;
+        }
+
+        if (
+            data &&
+            typeof data === 'object'
+        ) {
+            return (
+                data.total ??
+                data.count ??
+                0
+            );
+        }
+
+        return Number(data) || 0;
+
+    } catch (error) {
+
+        console.error(
+            '### PRODUCT COUNT ERROR ###',
+            error
+        );
+
+        return 0;
     }
+}
     
     //getProduct
     async getProductsById(payload) {
-        const reponse = await Repository.get(`${marketplaceUrl}/products/${payload}`)
-            .then((response) => {
-                return response.data;
-            })
-            .catch((error) => ({ error: JSON.stringify(error) }));
-        //console.log("get product by id : "+JSON.stringify(reponse));
-        return reponse;
-    }
+    const response = await Repository.get(
+        `${marketplaceUrl}/products/${payload}`
+    )
+        .then((response) => {
+            let data = response.data;
+
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {}
+            }
+
+            return data;
+        })
+        .catch((error) => ({
+            error: JSON.stringify(error),
+        }));
+
+    return response;
+}
 
 
     async getProductsByCategory(payload) {
@@ -126,12 +277,12 @@ class ProductRepository {
             `${marketplaceUrl}/product-categories?slug=${payload?.slug}&_limit=${payload?._limit}&_start=${payload?._start}&price_lt=${payload?.price_lt}&price_gt=${payload?.price_gt}`
         )
             .then((response) => {
-                if (response.data) {
-                    if (response.data.length > 0) {
-                        return response.data;
-                    }else{
-                        return null;
-                    }
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                if (Array.isArray(data) && data.length > 0) {
+                    return data;
                 } else {
                     return null;
                 }
@@ -149,12 +300,12 @@ class ProductRepository {
             `${marketplaceUrl}/brands?slug=${payload}`
         )
             .then((response) => {
-               // console.warn(JSON.stringify(response.data))
-                if (response.data) {
-                    if (response.data.length > 0) {
-                        //console.log("brd;  "+response.data[0])
-                        return response.data;
-                    }
+                let data = response.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch(e) {}
+                }
+                if (Array.isArray(data) && data.length > 0) {
+                    return data;
                 } else {
                     return null;
                 }
@@ -166,25 +317,126 @@ class ProductRepository {
         return reponse;
     }
 
-    async getProductsByIds(payload) {
-        //const endPoint = `${baseUrl}/products?${payload}`;
-        const endPoint = `${marketplaceUrl}/productsByIds?${payload}`;
-        const reponse = await Repository.get(endPoint)
-            .then((response) => {
-                if (response.data && response.data.length > 0) {
-                    return response.data;
-                } else {
-                    return null;
-                }
-            })
-            .catch((error) => {
-                console.log(JSON.stringify(error));
-                return null;
-            });
+    async getProductsByIds(productIds) {
+    try {
+        if (!productIds) {
+            return [];
+        }
 
-       // console.log("getproductByIds (payload): "+payload);
-        return reponse;
+        let ids = [];
+
+        /*
+         * Support both:
+         *
+         * Array:
+         * ["id1", "id2", "id3"]
+         *
+         * and existing string:
+         * "id_in=id1&id_in=id2"
+         */
+
+        if (Array.isArray(productIds)) {
+            ids = productIds;
+        } else if (typeof productIds === 'string') {
+
+            /*
+             * If caller already gives:
+             *
+             * id_in=abc&id_in=xyz
+             *
+             * use it directly.
+             */
+            if (productIds.includes('id_in=')) {
+                const queryString =
+                    productIds.replace(/^&+|&+$/g, '');
+
+                const response = await Repository.get(
+                    `${marketplaceUrl}/productsByIds?${queryString}`
+                );
+
+                let data = response.data;
+
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                return Array.isArray(data)
+                    ? data
+                    : [];
+            }
+
+            /*
+             * Otherwise treat the string as comma-separated IDs.
+             */
+            ids = productIds
+                .split(',')
+                .map((id) => id.trim())
+                .filter(Boolean);
+        }
+
+        ids = ids
+            .map((id) => String(id).trim())
+            .filter(Boolean);
+
+        if (ids.length === 0) {
+            return [];
+        }
+
+        const queryParams = new URLSearchParams();
+
+        ids.forEach((id) => {
+            queryParams.append('id_in', id);
+        });
+
+        const url =
+            `${marketplaceUrl}/productsByIds?${queryParams.toString()}`;
+
+        console.log(
+            '### GET PRODUCTS BY IDS ###',
+            url
+        );
+
+        const response = await Repository.get(url);
+
+        let data = response.data;
+
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                console.error(
+                    '### PRODUCTS BY IDS JSON ERROR ###',
+                    e
+                );
+
+                return [];
+            }
+        }
+
+        console.log(
+            '### PRODUCTS BY IDS RESPONSE ###',
+            data
+        );
+
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        return [];
+
+    } catch (error) {
+        console.error(
+            '### PRODUCTS BY IDS ERROR ###',
+            error
+        );
+
+        return [];
     }
+}
 
    
 }

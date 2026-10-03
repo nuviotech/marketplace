@@ -1,0 +1,49 @@
+import com.marketplace.api.drools.CouponPojo;
+global com.marketplace.api.drools.CouponValidation couponValidationResponse;
+dialect  "mvel"
+
+
+rule "Coupon is active or inactive"
+    when
+        CouponPojo(status == "inactive");
+    then
+      	couponValidationResponse.setErrorMessage("Coupon is not available.");
+end
+
+rule "Coupon code exist"
+    when
+        CouponPojo(oCouponCode != dCouponCode );
+    then
+      	couponValidationResponse.setErrorMessage("Please enter correct coupon code.");
+end
+
+rule "Coupon expire"
+    when
+        CouponPojo(startDate < date && date > endDate );
+    then
+      	couponValidationResponse.setErrorMessage("Coupon is expire.");
+end
+
+rule "Coupon applicable when minimum purchase amount satisfied"
+    when
+        CouponPojo(minimumPurchaseAmt > totalOrderAmt  );
+    then
+      	couponValidationResponse.setMinimumPurchaseAmtGreterOrEqual(true);
+end
+
+rule "Coupon applicable for first n number of users"
+    when
+        CouponPojo(limitUser <= totalCouponUserCount);
+    then
+      	couponValidationResponse.setErrorMessage("Coupon is not available.");
+end
+
+
+
+
+
+
+
+
+
+

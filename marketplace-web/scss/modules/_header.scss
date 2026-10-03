@@ -116,7 +116,7 @@
 
         .header__left {
             .ps-logo {
-                display: none;
+                display: inline-block;
             }
 
             .menu--product-categories {
@@ -347,7 +347,7 @@
         }
 
         .ps-logo {
-            display: none;
+            display: inline-block;
         }
     }
 
@@ -700,4 +700,3 @@
         }
     }
 }
-

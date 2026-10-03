@@ -18,6 +18,7 @@ const HomeDefaultBanner = () => {
         const responseData = await MediaRepository.getBannersBySlug(
             'banner-home-fullwidth'
         );
+         console.log("Banner Response:", responseData);
         if (responseData) {
             setBannerItems(responseData);
         }
@@ -37,7 +38,7 @@ const HomeDefaultBanner = () => {
     useEffect(() => {
         getBannerItems();
         getPromotions();
-    }, slider);
+    }, [slider]);
     
     const carouselSetting = {
         dots: false,
@@ -51,9 +52,12 @@ const HomeDefaultBanner = () => {
     };
 
     // Views
-    let mainCarouselView;
-    if (bannerItems) {
-        const carouseItems = bannerItems?.map((item) => (
+let mainCarouselView;
+if (bannerItems) {
+    const carouseItems = bannerItems.map((item) => {
+        console.log("Image URL:", `${baseUrl}${item?.image?.url}`);
+
+        return (
             <div className="slide-item" key={item?.id}>
                 <Link href="/shop">
                     <a
@@ -64,18 +68,21 @@ const HomeDefaultBanner = () => {
                     />
                 </Link>
             </div>
-        ));
-        mainCarouselView = (
-            <Slider ref={slider => ( setSlider(slider))}  {...carouselSetting} className="ps-carousel">
-                {carouseItems}
-            </Slider>
-           
         );
-        
-        slider?.slickPlay();
+    });
 
-    }
+    mainCarouselView = (
+        <Slider
+            ref={(slider) => setSlider(slider)}
+            {...carouselSetting}
+            className="ps-carousel"
+        >
+            {carouseItems}
+        </Slider>
+    );
 
+    slider?.slickPlay();
+}
     return (
         
         <div className="ps-home-banner ps-home-banner--1">
@@ -91,7 +98,6 @@ const HomeDefaultBanner = () => {
                         link={promotion2?.link}
                         image={promotion2 ? promotion2.image : null}
                     />
-                    
                 </div>
             </div>
         </div>

@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Reporting Account</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/reportingAccountDetails?page=0}">Reporting Account</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Add New Reporting Account</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="container-fluid">
+                           <div >
+                              <div class="text-center">
+                                 <h3><b><span th:text="${tagName}"></span> Reporting Account</b></h3>
+                              </div>
+                              <div class="row my-3">
+                                 <div class="card py-4 col-12 col-md-6 offset-md-3">
+                                    <form th:action="@{/marketplace/saveReportingAccountDetails}" method="post" th:object="${reportAcnt}">
+                                       <label class="mb-0">Account name</label>
+                                       <input required="required" class="form-control" name="reportingAccountName" th:value="${reportAcnt.getReportingAccountName()}" placeholder="reporting account name..." />
+                                       <input type="hidden" name="reportingAccountId" th:value="${reportAcnt.reportingAccountId}"/>
+                                       <label class="mt-3 mb-0">Account email</label>
+                                       <input required="required" name="email" th:value="${reportAcnt.getEmail()}" class="form-control" placeholder="reporting account email id..." />
+                                       <label class="mt-3 mb-0">Account phone</label>
+                                       <input required="required" name="phone" th:value="${reportAcnt.getPhone()}" class="form-control" placeholder="reporting account phone number..." />
+                                       <label class="mt-3 mb-0">Address</label>
+                                       <textarea name="address"  row="3"  class="form-control" th:text="${reportAcnt.getAddress()}"  ></textarea>
+                                       <div class="text-right mt-4">
+                                          <a class="btn btn-dark" href="/marketplace/reportingAccountDetails?page=0">Back</a>
+                                          <button type="reset" class="btn btn-warning">Clear</button>
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

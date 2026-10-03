@@ -1,0 +1,105 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Coupon Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Coupon Table</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container-fluid">
+                           <a href="/marketplace/addCouponForm" class="btn btn-primary my-2">Add New Coupon</a>
+                        </div>
+                        <div class="card shadow mb-4">
+                           <div class="card-body">
+                              <div class="table-responsive">
+                                 <table class=" table table-bordered" id="dataTable" width="100%"
+                                    cellspacing="0">
+                                    <thead>
+                                       <tr>
+                                          <th>Coupon Code</th>
+                                          <th>Discount Type</th>
+                                          <th>Discount Persentage</th>
+                                          <th>Min Purchase Amt.</th>
+                                          <th>Number of user</th>
+                                          <th>Start Date</th>
+                                          <th>End Date</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr th:each="coupon : ${coupons}">
+                                          <td> 
+                                             <span class="text-dark" th:if="${coupon.status!=null && coupon.status.equals('active')}"><span th:text="${coupon.couponCode}"></span></span>
+                                             <span class="text-muted" th:if="${coupon.status==null || coupon.status.equals('inactive')}"><span th:text="${coupon.couponCode}"></span></span>
+                                          </td>
+                                          <td th:text="${coupon.discountType}"></td>
+                                          <td th:text="${coupon.discountAmount+'%'}"></td>
+                                          <td th:text="${coupon.minimumPurchasetAmt}"></td>
+                                          <td th:text="${coupon.firstLimitedUser}"></td>
+                                          <td th:text="${coupon.startDate}"></td>
+                                          <td th:text="${coupon.endDate}"></td>
+                                          <td th:if="${coupon.status!=null && coupon.status.equals('active')}"><a th:href="@{'/marketplace/changeCouponStatus/'+${currentPage}+'/'+${coupon.couponId}+'/inactive'}" class="btn btn-primary btn-sm" >Deactivate</a></td>
+                                          <td th:if="${coupon.status==null || coupon.status.equals('inactive')}"><a th:href="@{'/marketplace/changeCouponStatus/'+${currentPage}+'/'+${coupon.couponId}+'/active'}" class="btn btn-primary btn-sm" >Activate</a></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/coupons?page='+${currentPage-1} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/coupons?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/coupons?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                        <script th:if="${alert.equals('success')}">Swal.fire({
+                           icon:'success',
+                           title: 'Coupon is Saved !!',
+                           width: 550,
+                           padding: '1em',
+                           text:"Your coupon details is successfully saved.",
+                           backdrop: `
+                             rgba(0,0,0,0.3)
+                           `
+                           });
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

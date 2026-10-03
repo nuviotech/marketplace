@@ -1,0 +1,238 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Email Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Email Table</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container-fluid">
+                           <a href="/marketplace/emailConfig" class="btn btn-primary my-2">Email
+                           Configuration</a> <a href="/marketplace/addEmail"
+                              class="btn btn-primary my-2">Add New Email Template</a>
+                        </div>
+                        <div class="card shadow mb-4">
+                           <div class="card-body">
+                              <div class="table-responsive">
+                                 <table class=" table table-bordered" id="dataTable" width="100%"
+                                    cellspacing="0">
+                                    <thead>
+                                       <tr>
+                                          <th>Subject</th>
+                                          <th>Sender Email</th>
+                                          <th>Receiver Type</th>
+                                          <th>Created Date</th>
+                                          <th>Action</th>
+                                          <th>Send Mail</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr th:each="emails : ${emails}">
+                                          <td th:text="${emails.subject}"></td>
+                                          <td th:text="${emails.sendeEmailType}"></td>
+                                          <td th:text="${emails.emailType}"></td>
+                                          <!--  td th:text="${emails.receiverEmails.split(',').length}"></td -->
+                                         
+                                          <td th:text="${emails.createdDateAndTime}"></td>
+                                          <td class="">
+                                          		<a style="cursor: pointer;" th:attr="onclick=|previewEmail('${emails.receiverEmails}')|"><i class="feather icon-mail text-info"></i></a> 
+                                          		<a style="cursor: pointer;" th:attr="onclick=|previewEmail('${emails.emailMsg.trim()}')|"><i  class="pl-2 text-warning feather icon-eye"></i></a>
+                                          		<a th:attr="onclick= | deleteRow(this,'${emails.getEmailId()}')|" style="cursor: pointer;" ><i  class="pl-2 text-danger feather icon-trash-2"></i></a>
+                                          		<a th:href="@{'/marketplace/updateEmailTemplate/'+${emails.getEmailId()}}" style="cursor: pointer;" ><i  class="pl-2 text-warning feather icon-edit-2"></i></a>
+                                          </td>
+                                           <td>
+                                             <a style="cursor: pointer;" th:attr="onclick= | sendEmail('${emails.getEmailId()}')|" class="btn btn-sm btn-primary text-light " >send mail</a>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/emailTemplates?page='+${currentPage-1} }"
+                                    tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/emailTemplates?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/emailTemplates?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                        <script>
+                           function previewEmail(emailBody){
+                           	Swal.fire({
+                           		  width: 850,
+                           		  position: "top",
+                           		  padding: '0.1em',
+                           		  html:`
+                           			<div class="">
+                           		  		<div class="card m-3 p-3 text-left">${emailBody}</div>
+                           		  	</div>
+                           		  `,
+                           		  showCloseButton: true,
+                           		  backdrop: `
+                           		    rgba(0,0,0,0.6)
+                           		  `
+                           	});
+                           }
+                           
+                        </script>
+                        <script th:if="${alert.equals('success')}">
+                           Swal.fire({
+                           	  icon:'success',
+                           	  title: 'Email template is saved !!',
+                           	  width: 550,
+                           	  padding: '1em',
+                           	  text:"Email is successfully saved.",
+                           	  backdrop: `
+                           	    rgba(0,0,0,0.3)
+                           	  `
+                           	});
+                           function removeMsgCodeParameter() {
+                        	    // Get the current URL
+                        	    var url = window.location.href;
+
+                        	    // Remove the msgCode parameter
+                        	    var urlWithoutMsgCode = url.replace(/([&?]msgCode=)[^&]*(&|$)/, '$2');
+
+                        	    // If the msgCode parameter was removed from the query string
+                        	    if (urlWithoutMsgCode !== url) {
+                        	        // Update the URL without reloading the page
+                        	        window.history.replaceState({}, document.title, urlWithoutMsgCode);
+                        	    }
+                        	}
+                           removeMsgCodeParameter();
+                        </script>
+                        <script th:if="${alert.equals('sendEmail')}">
+                           Swal.fire({
+                           	  icon:'success',
+                           	  title: 'Email send successfully.',
+                           	  width: 500,
+                           	  padding: '1em',
+                           	  text:"Email is send successfully to related users.",
+                           	  backdrop: `
+                           	    rgba(0,0,0,0.3)
+                           	  `
+                           	});
+                        </script>
+                        
+                         <script>
+                           function deleteRow(button,id) {
+                           	
+                           	Swal.fire({
+                           		  title: 'Are you sure to remove this email?',
+                           		  showDenyButton: true,
+                           		  showCancelButton: true,
+                           		  confirmButtonText: 'Yes',
+                           		  denyButtonText: 'No',
+                           		  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `,
+                           		}).then((result) => {
+                           		  /* Read more about isConfirmed, isDenied below */
+                           		  if (result.isConfirmed) {
+                           			  
+                           			  $.ajax({
+                           					type:'GET',
+                           					url:'/marketplace/removeEmailTemplate/'+id,
+                           					contentType:'application/json',
+                           					cache:'false',
+                           					processData:'false',
+                           					success:function(response){
+                           						if(response=='deleted'){
+                           							var row = button.parentNode.parentNode; // Get the row containing the button
+                           						    row.parentNode.removeChild(row); // Remove the row from its parent (the table)
+                           						}
+                           						else
+                           							Swal.fire('Error!', response, 'error');
+                           					},
+                           					error:function (error){
+                           						Swal.fire('Error!', '', 'error')
+                           						console.log("Admin store check : "+error);
+                           					}
+                           			  })
+                           		  } 
+                           		})
+                               
+                           }
+                           
+                        </script>
+                        
+                        <script>
+                           function sendEmail(emailId) {
+                           	if(emailId.length==0){
+                           		alert("inavlid email id!!");
+                           		return ;
+                           	}
+                           	Swal.fire({
+                           		  title: 'Are you sure to send email?',
+                           		  showDenyButton: true,
+                           		  showCancelButton: true,
+                           		  confirmButtonText: 'Yes',
+                           		  denyButtonText: 'No',
+                           		  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `,
+                           		}).then((result) => {
+                           		  /* Read more about isConfirmed, isDenied below */
+                           		  if (result.isConfirmed) {
+                           			  Swal.fire("email sending..");
+                           			  $.ajax({
+                           					type:'GET',
+                           					url:'/marketplace/sendEmailOnClick?emailId='+emailId,
+                           					contentType:'application/json',
+                           					cache:'false',
+                           					processData:'false',
+                           					success:function(response){
+                           						if(response==="done"){
+                           							Swal.fire('Email send', 'email send successfully.', 'success')
+                           						}else{
+                           							Swal.fire('Error!!', response, 'error');
+                           						}
+                           					},
+                           					error:function (error){
+                           						Swal.fire('Email Error!', '', 'error')
+                           						console.log("Admin store check : "+error);
+                           					}
+                           			  })
+                           		  } 
+                           		})   
+                           }
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

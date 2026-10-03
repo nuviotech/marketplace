@@ -1,0 +1,120 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Return Orders</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Return Orders</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <!-- DataTales Example -->
+                           <div class="card shadow mb-4">
+                              <div class="card-header py-3">
+                                 <h6 class="m-0 font-weight-bold text-primary"><span ></span> <span>Orders</span></h6>
+                              </div>
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>#ID</th>
+                                             <th>Email</th>
+                                             <th>P.name</th>
+                                             <th>C.Id</th>
+                                             <th>Date</th>
+                                             <th>Reason</th>
+                                             <th>Amount</th>
+                                             <th>Status</th>
+                                             <th>Action</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="refund : ${refunds}">
+                                             <td><span th:text="${refund.returnDetailsId}"></span></td>
+                                             <td th:text="${refund.email}"></td>
+                                             <td th:text="${refund.productName}"></td>
+                                             <td th:text="${refund.categoryId}"></td>
+                                             <td th:text="${refund.returnOrderDtTime}"></td>
+                                             <td th:text="${refund.reason}"></td>
+                                             <td th:text="${refund.amt}"></td>
+                                             <td th:text="${refund.status}"></td>
+                                             <td> <button th:if="${refund.status.equals('pending')}"  th:attr="onclick=|refundOrders('${refund.returnDetailsId}')|"  class="btn btn-sm btn-success">Refund</button> <button th:if="${refund.status.equals('refunded')}"  class="btn btn-sm btn-info">Refunded</button></td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/allSellers?page='+${currentPage-1} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/allSellers?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/allSellers?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                        <script type="text/javascript">
+                           function refundOrders(id){
+                           	//alert("id : "+id)
+                           		Swal.fire({
+                           			  title: 'Do you want to refund this order?',
+                           			  showDenyButton: true,
+                           			  showCancelButton: true,
+                           			  confirmButtonText: 'Yes',
+                           			  denyButtonText: 'No',
+                           			  backdrop: `
+                           				    rgba(255,233,150,0.3)
+                           				  `,
+                           			}).then((result) => {
+                           			  /* Read more about isConfirmed, isDenied below */
+                           			  if (result.isConfirmed) {
+                           				  window.location.assign("/marketplace/refundOrder?id="+id);    
+                           			  } else if (result.isDenied) {
+                           			    Swal.fire('Changes are not saved', '', 'info')
+                           			  }
+                           			})	
+                           }
+                           
+                           
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

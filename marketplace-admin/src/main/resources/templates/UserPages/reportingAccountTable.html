@@ -1,0 +1,92 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Affiliate Account</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Affiliate Account</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <a th:href="@{/marketplace/reportingAccountDetailsForm}" class="btn btn-primary btn-sm">Create Affiliate Account</a>
+                           <div class="card shadow my-4">
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class=" table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>#ID</th>
+                                             <th>Account Name</th>
+                                             <th>Email</th>
+                                             <th>Date</th>
+                                             <th>Phone</th>
+                                             <th>Address</th>
+                                             <th>Action</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="reportAcnt : ${reportingAcnts}">
+                                             <td><span th:text="${reportAcnt.getReportingAccountId()}"></span></td>
+                                             <td><span th:text="${reportAcnt.getReportingAccountName()}"></span></td>
+                                             <td><span th:text="${reportAcnt.getEmail()}"></span></td>
+                                             <td><span th:text="${reportAcnt.getUpdatedDtTime()}"></span></td>
+                                             <td><span th:text="${reportAcnt.getPhone()}"></span></td>
+                                             <td style="width: 50px !important;"><span th:text="${reportAcnt.getAddress()}"></span></td>
+                                             <td>
+                                                <a th:href="@{'/marketplace/reportingAccountDetailsForm?reporting_accnt_id='+${reportAcnt.getReportingAccountId()}}" class="btn btn-sm btn-warning">Edit</a>
+                                                <a th:href="@{'/marketplace/getReferralOrders/'+${reportAcnt.getReportingAccountId()+'?page=0'}}" class="btn btn-sm btn-warning">View Referrals</a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/reportingAccountDetails?page='+${currentPage-1} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/reportingAccountDetails?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/reportingAccountDetails?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

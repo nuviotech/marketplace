@@ -1,0 +1,128 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Media Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Media Images</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container-fluid">
+                           <form th:action="@{/marketplace/uploadMediaImages}" method="post" enctype="multipart/form-data">
+                              <div class="input-group mb-3">
+                                 <input name="files" type="file" multiple="multiple" class="form-control" placeholder="add media file here" aria-label="add media file here" aria-describedby="basic-addon2">
+                                 <div class="input-group-append">
+                                    <button type="submit" class="btn btn-outline-secondary" >Upload Files</button>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                        <div class="card shadow mb-4">
+                           <div class="card-body">
+                              <div class="table-responsive">
+                                 <table class=" table table-bordered" id="dataTable" width="100%"
+                                    cellspacing="0">
+                                    <thead>
+                                       <tr>
+                                          <th>Image</th>
+                                          <th>Url</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr th:each="img : ${mediaImages}">
+                                          <td><img height="100px" width="auto" th:src="${''+baseUrl+img.getName}" /></td>
+                                          <td th:text="${baseUrl+img.getName}"></td>
+                                          <td><button th:attr="onclick= | deleteRow(this,'${img.id}')|" class="btn btn-danger btn-sm">Remove</button></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/mediaFiles?page='+${currentPage-1} }"
+                                    tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/mediaFiles?page='+${i-1} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/mediaFiles?page='+${currentPage+1} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                        <script>
+                           function deleteRow(button,id) {
+                           	
+                           	Swal.fire({
+                           		  title: 'Are you sure to remove this file?',
+                           		  showDenyButton: true,
+                           		  showCancelButton: true,
+                           		  confirmButtonText: 'Yes',
+                           		  denyButtonText: 'No',
+                           		  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `,
+                           		}).then((result) => {
+                           		  /* Read more about isConfirmed, isDenied below */
+                           		  if (result.isConfirmed) {
+                           			  
+                           			  $.ajax({
+                           					type:'GET',
+                           					url:'/marketplace/removeMediaFile/'+id,
+                           					contentType:'application/json',
+                           					cache:'false',
+                           					processData:'false',
+                           					success:function(response){
+                           						if(response=='deleted'){
+                           							var row = button.parentNode.parentNode; // Get the row containing the button
+                           						    row.parentNode.removeChild(row); // Remove the row from its parent (the table)
+                           						}
+                           						else
+                           							Swal.fire('Error!', response, 'error');
+                           					},
+                           					error:function (error){
+                           						Swal.fire('Error!', '', 'error')
+                           						console.log("Admin store check : "+error);
+                           					}
+                           			  })
+                           		  } 
+                           		})
+                               
+                           }
+                           
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

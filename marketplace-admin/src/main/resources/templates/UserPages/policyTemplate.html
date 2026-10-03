@@ -1,0 +1,75 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+      <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                     
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Settings</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="/marketplace/setting">Settings</a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Policy Page</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+               
+      					<h4 class="text-muted" th:text="${policyType}"></h4>
+      					
+      					
+ 						<form th:action="@{/marketplace/savePolicyDetails}" method="post" th:object="${policy}">
+ 							<label class="text-muted mt-2">policy details</label><br/>
+ 							<small class="text-danger">Note: separate policy new point by ##</small>
+ 							<textarea rows="15" class="form-control" th:text="${policy.getPolicy()}" placeholder="enter policy details here!!" name="policy"></textarea>
+ 							<input type="hidden" th:value="${policyType}" name="policyType" />
+ 							<div class="text-right my-2">
+ 								<button type="submit" class="btn btn-primary">Add/Update Policy</button>
+ 							</div>
+      					</form>
+                    </div>
+                  </div>
+               </div>
+             </div>
+          </div>
+                        
+      	<script th:if="${status.equals('updated')}">
+      	Swal.fire({
+                           icon:'success',
+                           title: 'Updated successfully!!',
+                           width: 550,
+                           padding: '1em',
+                           text:"policy details updated successfully.",
+                           backdrop: `
+                             rgba(0,0,0,0.3)
+                           `
+                           });
+                        </script>
+         <script th:if="${status.equals('add_new')}">Swal.fire({
+                           icon:'success',
+                           title: 'Save successfully!!',
+                           width: 550,
+                           padding: '1em',
+                           text:"policy details save successfully.",
+                           backdrop: `
+                             rgba(0,0,0,0.3)
+                           `
+                           });
+                        </script>
+      </section>
+   </body>
+</html>
+      

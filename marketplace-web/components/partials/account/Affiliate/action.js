@@ -31,3 +31,33 @@ export const getAffiliateAccountDetails = async () => {
     )
     return data;
 }
+
+export const getAffiliateAccountReferralOrders = async (page) => {
+    const data= Axios.get(`${marketplaceUrl}/getReferralOrderDetails/${page}`, {
+         headers: {
+             Authorization: "Bearer " + getToken(),
+         }
+     }).then(
+         async (response) => {
+
+             if (response.data.status == 0) {
+                 console.log(response?.data?.referralOrders);
+                return response?.data?.referralOrders;
+             } else {
+                 const modal = Modal.error({
+                     centered: true,
+                     title: 'Error!',
+                     content: `invalid access!!`,
+                 });
+             }
+             return null;
+         },
+         (error) => {
+            console.error("(7476) Some thing wrong.")
+            logOut();
+            console.log(error)
+            return null;
+         }
+     )
+     return data;
+ }

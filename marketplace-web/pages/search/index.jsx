@@ -83,10 +83,15 @@ const SearchPage = () => {
             shopItemsView = (
                 <ProductGroupGridItems columns={6} pageSize={pageSize} />
             );
-            if (productItems.length > 0) {
-                const items = productItems.map((item) => {
+            let itemsList = Array.isArray(productItems)
+                ? productItems
+                : typeof productItems === 'string'
+                ? (() => { try { return JSON.parse(productItems); } catch(e) { return []; } })()
+                : [];
+            if (itemsList.length > 0) {
+                const items = itemsList.map((item) => {
                     return (
-                        <div className="col-md-3 col-sm-6 col-6" key={item.id}>
+                        <div className="col-md-3 col-sm-6 col-6" key={item.id || item.productRefId}>
                             <Product product={item} />
                         </div>
                     );

@@ -48,10 +48,14 @@ const Logo = ({ type }) => {
     }
     return (
         <Link href={data.url}>
-            <a className="ps-logo">
-                <img src={data.img} style={{ width:'auto',height:36}} />
-            </a>
-        </Link>
+    <a className="ps-logo">
+        <img
+            src="/static/img/logo.png"
+            style={{ width: 'auto', height: 36 }}
+            alt="Logo"
+        />
+    </a>
+</Link>
     );
 };
 

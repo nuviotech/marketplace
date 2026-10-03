@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import Product from '../../../elements/products/Product';
 import { carouselStandard } from '../../../../utilities/carousel-helpers';
 import { connect } from 'react-redux';
-import { getColletionBySlug } from '../../../../utilities/product-helper';
+import { tionBySlug } from '../../../../utilities/product-helper';
 
 class ElectronicBestSeller extends Component {
     render() {

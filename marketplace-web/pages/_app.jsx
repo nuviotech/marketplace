@@ -46,7 +46,13 @@ function App({ Component, pageProps }) {
                     />
                     <meta name="format-detection" content="telephone=no" />
                     <meta name="apple-mobile-web-app-capable" content="yes" />
-                </Head>
+                
+                
+                <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+/>
+</Head>
                 <SEO 
                     title={process.env.NEXT_PUBLIC_WEBSITE_NAME} 
                     description={`Shop at ${process.env.NEXT_PUBLIC_WEBSITE_NAME} for electronics, fashion, home goods, and more. Enjoy fast shipping and great deals on all your favorite products.`} 
