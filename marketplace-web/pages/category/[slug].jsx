@@ -45,9 +45,15 @@ const ProductCategoryScreen = () => {
         }
     }
 
-    function handlePagination(page, pageSize) {
-        Router.push(`?page=${page}&price_lt=${query?.price_lt}&price_gt=${query?.price_gt}&slug=${query?.slug}`);
-    }
+    function handlePagination(page) {
+    Router.push({
+        pathname: Router.pathname,
+        query: {
+            ...query,
+            page: page,
+        },
+    });
+}
 
     async function getTotalRecords(params) {
         var responseData;
@@ -68,14 +74,15 @@ const ProductCategoryScreen = () => {
                 price_gt: query.price_gt
             };
 
-            const queries = {
-                _start: page,
-                _limit: pageSize,
-                slug: query.slug,
-                price_lt: query.price_lt,
-                price_gt: query.price_gt
-            };
-            
+            const currentPage = page ? parseInt(page) : 1;
+
+const queries = {
+    _start: currentPage,
+    _limit: pageSize,
+    slug: query.slug,
+    price_lt: query.price_lt,
+    price_gt: query.price_gt
+};
             getTotalRecords(params);
             getCategry(queries);
         }

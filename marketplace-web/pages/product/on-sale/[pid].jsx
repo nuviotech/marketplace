@@ -10,6 +10,9 @@ import RelatedProduct from '~/components/partials/product/RelatedProduct';
 import Newletters from '~/components/partials/commons/Newletters';
 import FooterDefault from '~/components/shared/footers/FooterDefault';
 import PageContainer from '~/components/layouts/PageContainer';
+import axios from 'axios';
+import { marketplaceUrl } from '~/repositories/Repository';
+import { userIsLogin, getToken } from '~/store/auth/action';
 
 const ProductDefaultPage = () => {
     const router = useRouter();
@@ -22,6 +25,7 @@ const ProductDefaultPage = () => {
         const responseData = await ProductRepository.getProductsById(pid);
         if (responseData) {
             setProduct(responseData);
+            trackProductView(responseData);
             setTimeout(
                 function () {
                     setLoading(false);
@@ -30,6 +34,30 @@ const ProductDefaultPage = () => {
             );
         }
     }
+
+    const trackProductView = (productData) => {
+        if (!userIsLogin() || !productData) return;
+        try {
+            axios.post(
+                `${marketplaceUrl}/addRecentlyViewedProduct`,
+                {
+                    productId: productData.id,
+                    productName: productData.title,
+                    productPrice: productData.sale_price || productData.price || 0,
+                    productImage: productData.images?.[0]?.url || '',
+                    categoryId: productData.category_id || 0,
+                },
+                {
+                    headers: { Authorization: "Bearer " + getToken() },
+                    timeout: 5000,
+                }
+            ).catch((error) => {
+                console.debug("Recently viewed product tracking failed (non-critical)", error.message);
+            });
+        } catch (error) {
+            console.debug("Recently viewed product tracking error (non-critical)", error.message);
+        }
+    };
 
     useEffect(() => {
         getProduct(pid);

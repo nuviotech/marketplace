@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { marketplaceUrl } from '~/repositories/Repository';
 import Link from 'next/link';
-import { Form, Modal } from 'antd';
+import { Form, Modal, message } from 'antd';
 import useEcomerce from '~/hooks/useEcomerce';
 import { calculateAmount } from '~/utilities/ecomerce-helpers';
 import { userIsLogin, getToken } from '~/store/auth/action';
@@ -19,6 +19,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
     const [loader, setLoader] = useState(false)
     const [codIsEnabled, setCodIsEnabled] = useState(false);
     const [minimumPurchaseAmt, setMinimumPurchaseAmt] = useState(null);
+    const [codPrepaidAmountPercentage, setCodPrepaidAmountPercentage] = useState(0);
     const [businessType, setBusinessType] = useState(null);
     const [state, setState] = useState({});
     const [review, setReview] = useState({ state: "select state" });
@@ -87,6 +88,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                 setCodIsEnabled(marketplaceSetupInfo?.cod);
                 setMinimumPurchaseAmt(marketplaceSetupInfo?.minimumPurchaseAmt)
                 setBusinessType(marketplaceSetupInfo?.businessType)
+                setCodPrepaidAmountPercentage(marketplaceSetupInfo?.codPrepaidAmountPercentage)
                 getProducts(ecomerce.cartItems, 'cart');
                 setDefaultValues();
             }
@@ -124,10 +126,11 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
             "totalBill": totalAmount,
             "token": getToken(),
             "state": dt.get("state"),
+            "codPrepaidAmountPercentage": codPrepaidAmountPercentage,
             "couponCode": coupon,
             //    "orderTotalAmtBeforeApplyingCoupon": orderTotalAmt,
             "paymentType": dt.get("paymentType"),
-            "gstin":dt.get("gstin")
+            "gstin": dt.get("gstin")
         }
 
         if (minimumPurchaseAmt == null) {
@@ -171,8 +174,41 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                 title: 'pincode is required!!',
             });
         } else {
-            setLoader(true);
-            placeOrder(orderInformation);
+            if (orderInformation?.paymentType==="Cash on Delivery" && codPrepaidAmountPercentage > 0) {
+                const prepaidCodAmount = (totalAmount * (codPrepaidAmountPercentage / 100)).toFixed(2);
+
+                Modal.confirm({
+                    title: 'Cash on Delivery Confirmation',
+                    content: (
+                        <div>
+                            <p>Thank you for choosing Cash on Delivery (COD) for your order.</p>
+                            <p>
+                                To secure your order, a prepaid amount of <strong>₹{prepaidCodAmount}</strong>
+                                ({codPrepaidAmountPercentage}% of your total order value) is required. This
+                                amount will be deducted from your final payment.
+                            </p>
+                            <p>
+                                If your total order value is <strong>₹{totalAmount}</strong>, you
+                                would need to pay <strong>₹{prepaidCodAmount}</strong> upfront.
+                            </p>
+                        </div>
+                    ),
+                    centered: true,
+                    okText: 'Accept & Continue',
+                    cancelText: 'Cancel Order',
+                    onOk: () => {
+                        setLoader(true);
+                        placeOrder(orderInformation);
+                        message.success('Order confirmed. Proceeding to payment.');
+                    },
+                    onCancel: () => {
+                        message.info('Order not placed.');
+                    },
+                });
+            } else{
+                setLoader(true);
+                placeOrder(orderInformation);
+            }
         }
         //  Router.push('/account/shipping');
 
@@ -204,136 +240,294 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
             }
         }).then(
             async (response) => {
+                //alert(JSON.stringify(response?.data))
                 if (response.data.success) {
-                    //var merchantId = response.data.data.merchantId;
-                    // var transactionId = response.data.data.merchantTransactionId
+                    // PhonePe response - redirect to payment page
                     router.push(response.data.data.instrumentResponse.redirectInfo.url + "");
+                } else if (response.data.status === "razorpay") {
+                    // RAZORPAY PAYMENT FLOW - response.data is already a JSON object
+                    setLoader(false);
+                    const orderId = response.data.orderId;
+                    console.log("Razorpay order created: " + orderId);
+                    
+                    try {
+                        // Call backend to create Razorpay order
+                        const razorpayOrderResponse = await axios.post(`${marketplaceUrl}/createRazorpayOrder`, 
+                            { orderId: orderId }, 
+                            {
+                                headers: {
+                                    Authorization: "Bearer " + getToken(),
+                                }
+                            }
+                        );
+                        
+                        if (razorpayOrderResponse.data.status === 0) {
+                            // Load Razorpay Checkout script
+                            const result = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+                            if (!result) {
+                                alert("Failed to load Razorpay. Please try again.");
+                                return;
+                            }
+                            
+                            const options = {
+                                key: razorpayOrderResponse.data.razorpayKeyId, // Razorpay Public Key (not secret)
+                                amount: razorpayOrderResponse.data.amount * 100, // Convert to paise
+                                currency: razorpayOrderResponse.data.currency,
+                                order_id: razorpayOrderResponse.data.razorpayOrderId,
+                                name: "Nuvio Marketplace",
+                                description: "Purchase from Nuvio Marketplace",
+                                image: "/static/img/nuvioseller.png",
+                                handler: async function (paymentResponse) {
+                                    // Payment successful - verify on backend
+                                    const payment_id = paymentResponse.razorpay_payment_id;
+                                    const rz_order_id = paymentResponse.razorpay_order_id;
+                                    const signature = paymentResponse.razorpay_signature;
+                                    
+                                    try {
+                                        const verifyResponse = await axios.post(
+                                            `${marketplaceUrl}/verifyRazorpayPayment`,
+                                            {
+                                                razorpay_order_id: rz_order_id,
+                                                razorpay_payment_id: payment_id,
+                                                razorpay_signature: signature
+                                            },
+                                            {
+                                                headers: {
+                                                    Authorization: "Bearer " + getToken(),
+                                                }
+                                            }
+                                        );
+                                        
+                                        if (verifyResponse.data.status === 0) {
+                                            // Payment verified successfully
+                                            removeItems('cart');
+                                            Modal.success({
+                                                centered: true,
+                                                title: 'Payment Successful!',
+                                                content: `Thank you! Your order ${verifyResponse.data.orderId} has been placed successfully.`,
+                                                onOk() {
+                                                    router.push(`/account/orders?orId=${verifyResponse.data.orderId}`);
+                                                }
+                                            });
+                                        } else {
+                                            Modal.error({
+                                                centered: true,
+                                                title: 'Payment Verification Failed',
+                                                content: verifyResponse.data.message || 'Could not verify payment. Please contact support.',
+                                            });
+                                        }
+                                    } catch (error) {
+                                        console.error("Verification error:", error);
+                                        Modal.error({
+                                            centered: true,
+                                            title: 'Verification Error',
+                                            content: 'Payment verification failed. Please contact support.',
+                                        });
+                                    }
+                                },
+                                prefill: {
+                                    name: "Customer",
+                                    email: "",
+                                    contact: "",
+                                },
+                                theme: {
+                                    color: "#fcb800"
+                                },
+                                modal: {
+                                    ondismiss: function() {
+                                        Modal.info({
+                                            centered: true,
+                                            title: 'Payment Cancelled',
+                                            content: 'Payment was cancelled. Your order has been saved. You can retry payment later.',
+                                        });
+                                    }
+                                }
+                            };
+                            
+                            const razorpay = new window.Razorpay(options);
+                            razorpay.open();
+                        } else {
+                            Modal.error({
+                                centered: true,
+                                title: 'Error Creating Payment',
+                                content: razorpayOrderResponse.data.message || 'Failed to create Razorpay order.',
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Razorpay flow error:", e);
+                        Modal.error({
+                            centered: true,
+                            title: 'Payment Error',
+                            content: 'Failed to initiate Razorpay payment. Please try again.',
+                        });
+                    }
+                } else if (typeof response.data === 'string') {
+                    setLoader(false);
+                    try {
+                        const data = JSON.parse(response.data);
+                        
+                        // RAZORPAY PAYMENT FLOW (for backward compatibility if response is string)
+                        if (data.status === "razorpay") {
+                            const orderId = data.orderId;
+                            logger.debug("Razorpay order created: " + orderId);
+                            
+                            // Call backend to create Razorpay order
+                            const razorpayOrderResponse = await axios.post(`${marketplaceUrl}/createRazorpayOrder`, 
+                                { orderId: orderId }, 
+                                {
+                                    headers: {
+                                        Authorization: "Bearer " + getToken(),
+                                    }
+                                }
+                            );
+                            
+                            if (razorpayOrderResponse.data.status === 0) {
+                                // Load Razorpay Checkout script
+                                const result = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+                                if (!result) {
+                                    alert("Failed to load Razorpay. Please try again.");
+                                    return;
+                                }
+                                
+                                const options = {
+                                    key: razorpayOrderResponse.data.razorpayKeyId, // Razorpay Public Key (not secret)
+                                    amount: razorpayOrderResponse.data.amount * 100, // Convert to paise
+                                    currency: razorpayOrderResponse.data.currency,
+                                    order_id: razorpayOrderResponse.data.razorpayOrderId,
+                                    name: "Nuvio Marketplace",
+                                    description: "Purchase from Nuvio Marketplace",
+                                    image: "/static/img/nuvioseller.png",
+                                    handler: async function (paymentResponse) {
+                                        // Payment successful - verify on backend
+                                        const payment_id = paymentResponse.razorpay_payment_id;
+                                        const rz_order_id = paymentResponse.razorpay_order_id;
+                                        const signature = paymentResponse.razorpay_signature;
+                                        
+                                        try {
+                                            const verifyResponse = await axios.post(
+                                                `${marketplaceUrl}/verifyRazorpayPayment`,
+                                                {
+                                                    razorpay_order_id: rz_order_id,
+                                                    razorpay_payment_id: payment_id,
+                                                    razorpay_signature: signature
+                                                },
+                                                {
+                                                    headers: {
+                                                        Authorization: "Bearer " + getToken(),
+                                                    }
+                                                }
+                                            );
+                                            
+                                            if (verifyResponse.data.status === 0) {
+                                                // Payment verified successfully
+                                                removeItems('cart');
+                                                Modal.success({
+                                                    centered: true,
+                                                    title: 'Payment Successful!',
+                                                    content: `Thank you! Your order ${verifyResponse.data.orderId} has been placed successfully.`,
+                                                    onOk() {
+                                                        router.push(`/account/orders?orId=${verifyResponse.data.orderId}`);
+                                                    }
+                                                });
+                                            } else {
+                                                Modal.error({
+                                                    centered: true,
+                                                    title: 'Payment Verification Failed',
+                                                    content: verifyResponse.data.message || 'Could not verify payment. Please contact support.',
+                                                });
+                                            }
+                                        } catch (error) {
+                                            console.error("Verification error:", error);
+                                            Modal.error({
+                                                centered: true,
+                                                title: 'Verification Error',
+                                                content: 'Payment verification failed. Please contact support.',
+                                            });
+                                        }
+                                    },
+                                    prefill: {
+                                        name: data.firstName + " " + data.lastName || review.fname + " " + review.lname,
+                                        email: razorpayOrderResponse.data.userEmail,
+                                        contact: review.contact,
+                                    },
+                                    theme: {
+                                        color: "#fcb800"
+                                    },
+                                    modal: {
+                                        ondismiss: function() {
+                                            Modal.info({
+                                                centered: true,
+                                                title: 'Payment Cancelled',
+                                                content: 'Payment was cancelled. Your order has been saved. You can retry payment later.',
+                                            });
+                                        }
+                                    }
+                                };
+                                
+                                const razorpay = new window.Razorpay(options);
+                                razorpay.open();
+                            } else {
+                                Modal.error({
+                                    centered: true,
+                                    title: 'Error Creating Payment',
+                                    content: razorpayOrderResponse.data.message || 'Failed to create Razorpay order.',
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        console.log("Response parsing or Razorpay handling error:", e);
+                        // Try treating as string response for other cases
+                        if (response.data === 'InvalidCouponCode') {
+                            Modal.error({
+                                centered: true,
+                                title: 'Sorry, Invalid coupon code !!',
+                            });
+                        } else if (response.data === 'user_alredy_use_coupon') {
+                            Modal.error({
+                                centered: true,
+                                title: 'Sorry, This Token Has Already Been Used !!',
+                            });
+                        } else if (response.data === 'cod_order_save') {
+                            removeItems('cart');
+                            window.location.assign("/account/orders?orId=OD-nuvio-2024&cod=true");
+                        } else if (response.data === 'cash_on_delivery_not_available') {
+                            Modal.error({
+                                centered: true,
+                                title: 'Sorry, Cash on Delivery not available!!',
+                            });
+                        } else if (response.data === 'gstin_required') {
+                            Modal.error({
+                                centered: true,
+                                title: 'GSTIN number is required!',
+                            });
+                        }else if(response?.data === "cod_prepaid_persentage_not_match"){
+                            Modal.error({
+                                centered: true,
+                                title: 'COD prepaid persentage not match!!',
+                            });
+                        } else if (response?.data?.startsWith("Your order from")) {
+                            Modal.error({
+                                centered: true,
+                                title: 'Insufficient Minimum Order Value',
+                                content: response?.data
+                            });
+                        } else {
+                            const modal = Modal.error({
+                                centered: true,
+                                title: 'Something went wrong on server!!',
+                                content: `Oops! It seems that something unexpected occurred on our end. We apologize for any inconvenience this may have caused. Our team has been notified and is working diligently to fix the issue. Please try again later, or feel free to contact our support team if you need immediate assistance. Thank you for your understanding.`,
+                            });
+                        }
+                    }
                 } else {
                     setLoader(false);
-                    if (response.data === 'InvalidCouponCode') {
-                        Modal.error({
-                            centered: true,
-                            title: 'Sorry, Invalid coupon code !!',
-                        });
-                    } else if (response.data === 'user_alredy_use_coupon') {
-                        Modal.error({
-                            centered: true,
-                            title: 'Sorry, This Token Has Already Been Used !!',
-                        });
-                    } else if (response.data === 'cod_order_save') {
-                        removeItems('cart');
-                        window.location.assign("/account/orders?orId=OD-nuvio-2024&cod=true");
-                    } else if (response.data === 'cash_on_delivery_not_available') {
-                        Modal.error({
-                            centered: true,
-                            title: 'Sorry, Cash on Delivery not available!!',
-                        });
-                    }else if(response.data === 'gstin_required'){
-                        Modal.error({
-                            centered: true,
-                            title: 'GSTIN number is required!',
-                        });
-                    }else if(response?.data?.startsWith("Your order from")){
-                        Modal.error({
-                            centered: true,
-                            title: 'Insufficient Minimum Order Value',
-                            content:response?.data
-                        });
-                    } else {
-                        const modal = Modal.error({
-                            centered: true,
-                            title: 'Something went wrong on server!!',
-                            content: `Oops! It seems that something unexpected occurred on our end. We apologize for any inconvenience this may have caused. Our team has been notified and is working diligently to fix the issue. Please try again later, or feel free to contact our support team if you need immediate assistance. Thank you for your understanding.`,
-                        });
-                        modal.update;
-                        console.error(JSON.stringify(response?.data));
-
-                    }
-
+                    Modal.error({
+                        centered: true,
+                        title: 'Error',
+                        content: 'Unexpected response format from server. Please try again.',
+                    });
                 }
-
-                //razorpay payment integration
-                /*
-                const result = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-                if (!result) {
-                    alert("network issue...");
-                    return;
-                }
-                const amt = totalAmount;
-               // console.log("amt " + JSON.stringify(response.data));
-                const Razorpay_payment = response.data.RZ_order;
-                const order_ref_id = response.data.order_id;
-                //console.log("order id : "+Razorpay_payment.id);
-                const options = {
-                    key: response.data.rzKey,
-                    currency: "INR",
-                    name: "Payment gateway.",
-                    description: "Test Wallet Transaction",
-                    image: "/static/img/nuvioseller.png",
-                    order_id: Razorpay_payment.id,
-                    handler: function (response) {
-
-                        const payment_id = response.razorpay_payment_id;
-                        const rz_order_id = response.razorpay_order_id;
-                        const signature = response.razorpay_signature;
-
-                        if (response.razorpay_payment_id) {
-                            //update the states of order payment
-                            const paymentObject = {
-                                "rzPaymentId": payment_id,
-                                "rzOrderId": rz_order_id,
-                                "rzSignature": signature,
-                                "orderID": order_ref_id
-                            }
-                            axios.post(`${marketplaceUrl}/updateOrder`, paymentObject, {
-                                headers: {
-                                    Authorization: "Bearer "+getToken(),
-                                }
-                            }).then(
-                                (response) => {
-                                    // alert("payment is success full");
-                                    const modal = Modal.success({
-                                        centered: true,
-                                        title: 'Payment Success!',
-                                        content: `Thank you! Your order is ` + order_ref_id,
-                                    });
-                                    modal.update;
-                                    review.fname = "";
-                                },
-                                (error) => {
-                                    alert("error happning in update payment status...")
-                                }
-                            )
-
-                        }
-                    },
-                    prefill: {
-                        name: review.fname + " " + review.last_name,
-                        email: "xyz@gmail.com",
-                        contact: review.contact,
-                    },
-                    theme: {
-                        color: "#fcb800"
-                    }
-                };
-
-                const paymentObject = new window.Razorpay(options);
-                paymentObject.open();
-
-
-
-                //order details is save to database
-                //console.log("Razor pay details : "+JSON.stringify(response));
-                // alert(" Order are successfully save to store. ");
-
-                //Router.push('/account/payment');
-            */
-
-
-
-
-                /*
-                    //Paytm payment integration
+                /* OLD PAYTM CODE - DISABLED
                     const result = await loadScript("https://securegw.paytm.in/merchantpgpui/checkoutjs/merchants/NhwQUF41773981847093.js");
                     if (!result) {
                         alert("network issue...");
@@ -394,8 +588,6 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                                         }
                                     )
     
-    
-    
                                 } else {
                                     alert("something wrong");
                                 }
@@ -413,8 +605,7 @@ const FormCheckoutInformation = ({ ecomerce, coupon }) => {
                             });
                         });
                     }
-                    //paytm
-                    */
+                */
             },
             (error) => {
                 //order details is not save to database

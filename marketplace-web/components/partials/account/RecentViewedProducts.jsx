@@ -1,20 +1,20 @@
 import React, { Component, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { logOut, userIsLogin } from '../../../store/auth/action';
+import { logOut, userIsLogin, getToken } from '../../../store/auth/action';
 import { userData } from '~/repositories/UserDeatils';
 import { AuthContext } from '~/context/loginContext';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { marketplaceUrl } from '~/repositories/Repository';
 
 function RecentViewedProducts() {
-    /* constructor(props) {
-         super(props);
-         this.state = {};
-     }*/
     const dispatch = useDispatch();
     const Router = useRouter();
+    const { currentUser } = useContext(AuthContext);
+    const [recentlyViewedProducts, setRecentlyViewedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    //  render() {
     const accountLinks = [
         {
             text: 'Account Information',
@@ -49,15 +49,32 @@ function RecentViewedProducts() {
         },
     ];
 
-    const { currentUser } = useContext(AuthContext);
-    /*
-    //getUserDetails();
-    const [user,setUser]=useState([]);
-    useEffect(async()=>{
-        setUser(await userData())
-    },[]);
-    */
+    // Fetch recently viewed products on component mount
+    useEffect(() => {
+        const fetchRecentlyViewed = async () => {
+            if (userIsLogin()) {
+                try {
+                    const response = await axios.get(`${marketplaceUrl}/getRecentlyViewedProducts`, {
+                        headers: {
+                            Authorization: "Bearer " + getToken(),
+                        }
+                    });
+                    
+                    if (response.data && response.data.data) {
+                        setRecentlyViewedProducts(response.data.data);
+                    }
+                } catch (error) {
+                    console.error("Error fetching recently viewed products:", error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
 
+        fetchRecentlyViewed();
+    }, []);
 
     return (
         <section className="ps-my-account ps-page--account">
@@ -97,7 +114,6 @@ function RecentViewedProducts() {
                                                     </li>
                                                 ))}
                                                 <li>
-
                                                     <a onClick={() => {
                                                         dispatch(logOut());
                                                         Router.push('/account/login');
@@ -105,7 +121,6 @@ function RecentViewedProducts() {
                                                         <i className="icon-power-switch"></i>
                                                         Logout
                                                     </a>
-
                                                 </li>
                                             </ul>
                                         </div>
@@ -114,8 +129,52 @@ function RecentViewedProducts() {
                             </div>
                             <div className="col-lg-8">
                                 <section className="ps-section--account-setting">
+                                    <div className="ps-section__header">
+                                        <h3>Recently Viewed Products</h3>
+                                    </div>
                                     <div className="ps-section__content">
-                                        <p>No product here.</p>
+                                        {loading ? (
+                                            <p>Loading...</p>
+                                        ) : recentlyViewedProducts && recentlyViewedProducts.length > 0 ? (
+                                            <div className="table-responsive">
+                                                <table className="table ps-table--shopping-cart">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product Name</th>
+                                                            <th>Price</th>
+                                                            <th>Viewed Date</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {recentlyViewedProducts.map((product) => (
+                                                            <tr key={product.id}>
+                                                                <td>
+                                                                    <strong>
+                                                                        {product.productName && product.productName.length > 50
+                                                                            ? product.productName.substring(0, 50) + "..."
+                                                                            : product.productName}
+                                                                    </strong>
+                                                                </td>
+                                                                <td className="price">
+                                                                    ₹{product.productPrice}
+                                                                </td>
+                                                                <td>
+                                                                    {new Date(product.viewedDate).toLocaleDateString()}
+                                                                </td>
+                                                                <td>
+                                                                    <Link href={`/product/${product.productId}`}>
+                                                                        <a className="btn btn-sm btn-outline-primary">View Product</a>
+                                                                    </Link>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ) : (
+                                            <p>No recently viewed products.</p>
+                                        )}
                                     </div>
                                 </section>
                             </div>
@@ -125,14 +184,12 @@ function RecentViewedProducts() {
                     <div className='text-center'>
                         <h3 className='text-danger text-center'>Please login first to access this page !!</h3>
                         <a onClick={() => {
-                           // Router.push('/account/login');
                            window.location.assign("/account/login")
                         }} className='btn btn-lg btn-warning text-center'>Login Here !!</a>
                     </div>
             }
         </section>
     );
-    // }
 }
 
 export default RecentViewedProducts;

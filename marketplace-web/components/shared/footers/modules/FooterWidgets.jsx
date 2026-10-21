@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import ReactWhatsapp from 'react-whatsapp';
-import { WhatsappIcon } from 'react-share';
-import { FloatingWhatsApp } from 'react-floating-whatsapp';
+//import ReactWhatsapp from 'react-whatsapp';
+//import { WhatsappIcon } from 'react-share';
+//import { FloatingWhatsApp } from 'react-floating-whatsapp';
 import { relative } from 'path';
 
 
@@ -15,6 +15,7 @@ const FooterWidgets = () => (
                     target="_blank"
                     rel="noopener noreferrer"
                 >
+                    
                     <i class="fa fa-whatsapp whatsapp-icon fa-3x text-success"  ></i>
                 </a>
 
@@ -23,15 +24,16 @@ const FooterWidgets = () => (
             <div className="widget_content">
 
                 <p>Whatsapp us 24/7</p>
+                {/*
                 <div className='mb-5'>
-                    {/* <FloatingWhatsApp phoneNumber={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} accountName={`${process?.env?.NEXT_PUBLIC_FOOTER_WEBSITE_NAME} seller`} /> */}
+                    {/* <FloatingWhatsApp phoneNumber={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} accountName={`${process?.env?.NEXT_PUBLIC_FOOTER_WEBSITE_NAME} seller`} /> 
 
                     <ReactWhatsapp number={`91${process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}`} message="Hi" element={"div"} >
                         <WhatsappIcon size={35} round="true"></WhatsappIcon>
                     </ReactWhatsapp>
 
                 </div>
-
+                */}
                 <h3 style={{ fontSize: "19px" }}>+91 {process?.env?.NEXT_PUBLIC_WHATSAPP_NUMBER}</h3>
                 <p>
                     <a href={`mailto:${process?.env?.NEXT_PUBLIC_EMAIL}`}>{process?.env?.NEXT_PUBLIC_EMAIL}</a>
@@ -83,7 +85,7 @@ const FooterWidgets = () => (
                 </li>
 
                 <li>
-                    <Link href="/page/terms_of_service">
+                    <Link href="/page/terms_and_conditions">
                         <a>Terms Of Service</a>
                     </Link>
                 </li>

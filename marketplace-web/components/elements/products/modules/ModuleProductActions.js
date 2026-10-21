@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { connect } from 'react-redux';
 import ProductDetailQuickView from '~/components/elements/detail/ProductDetailQuickView';
 import useEcomerce from '~/hooks/useEcomerce';
@@ -7,11 +7,24 @@ import useEcomerce from '~/hooks/useEcomerce';
 const ModuleProductActions = ({ product, ecomerce }) => {
     const [isQuickView, setIsQuickView] = useState(false);
     const { addItem } = useEcomerce();
-
+    
     function handleAddItemToCart(e) {
-        e.preventDefault();
-        addItem({ id: product?.id, quantity: 1 }, ecomerce?.cartItems, 'cart');
-    }
+    e.preventDefault();
+
+    addItem(
+        {
+            id: product?.id,
+            quantity: product?.minimumOrderQuantity,
+        },
+        ecomerce?.cartItems,
+        'cart'
+    );
+
+    message.success({
+        content: `${product?.title || 'Product'} added to cart`,
+        duration: 2,
+    });
+}
 
     function handleAddItemToWishlist(e) {
         e.preventDefault();

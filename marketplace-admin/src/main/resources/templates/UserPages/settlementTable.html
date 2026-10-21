@@ -1,0 +1,176 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head></head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Settlement Report</h5>
+                                    </div>
+                                                   
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a href="#!">Settlement Table</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        
+                        <div class="row">
+                        	<div class="col-12 col-md-6">
+                        	    <button class="btn btn-primary" id="downloadButton" th:attr="onclick=|downloadExcel('${startDate}','${endDate}')|">Download Excel</button>
+                        	</div>
+                        	<div class="col-12 col-md-6">
+                        		<div class="search-container">   
+						   			 <form th:action="@{/marketplace/settlement}" onsubmit="return checkDates()" id="dateForm" method="GET" >
+							  
+							           <div class="input-group">
+							          <input  type="hidden" name="page" th:value="${currentPage}">
+							          
+						               <input placeholder="start date" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="start-date" th:value="${startDate}" name="startDate" required>
+				
+						               <input placeholder="end date" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="end-date" th:value="${endDate}" name="endDate"required>
+							              <div class="input-group-prepend">
+							               <button class="btn btn-primary" type="submit" value="Search" >Search</button>
+							              </div>
+						               </div>
+						             </form>
+						       </div> 
+                        	</div>
+                        </div>
+                        
+       
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                           <!-- Page Heading -->
+                           <!-- DataTales Example seller_request -->
+                           <div class="card shadow mb-4">
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table class=" table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                       <thead>
+                                          <tr>
+                                             <th>#ID</th>
+                                             <th>Seller Email</th>
+                                             <th>Product id</th>
+                                             <th>Date</th>
+                                             <th>Qty</th>
+                                             <th>Item Amt</th>
+                                             <th>Marketplace Charge</th>
+                                             <th>Service Charge</th>
+                                             <th>Final Amt</th>
+                                             <th>Status</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr th:each="settlement : ${settlements}">
+                                             <td><span th:text="${settlement.getSettlementId()}"></span></td>
+                                             <td><span th:text="${ settlement?.getSellerEmail()}"></span></td>
+                                             <td><span th:text="${settlement.getProductId()}"></span></td>
+                                             <td><span th:text="${settlement.getCreatedDtTime()}"></span></td>
+                                             <td><span th:text="${settlement.getItemQuantity()}"></span></td>
+                                             <td><span th:text="${'₹ '+settlement.getItemPrice()}"></span></td>
+                                             <td><span th:text="${'₹ '+settlement.getMarketplaceCharge()}"></span></td>
+                                             <td><span th:text="${'₹ '+settlement.getServiceCharge()}"></span></td>
+                                             <td><span th:text="${'₹ '+settlement.getFinalAmt()}"></span></td>
+                                             <td><span th:if="${settlement.getOrderProduct()!=null}" th:text="${ settlement?.getOrderProduct()?.status}"></span></td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /.container-fluid -->
+                        <div th:if="${totalPage!=0}" class="my-5">
+                           <nav aria-label="Page navigation example ">
+                              <ul class="pagination justify-content-end">
+                                 <li th:classappend="${ currentPage == 0 ?'disabled':'enabled' }"
+                                    class="page-item"><a class="page-link"
+                                    th:href="@{'/marketplace/settlement?page='+${currentPage-1}+'&startDate='+${startDate}+'&endDate='+${endDate} }" tabindex="-1">Previous</a></li>
+                                 <li th:each="i : ${#numbers.sequence(1,totalPage)}"
+                                    class="page-item text-dark"><a class="page-link text-dark"
+                                    th:classappend="${ i==currentPage+1 }?'bg-dyellow' : ''"
+                                    th:href="@{'/marketplace/settlement?page='+${i-1}+'&startDate='+${startDate}+'&endDate='+${endDate} }"><span
+                                    th:text="${i}"></span></a></li>
+                                 <li class="page-item"
+                                    th:classappend="${ currentPage+1 == totalPage } ?'disabled':'enabled' ">
+                                    <a class="page-link"
+                                       th:href="@{'/marketplace/settlement?page='+${currentPage-1}+'&startDate='+${startDate}+'&endDate='+${endDate} }">Next</a>
+                                 </li>
+                              </ul>
+                           </nav>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+          <script>
+		      function checkDates(){
+		      	    let fromDate = new Date(document.getElementById('start-date').value);
+		            let toDate = new Date(document.getElementById('end-date').value);
+		
+		            if (fromDate > toDate) {
+		                Swal.fire("Invalid dates!!","Start date cannot be greater than End date.","warning");
+		               return false;
+		            } else {
+		                return true;
+		            }
+		      	return false;
+		      }
+		      
+		      
+		      function downloadExcel(startDate,endDate) {
+		            var button = document.getElementById("downloadButton");
+		            
+		            button.disabled = true; // Disable the button
+		            button.innerText = "Please Wait..";
+		
+		            var xhr = new XMLHttpRequest();
+		            xhr.open("GET", "/marketplace/download/excel?startDate="+startDate+"&endDate="+endDate, true);
+		            xhr.responseType = "blob";
+		
+		            xhr.onload = function () {
+		                if (this.status === 200) {
+		                    var filename = "";
+		                    var disposition = xhr.getResponseHeader('Content-Disposition');
+		                    if (disposition && disposition.indexOf('attachment') !== -1) {
+		                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+		                        var matches = filenameRegex.exec(disposition);
+		                        if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+		                    }
+
+		                    var blob = new Blob([this.response], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+		                    var link = document.createElement("a");
+		                    link.href = window.URL.createObjectURL(blob);
+		                    link.download = filename || "data.xlsx"; // Use the extracted filename or a default one
+		                    link.style.display = 'none'; // Hide the link
+		                    document.body.appendChild(link);
+		                    link.click();
+		                    document.body.removeChild(link); // Remove the link from the DOM
+
+		                    button.disabled = false; // Enable the button
+		                    button.innerText = "Download Excel"; // Restore the original text
+		                }else{
+		                	button.disabled = false; // Enable the button
+		                    button.innerText = "Download Excel"; // Restore the original text
+		                }
+		            };
+		            xhr.send();
+		        }
+       </script>
+      </section>
+   </body>
+</html>

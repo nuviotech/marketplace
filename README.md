@@ -1,211 +1,110 @@
-# Marketplace Description
+# Marketplace
 
-Our "Marketplace Software" is the #1 API based Interconnectable marketplace software which collaborates with other sellers and sites for the products with an option to sell with other sellers and products readily available and onboarded.
+This repository starts the storefront, Strapi CMS, marketplace API, and marketplace admin against one local MySQL database. The Windows and Linux launchers build the checked-in Java projects, install and build the Node projects, start all four services, and wait for their HTTP endpoints to respond.
 
-Sample application you can find is www.nuvio.in
+## Service URLs
 
-In order to upload projects to this marketplace, User needs to have account https://manageecom.com as a seller and user can upload the products in https://manageecom.com. 
+| Service | URL | Runtime |
+| --- | --- | --- |
+| Storefront | http://localhost:3003 | Next.js, Node 16 |
+| CMS | http://localhost:1337 | Strapi 3, Node 14 |
+| Marketplace API | http://localhost:8084 | Spring Boot, Java 21+ |
+| Marketplace admin | http://localhost:9091 | Spring Boot, Java 21+ |
 
-Your marketplace admin site shows the list of sellers already onboarded on manageecom.com and provide you an option to choose sellers from your admin dashboard.
+The API and admin share the `marketplace` MySQL database. The storefront connects to the API, admin, and CMS above. Strapi uses SQLite under `marketplace-cms`.
 
-After selecting the available sellers , a request will got seller account in manageecom.com, once sellers approves your request, all his products will become visible on your site. 
+## Windows (PowerShell)
 
-Below are the ports and services on which your marketplace operates when you install on localhost, You can change the ports in startup.properties
+In an elevated PowerShell window, install Java 21, MySQL Server, and nvm-windows:
 
-Marketplace url : http://localhost:3000
-CMS to change the content on marketplace : http://localhost:1337
-Marketplace Admin URL : http://localhost:9091
-Marketplace api URL : http://localhost:8089
-
-
-## Installation Instructions ###
-
-## Install Nodejs
-
-#### STEP 1 :
-Enable the NodeSource repository by running the following curl command as a user with sudo privileges :
-```bash
-curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-```
-The command will add the NodeSource signing key to your system, create an apt sources repository file, install all necessary packages and refresh the apt cache.
-#### STEP 2 :
-Once the NodeSource repository is enabled, install Node.js and npm by typing
-```bash
-sudo apt install nodejs
-```
-The nodejs package contains both the node and npm binaries.
-
-#### STEP 3 :
-Verify that the Node.js and npm were successfully installed by printing their versions:
-
-```bash
-node --version
-#output : v16.17.1
-npm --version
-#output : 8.15.0
+```powershell
+winget install --id EclipseAdoptium.Temurin.21.JDK -e
+winget install --id Oracle.MySQL -e
+winget install --id CoreyButler.NVMforWindows -e
 ```
 
-Install nvm by running the following command :
+Finish MySQL Server configuration in its installer and note the root password. If the installer does not add MySQL Server's `bin` directory to `PATH`, add it so `mysql.exe` and `mysqladmin.exe` are available. Close and reopen PowerShell after installation. The launcher installs the needed Node 14 and Node 16 versions and Yarn 1 using nvm-windows.
+
+Start the MySQL Windows service from an elevated PowerShell window. The service name varies by MySQL version; find it with:
+
+```powershell
+Get-Service *mysql*
+```
+
+Start the service (replace `MySQL80` with the service name shown above):
+
+```powershell
+Start-Service MySQL80
+```
+
+Then create the local app account (enter the MySQL root password when prompted):
+
+```powershell
+mysql.exe -u root -p -e "CREATE USER IF NOT EXISTS 'marketplace'@'localhost' IDENTIFIED BY 'marketplace'; CREATE USER IF NOT EXISTS 'marketplace'@'127.0.0.1' IDENTIFIED BY 'marketplace'; GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'localhost'; GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'127.0.0.1'; FLUSH PRIVILEGES;"
+```
+
+Open a new PowerShell window, go to the project root, and start all services:
+
+```powershell
+cd $env:USERPROFILE\marketplace
+Set-ExecutionPolicy -Scope Process Bypass
+.\startup.ps1
+```
+
+If nvm-windows cannot switch Node versions because it cannot update its symlink, reopen PowerShell as Administrator and run the startup command again. The first run downloads dependencies and builds the applications; it may take several minutes. Logs are written to `log\marketplace-<service>.out.log` and `.err.log`.
+
+Stop or restart the services with:
+
+```powershell
+.\shutdown.ps1
+# or
+.\restart.ps1
+```
+
+If your MySQL credentials differ from the defaults, set these before starting:
+
+```powershell
+$env:MYSQL_HOST = '127.0.0.1'
+$env:MYSQL_PORT = '3306'
+$env:MYSQL_DATABASE = 'marketplace'
+$env:MYSQL_USER = 'marketplace'
+$env:MYSQL_PASSWORD = 'marketplace'
+.\startup.ps1
+```
+
+## Linux or Ubuntu on WSL
+
+Install prerequisites and nvm:
+
 ```bash
+sudo apt update
+sudo apt install -y openjdk-21-jdk mysql-server git curl unzip iproute2
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
-Install yarn by running the following command :
-````bash
-sudo curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
-````
 
-## Install Java
-Install java 11 by running the following command :
+Close and reopen the terminal, start MySQL, then create the database account:
+
 ```bash
-sudo apt-get install openjdk-11-jdk
-```
-Verify that the java successfully installed by printing their versions:
-```bash
-java --version
-# output : v11.17.1
+sudo systemctl enable --now mysql
+sudo mysql <<'SQL'
+CREATE USER IF NOT EXISTS 'marketplace'@'localhost' IDENTIFIED BY 'marketplace';
+CREATE USER IF NOT EXISTS 'marketplace'@'127.0.0.1' IDENTIFIED BY 'marketplace';
+GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'localhost';
+GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'127.0.0.1';
+FLUSH PRIVILEGES;
+SQL
 ```
 
-## Installing Mysql
-#### STEP 1 :
-Update the system Packages:
+From the repository root, start the applications:
+
 ```bash
-Add mysql apt 
-sudo apt update
-```
-We need to Install wget using below command:
-```bash
-sudo apt install wget -y
-```
-Download the repository using the below command:
-```bash
-wget https://dev.mysql.com/get/mysql-apt-config_0.8.12-1_all.deb
-```
-Once downloaded install repository using below command:
-```bash
-sudo dpkg -i mysql-apt-config_0.8.12-1_all.deb
+bash startup.sh
 ```
 
-###### IN PROMPT
-- a)In the prompt, choose Ubuntu Bionic and click Ok
-- b)The next prompt shows MySQL 8.0 chosen by default. Choose the first option and click OK
-- c)In the next prompt, select MySQL 5.7 server and click OK.
-- d)The next prompt selects MySQL5.7 by default. Choose the last option Ok and click OK
+Stop or restart them with `bash shutdown.sh` or `bash restart.sh`.
 
-STEP 2 : 
-Let’s search for MySQL 5,7 using below command:
-sudo apt-get update
-sudo apt-cache policy mysql-server
+## First-run notes
 
-#### STEP 3 :
-Before Installing MySQL 5.7 you need to run this command:
-```bash
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
-sudo apt update
-```
+Open the storefront at http://localhost:3003. Create a Strapi administrator at http://localhost:1337/admin. The API/admin database starts empty, so add catalog and admin data through the CMS and admin interface. The service ports are fixed because the current storefront source uses those same addresses for server-side connections.
 
-we are going to install MySQL 5.7 client, MySQL 5.7 server with the below command:
-```bash
-sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
-```
-Enter and re-enter root password.
-#### STEP 4 : 
-Run the following commands
-```bash
-sudo mysql_secure_installation
-```
-Provide the root password set above and you will have output like this:
-```bash
-ubuntu@ip-172-31-44-141:~$ sudo mysql_secure_installation
-
-Securing the MySQL server deployment.
-
-Enter password for user root:
-
-VALIDATE PASSWORD PLUGIN can be used to test passwords
-and improve security. It checks the strength of password
-and allows the users to set only those passwords which are
-secure enough. Would you like to setup VALIDATE PASSWORD plugin?
-
-Press y|Y for Yes, any other key for No: y
-
-There are three levels of password validation policy:
-
-LOW    Length >= 8
-MEDIUM Length >= 8, numeric, mixed case, and special characters
-STRONG Length >= 8, numeric, mixed case, special characters and dictionary file
-
-Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG: 1
-Using existing password for root.
-
-Estimated strength of the password: 25
-Change the password for root ? ((Press y|Y for Yes, any other key for No) : no
-
- ... skipping.
-By default, a MySQL installation has an anonymous user,
-allowing anyone to log into MySQL without having to have
-a user account created for them. This is intended only for
-testing, and to make the installation go a bit smoother.
-You should remove them before moving into a production
-environment.
-
-Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-
-Normally, root should only be allowed to connect from
-'localhost'. This ensures that someone cannot guess at
-the root password from the network.
-
-Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-By default, MySQL comes with a database named 'test' that
-anyone can access. This is also intended only for testing,
-and should be removed before moving into a production
-environment.
-
-
-Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
- - Dropping test database...
-Success.
-
- - Removing privileges on test database...
-Success.
-
-Reloading the privilege tables will ensure that all changes
-made so far will take effect immediately.
-
-Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-All done!
-
-```
-#### STEP 5 : 
-```bash
-mysql -u root -p 
-```
-To Restart, Stop and check the Status run the below commands:
-```bash
-sudo systemctl restart mysql
-sudo systemctl stop mysql
-sudo systemctl status mysql
-```
-## Setup the startup.properties file
-Add the values in startup.properties file according to you.
-
-## Run startup.sh
-Finally run the startup.sh file.
-
-
-### Support
-
-For support, email suport@nuvio.in or join our Slack channel.
-
-### License
-
-[![MIT License](https://img.shields.io/badge/License-BETA-green.svg)](https://choosealicense.com/licenses/mit/)
-
-### Authors
-
-- [@nuviotech](https://github.com/nuviotech)
+If a service does not become ready, inspect its log in `log/`. Check that MySQL is running and that ports 3003, 1337, 8084, and 9091 are free. The first run needs network access for Maven, Node, and Yarn dependencies.

@@ -1,11 +1,12 @@
 import React, { Component, useContext, useEffect, useState } from 'react';
 import AccountMenuSidebar from './modules/AccountMenuSidebar';
 import TableNotifications from './modules/TableNotifications';
+import OrderStatusTracker from './modules/OrderStatusTracker';
 import Link from 'next/link';
 import ProductCart from '../../elements/products/ProductCart';
 import { AuthContext } from '~/context/loginContext';
 import { useRouter } from 'next/router';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal, Select, Tag } from 'antd';
 import { Option } from 'antd/lib/mentions';
 
 const InvoiceDetail = () => {
@@ -239,7 +240,16 @@ const InvoiceDetail = () => {
                                                 </figcaption>
                                                 <div className="ps-block__content">
                                                     <p>
-                                                        Total Bill : {orderDetails?.totalBill}<br />
+                                                        Total Bill : ₹{orderDetails?.totalBill}<br />
+                                                        {
+                                                            (orderDetails?.codPrepaidAmountPercentage >0 && orderDetails?.codPrepaidPaymentStatus==="success") &&
+                                                            <>COD Prepaid Amount :₹{ ((orderDetails?.totalBill-49) * (orderDetails?.codPrepaidAmountPercentage / 100)).toFixed(2)} <br/></>
+                                                        }
+                                                        {
+
+                                                            (orderDetails?.codPrepaidAmountPercentage >0 && orderDetails?.codPrepaidPaymentStatus==="unpaid" && orderDetails?.paymentType==="Cash on Delivery") &&
+                                                            <>Prepaid Amount Not Paid.<br/></>
+                                                        }
                                                         Payment Method: {orderDetails?.paymentType}<br/>
                                                         Payment Status : {orderDetails?.paymentStatus}<br/>
                                                     </p>
@@ -247,6 +257,19 @@ const InvoiceDetail = () => {
                                             </figure>
                                         </div>
                                     </div>
+
+                                    {/* Order Status & Tracking Timeline */}
+                                    <div className="mt-4 mb-4">
+                                        <div className="ps-section__header mb-3">
+                                            <h4 style={{ fontSize: '18px', fontWeight: '600' }}>
+                                                Order Status & Tracking
+                                            </h4>
+                                        </div>
+                                        {orderDetails?.invoices?.flatMap((inv) => inv?.items || []).map((product, idx) => (
+                                            <OrderStatusTracker key={product?.orderProductId || idx} product={product} />
+                                        ))}
+                                    </div>
+
                                     <div className="table-responsive">
                                         <table className="table ps-table--shopping-cart">
                                             <thead>
@@ -261,9 +284,6 @@ const InvoiceDetail = () => {
                                             </thead>
                                             <tbody>
                                                 {orderDetails?.invoices?.map((invoice)=> (
-
-
-                                                    
                                                         invoice?.items?.map(
                                                             product => (
                                                                 <tr
@@ -287,10 +307,23 @@ const InvoiceDetail = () => {
 
                                                                     <td>{product?.quantity}</td>
                                                                     <td className="status">
-
-                                                                        {
-                                                                            product?.status
-                                                                        }
+                                                                        <span style={{
+                                                                            display: 'inline-block',
+                                                                            padding: '4px 10px',
+                                                                            borderRadius: '4px',
+                                                                            fontSize: '12px',
+                                                                            fontWeight: '600',
+                                                                            backgroundColor:
+                                                                                (product?.status || '').toUpperCase() === 'DELIVERED' ? '#d4edda' :
+                                                                                (product?.status || '').toUpperCase() === 'CANCELLED' ? '#f8d7da' :
+                                                                                (product?.status || '').toUpperCase() === 'RETURNED' ? '#fff3cd' : '#e2e3e5',
+                                                                            color:
+                                                                                (product?.status || '').toUpperCase() === 'DELIVERED' ? '#155724' :
+                                                                                (product?.status || '').toUpperCase() === 'CANCELLED' ? '#721c24' :
+                                                                                (product?.status || '').toUpperCase() === 'RETURNED' ? '#856404' : '#383d41'
+                                                                        }}>
+                                                                            {product?.status || 'PENDING'}
+                                                                        </span>
                                                                     </td>
                                                                     <td className='text-center'>
                                                                         {
@@ -300,9 +333,6 @@ const InvoiceDetail = () => {
                                                                 </tr>
                                                             )
                                                         )
-                                                    
-
-
                                                 ))}
 
                                             </tbody>

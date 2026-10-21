@@ -1,0 +1,149 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+   th:replace="UserPages/index::layout(~{::section})">
+   <head>
+   </head>
+   <body>
+      <section>
+         <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+               <div class="pcoded-inner-content">
+                  <div class="main-body">
+                     <div class="page-wrapper">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                           <div class="page-block">
+                              <div class="row align-items-center">
+                                 <div class="col-md-12">
+                                    <div class="page-header-title">
+                                       <h5 class="m-b-10">Email Service</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                       <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                       <li class="breadcrumb-item"><a th:href="@{/marketplace/emailTemplates?page=0}">Email Table</a></li>
+                                       <li class="breadcrumb-item"><a  href="#!"><span th:if="${email?.getSubject()==null}">Add New </span> <span th:if="${email?.getSubject()!=null}">Update </span>Email</a></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="container">
+                           <form th:action="@{/marketplace/saveEmailBodyDetails}" method="post" th:object="${email}"  onsubmit="return validation()" >
+                              <input type="hidden" th:if="${email?.getSubject()==null}" name="action" value="ADD" />
+                              <input type="hidden" th:if="${email?.getSubject()!=null}" name="action" value="UPDATE" />
+                              <input type="hidden" th:if="${email?.getSubject()!=null}" name="emailId" th:value="${email?.emailId}" />
+                              <div class="row">
+                                 <div class="col-12 col-md-5">
+                                    <label class="mb-0 mt-3">Email subject <span class="text-danger">*</span></label>
+                                    <input th:value="${email.getSubject()}" required="required" placeholder="subject" class="form-control" name="subject" />
+                                 </div>
+                                 <div class="col-12 col-md-5">
+                                    <label class="mb-0 mt-3">Sender email <span class="text-danger">*</span></label>
+                                    <select id="senderEmail" name="senderEmail" class="form-control">
+                                       <option value="none">Na</option>
+                                       <option value="GENERAL" th:selected="${email?.getSendeEmailType()?.equals('GENERAL')}">General Email</option>
+                                       <option value="SALES_REPRENSENTATIVE" th:selected="${email?.getSendeEmailType()?.equals('SALES_REPRENSENTATIVE')}">Sales Representative Email</option>
+                                       <option value="SUPPORT" th:selected="${email?.getSendeEmailType()?.equals('SUPPORT')}">Support Email</option>
+                                       <option value="CUSTOM_ONE" th:selected="${email?.getSendeEmailType()?.equals('CUSTOM_ONE')}">Custom 1 Email</option>
+                                       <option value="CUSTOM_TWO" th:selected="${email?.getSendeEmailType()?.equals('CUSTOM_TWO')}">Custom 2 Email</option>
+                                    </select>
+                                 </div>
+                                 <div class="col-12 col-md-2">
+                                    <label class="mb-0 mt-3">Total Recipient<span class="text-danger">*</span></label>
+                                      <input required="required" class="form-control" th:value="${email.getTotalRecipient()}" type="number" id="numberInput" name="totalRecipient" min="1" max="100">
+                                 </div>
+                              </div>
+                              <label class="mb-0 mt-3">Create email <span class="text-danger">*</span></label>
+                              <textarea name="emailMsg" rows="10" th:text="${email.getEmailMsg()}" ></textarea>
+                                                            
+                              <label class="mb-0 mt-3">Select email type <span class="text-danger">*</span></label>
+                              <select th:value="${email.getEmailType()}" name="receiverUserEmailType" onchange="handleSelectEmailType()" id="emailType" class="form-control">
+                                 <option value="none">Na</option>
+                                 <option value="ALL_USERS" >All users</option>
+                                 <option value="CUSTOM" >Custom emails</option>
+                              </select>
+                              
+                              <div id="customEmailTextArea" class="my-2 d-none">
+                                 <label class="mb-0">Add custom email <span class="text-danger">*</span></label>
+                                 <textarea th:text="${email.getReceiverEmails()}" name="reciverEmails" rows="3" id="customEmails" class="form-control "></textarea>
+                                 <span><b>NOTE : </b>email separate by comma.</span>
+                              </div>
+                              <div class="text-right my-4">
+                                 <button th:if="${email?.getSubject()==null}" type="submit" class="btn btn-primary px-5">Save Email</button>
+                                 <button th:if="${email?.getSubject()!=null}" type="submit" class="btn btn-primary px-5">Update Email</button>
+                              </div>
+                           </form>
+                        </div>
+                        <!-- ckeditor -->
+                        <script th:src="@{/ckeditor3/ckeditor.js}"></script>
+                        <script>
+                           function handleSelectEmailType(){
+                           	const emailType = document.getElementById("emailType");
+                           	const element= document.getElementById("customEmailTextArea");
+                           	const type=emailType.value;
+                           	if(type==='CUSTOM'){
+                           		element.classList.remove("d-none");
+                           		document.getElementById("customEmails").focus();
+                           	}else if(type==="ALL_USERS" || type==="none"){
+                           		element.classList.add("d-none");
+                           	}
+                           
+                           }
+                           
+                           function validation(){
+                           	const senderEmail = document.getElementById("senderEmail");
+                           	const emailType = document.getElementById("emailType");
+                           	const customEmails=document.getElementById("customEmails");
+                           	if(senderEmail.value==='none'){
+                           		Swal.fire({
+                           			  icon:'warning',
+                           			  title: 'Please select sender email.',
+                           			  width: 550,
+                           			  padding: '1em',
+                           			  text:"sender email not be null it is required field.",
+                           			  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `
+                           			});
+                           		return false;
+                           	}
+                           	if(emailType.value==='none'){
+                           		Swal.fire({
+                           			  icon:'warning',
+                           			  title: 'Please select email type.',
+                           			  width: 550,
+                           			  padding: '1em',
+                           			  text:"email type not be null it is required field.",
+                           			  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `
+                           			});
+                           		return false;
+                           	}
+                           
+                           	if(emailType.value==='CUSTOM' && customEmails.value.length <10){
+                           		Swal.fire({
+                           			  icon:'warning',
+                           			  title: 'Enter custom user email',
+                           			  width: 550,
+                           			  padding: '1em',
+                           			  text:"Enter the custom user emails, email separated by comma.",
+                           			  backdrop: `
+                           			    rgba(0,0,0,0.3)
+                           			  `
+                           			});
+                           		return false;
+                           	}
+                           	return true;
+                           }
+                        </script>
+                        <script>
+                           CKEDITOR.replace('emailMsg');
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </body>
+</html>

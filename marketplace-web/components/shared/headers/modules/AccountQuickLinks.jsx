@@ -104,7 +104,7 @@ const AccountQuickLinks = (props) => {
                         <div className="ps-block__content">
                             <ul className="ps-list--arrow">
                                 {
-                                    loginType=="normal_account"&& 
+                                    (loginType=="normal_account"|| loginType === "google_account") && 
                                     linksView
                                 }
                                 {

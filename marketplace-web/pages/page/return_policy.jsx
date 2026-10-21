@@ -3,9 +3,8 @@ import BreadCrumb from '~/components/elements/BreadCrumb';
 import FooterDefault from '~/components/shared/footers/FooterDefault';
 import Newletters from '~/components/partials/commons/Newletters';
 import PageContainer from '~/components/layouts/PageContainer';
-import Return_policy from '~/components/partials/page/Return_policy';
-import SEO from "@bradgarropy/next-seo"
-
+import SEO from '@bradgarropy/next-seo';
+import Return_Policy from '~/components/partials/page/Return_Policy';
 
 const return_policy = () => {
     const breadCrumb = [
@@ -20,13 +19,27 @@ const return_policy = () => {
 
     return (
         <PageContainer footer={<FooterDefault />} title="Return Policy">
-            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | Return Policy"} description="Return Policy" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" Return Policy", "Return Policy"]} />
+
+            <SEO
+                title={`${process.env.NEXT_PUBLIC_WEBSITE_NAME} | Return Policy`}
+                description="Return Policy"
+                keywords={[
+                    process.env.NEXT_PUBLIC_WEBSITE_NAME,
+                    'Return Policy',
+                ]}
+            />
 
             <div className="ps-page--single">
-                <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />
-                <Return_policy />
+                <BreadCrumb
+                    breacrumb={breadCrumb}
+                    layout="fullwidth"
+                />
+
+                <Return_Policy />
             </div>
+
             <Newletters layout="container" />
+
         </PageContainer>
     );
 };

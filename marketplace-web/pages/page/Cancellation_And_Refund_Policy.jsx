@@ -3,9 +3,8 @@ import BreadCrumb from '~/components/elements/BreadCrumb';
 import FooterDefault from '~/components/shared/footers/FooterDefault';
 import Newletters from '~/components/partials/commons/Newletters';
 import PageContainer from '~/components/layouts/PageContainer';
-import Cancellation_And_Refund_Policy from '~/components/partials/page/Cancellation_&_Refund_Policy';
-import SEO from "@bradgarropy/next-seo"
-
+import SEO from '@bradgarropy/next-seo';
+import Cancellation_And_Refund_Policy from '~/components/partials/page/Cancellation_And_Refund_Policy';
 
 const return_policy = () => {
     const breadCrumb = [
@@ -14,19 +13,37 @@ const return_policy = () => {
             url: '/',
         },
         {
-            text: 'Cancellation And Refund Policy',
+            text: 'Cancellation & Refund Policy',
         },
     ];
 
     return (
-        <PageContainer footer={<FooterDefault />} title="Cancellation And Refund Policy">
-            <SEO title={process.env.NEXT_PUBLIC_WEBSITE_NAME+" | Cancellation And Refund Policy"} description="Cancellation And Refund Policy" keywords={[process.env.NEXT_PUBLIC_WEBSITE_NAME,process.env.NEXT_PUBLIC_WEBSITE_NAME+" Cancellation And Refund Policy", "Cancellation And Refund Policy"]} />
+        <PageContainer
+            footer={<FooterDefault />}
+            title="Cancellation & Refund Policy"
+        >
+
+            <SEO
+                title={`${process.env.NEXT_PUBLIC_WEBSITE_NAME} | Cancellation & Refund Policy`}
+                description="Cancellation and Refund Policy"
+                keywords={[
+                    process.env.NEXT_PUBLIC_WEBSITE_NAME,
+                    'Cancellation Policy',
+                    'Refund Policy',
+                ]}
+            />
 
             <div className="ps-page--single">
-                <BreadCrumb breacrumb={breadCrumb} layout="fullwidth" />
+                <BreadCrumb
+                    breacrumb={breadCrumb}
+                    layout="fullwidth"
+                />
+
                 <Cancellation_And_Refund_Policy />
             </div>
+
             <Newletters layout="container" />
+
         </PageContainer>
     );
 };

@@ -10,7 +10,8 @@ export const AuthContextProvider =({children})=>{
     const [currentUser,setCurrentUser]=useState({});
     const unsub=useEffect(async()=>{
         if(userIsLogin()){
-            if(window.localStorage.getItem("_loginType_")==="normal_account")
+            if(window.localStorage.getItem("_loginType_")==="normal_account" || 
+               window.localStorage.getItem("_loginType_")==="google_account")
                 setCurrentUser(await userData())
            // if(window.localStorage.getItem("_loginType_")==="affiliate_account")
                 //getAffiliateAccountDetails();

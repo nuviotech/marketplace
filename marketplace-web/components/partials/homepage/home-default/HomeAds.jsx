@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MediaRepository from '~/repositories/MediaRepository';
 import { getItemBySlug } from '~/utilities/product-helper';
 import Promotion from '~/components/elements/media/Promotion';
+import DownloadAppSection from '~/components/partials/commons/DownloadAppSection';
 
 const HomeAds = () => {
     const [promotion1, setPromotion1] = useState(null);
@@ -36,6 +37,7 @@ const HomeAds = () => {
                             link={promotion2?.link}
                             image={promotion2 ? promotion2.image : null}
                         />
+                        <DownloadAppSection />
                     </div>
                 </div>
             </div>

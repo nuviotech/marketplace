@@ -9,7 +9,7 @@ const ModuleDetailShoppingActions = ({
     product,
     extended = false,
 }) => {
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(product?.minimumOrderQuantity);
 
     const Router = useRouter();
     const { addItem } = useEcomerce();
@@ -65,7 +65,7 @@ const ModuleDetailShoppingActions = ({
     function handleDecreaseItemQty(e) {
         e.preventDefault();
         //decreaseQty({ id: product.id }, ecomerce.cartItems)
-        if (quantity > 1) {
+        if (quantity > product?.minimumOrderQuantity) {
             setQuantity(quantity - 1);
         }
     }

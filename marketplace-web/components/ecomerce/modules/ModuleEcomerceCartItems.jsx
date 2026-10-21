@@ -17,9 +17,9 @@ const ModuleEcomerceCartItems = ({ ecomerce, cartItems }) => {
         increaseQty({ id: productId }, ecomerce.cartItems);
     }
 
-    function handleDecreaseItemQty(e, productId) {
+    function handleDecreaseItemQty(e, productId,moq) {
         e.preventDefault();
-        decreaseQty({ id: productId }, ecomerce.cartItems);
+        decreaseQty({ id: productId }, ecomerce.cartItems,moq);
     }
 
     // View
@@ -42,7 +42,7 @@ const ModuleEcomerceCartItems = ({ ecomerce, cartItems }) => {
                         </button>
                         <button
                             className="down"
-                            onClick={(e) => handleDecreaseItemQty(e, item?.id)}>
+                            onClick={(e) => handleDecreaseItemQty(e, item?.id, item?.minimumOrderQuantity)}>
                             -
                         </button>
                         <input

@@ -30,18 +30,23 @@ export default function useEcomerce() {
                         queries = queries + `&id_in=${item.id}`;
                     }
                 });
-                const responseData = await ProductRepository.getProductsByIds(
+                let responseData = await ProductRepository.getProductsByIds(
                     queries
                 );
-                if (responseData && responseData.length > 0) {
+                if (typeof responseData === 'string') {
+                    try { responseData = JSON.parse(responseData); } catch(e) { responseData = []; }
+                }
+                if (Array.isArray(responseData) && responseData.length > 0) {
                     if (group === 'cart') {
                         let cartItems = responseData;
                         payload.forEach((item) => {
-                            let existItem = cartItems.find(
-                                (val) => val?.id === item.id
-                            );
-                            if (existItem) {
-                                existItem.quantity = item.quantity;
+                            if (Array.isArray(cartItems)) {
+                                let existItem = cartItems.find(
+                                    (val) => val?.id === item?.id || val?.productRefId === item?.id
+                                );
+                                if (existItem) {
+                                    existItem.quantity = item.quantity;
+                                }
                             }
                         });
 
@@ -55,6 +60,9 @@ export default function useEcomerce() {
                         }.bind(this),
                         250
                     );
+                } else {
+                    setLoading(false);
+                    setProducts([]);
                 }
             } else {
                 setLoading(false);
@@ -77,13 +85,13 @@ export default function useEcomerce() {
             return cart;
         },
 
-        decreaseQty: (payload, currentCart) => {
+        decreaseQty: (payload, currentCart, moq) => {
             let cart = [];
             if (currentCart) {
                 cart = currentCart;
                 const existItem = cart.find((item) => item.id === payload.id);
                 if (existItem) {
-                    if (existItem.quantity > 1) {
+                    if (existItem.quantity > moq) {
                         existItem.quantity = existItem.quantity - 1;
                     }
                 }

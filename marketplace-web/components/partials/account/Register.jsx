@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import { login } from '../../../store/auth/action';
-import { marketplaceUrl } from '~/repositories/Repository';
 import axios from 'axios';
+import { login, saveToken } from '../../../store/auth/action';
+import { marketplaceUrl } from '~/repositories/Repository';
 
-import { Checkbox, Form, Input, Modal, Select } from 'antd';
+import { Checkbox, Form, Input, Modal, Button } from 'antd';
 import { connect } from 'react-redux';
-import TextArea from 'antd/lib/input/TextArea';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { saveUserDetails } from '~/repositories/UserDeatils';
 import { MathCaptcha } from '../commons/MathCaptcha';
 
@@ -24,18 +22,11 @@ class Register extends Component {
             password: null,
             password2: null,
             phone: null,
-            reportingAccountId: this?.props?.affiliate_account_id,
+            reportingAccountId: this?.props?.affiliate_account_id || 0,
             isCheckTermAndConditions: false,
             cflag: null,
-            // city: null,
-            //state: "Nan",
-            //country: null,
-            //shippingAddress: null
-            reportingAccntDetails: []
+            googleLoading: false
         };
-        this.fetchData = this.fetchData.bind(this);
-
-
     }
 
     onChangeCatcha = value => {
@@ -46,31 +37,101 @@ class Register extends Component {
         this.setState({ cflag: true });
     }
 
-    fetchData() {
-        fetch(marketplaceUrl + '/getReportingAccountDetails')
-            .then(response => response.json())
-            .then(data => this.setState({ reportingAccntDetails: data }));
+    // Handle Google Sign-Up response
+    handleGoogleSignUp = (response) => {
+        if (response.credential) {
+            this.setState({ googleLoading: true });
+            
+            // Preserve affiliate_account_id from URL
+            const affiliateId = this?.props?.affiliate_account_id || 0;
+            
+            axios.post(`${marketplaceUrl}/googleLogin`, {
+                credential: response.credential,
+                affiliate_account_id: affiliateId
+            }).then(
+                (response) => {
+                    var token = response.data.Token;
+                    var status = response.data.status;
+                    if (status == 0) {
+                        saveToken(token, "google_account");
+                        // Redirect to home or checkout
+                        var action;
+                        if (typeof window !== 'undefined') {
+                            action = sessionStorage.getItem("action")
+                        }
+                        if (action == "checkout") {
+                            Router.push('/account/checkout')
+                            sessionStorage.removeItem("action");
+                        } else {
+                            window.location.assign('/');
+                        }
+                    } else {
+                        const modal = Modal.error({
+                            centered: true,
+                            title: 'Google Sign-Up Failed',
+                            content: response.data.message || 'Unable to sign up with Google',
+                        });
+                    }
+                    this.setState({ googleLoading: false });
+                },
+                (error) => {
+                    const modal = Modal.error({
+                        centered: true,
+                        title: 'Google Sign-Up Error',
+                        content: 'An error occurred during Google sign-up',
+                    });
+                    console.error("Google signup error: " + error);
+                    this.setState({ googleLoading: false });
+                }
+            );
+        }
     }
 
     componentDidMount() {
-        this.fetchData();
+        // Load Google Identity Services script
+        if (!window.google) {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                setTimeout(() => {
+                    this.initializeAndRenderGoogleButton();
+                }, 100);
+            };
+            document.head.appendChild(script);
+        } else {
+            setTimeout(() => {
+                this.initializeAndRenderGoogleButton();
+            }, 100);
+        }
     }
 
-
-    getData = () => {
-        var reportingAccountDetails = [];
-        this.state?.reportingAccntDetails?.map(data => {
-            var obj = {
-                value: data?.reportingAccountId,
-                label: data?.reportingAccountName,
-            }
-            reportingAccountDetails.push(obj);
-        })
-        return reportingAccountDetails;
+    initializeAndRenderGoogleButton = () => {
+        const btnContainer = document.getElementById('google_signup_btn');
+        if (window.google && btnContainer) {
+            window.google.accounts.id.initialize({
+                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                callback: this.handleGoogleSignUp
+            });
+            
+            // Measure container width and clamp to Google GSI bounds (200px - 400px)
+            const containerWidth = btnContainer.offsetWidth || 370;
+            const buttonWidth = Math.min(Math.max(containerWidth, 200), 400);
+            
+            // Render Google button with proper width in pixels
+            window.google.accounts.id.renderButton(
+                btnContainer,
+                { 
+                    theme: 'outline',
+                    size: 'large',
+                    width: buttonWidth,
+                    text: 'signup_with',
+                    logo_alignment: 'left'
+                }
+            );
+        }
     }
-    onChange = (value) => {
-        this.setState({ reportingAccountId: value });
-    };
 
     onCheckBoxChange = (e) => {
         this.setState({ isCheckTermAndConditions: e.target.checked })
@@ -123,9 +184,10 @@ class Register extends Component {
             });
             modal.update;
         } else {
-            if (this?.props?.affiliate_account_id)
-                this.setState({ reportingAccountId: this?.props?.affiliate_account_id });
-                saveUserDetails(this.state,"",Router);
+            // Ensure reportingAccountId is set from URL if present
+            const affiliateId = this?.props?.affiliate_account_id || 0;
+            const stateToSave = { ...this.state, reportingAccountId: affiliateId };
+            saveUserDetails(stateToSave, "", Router);
         }
 
         this.props.form?.validateFields((err, values) => {
@@ -291,19 +353,6 @@ class Register extends Component {
                                     </Form.Item>
                                 </div>
 
-                                <div className="form-group">
-                                    <Select
-                                        showSearch
-                                        placeholder="select reporting accounts"
-                                        optionFilterProp="children"
-                                        value={this.props.affiliate_account_id}
-                                        style={{ width: "100%" }}
-                                        onChange={this.onChange}
-                                        options={this.getData()}
-
-                                    />
-                                </div>
-
 
                                 {/* <ReCAPTCHA
                                     sitekey={process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITEKEY}
@@ -313,6 +362,13 @@ class Register extends Component {
 
                                 <MathCaptcha onInvalid={()=>{this.setState({ cflag: null });}} onSuccess={this.handleCaptchaSuccess} />
 
+                                <div className="form-group submit">
+                                    <button
+                                        type="submit"
+                                        className="ps-btn ps-btn--fullwidth">
+                                        Register
+                                    </button>
+                                </div>
 
                                 <Checkbox className='my-2' onChange={this.onCheckBoxChange}>
                                     Accept Terms And Conditions
@@ -321,12 +377,12 @@ class Register extends Component {
                                     </Link>
                                 </Checkbox>
 
-                                <div className="form-group submit">
-                                    <button
-                                        type="submit"
-                                        className="ps-btn ps-btn--fullwidth">
-                                        Register
-                                    </button>
+                                <div className='text-center mt-3 mb-3'>
+                                    <p>OR</p>
+                                </div>
+
+                                <div className="form-group mb-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                    <div id="google_signup_btn" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
                                 </div>
                             </div>
                             {/*<div className="ps-form__footer">

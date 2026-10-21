@@ -16,14 +16,21 @@ const WidgetProductSameBrands = ({ collectionSlug }) => {
         setLoading(true);
        
         const responseData = await ProductRepository.getProductsByBrand(collectionSlug+"&limit=5");
-        if (responseData) {
-            setProductItems(responseData);
+        let items = responseData;
+        if (typeof items === 'string') {
+            try { items = JSON.parse(items); } catch(e) { items = []; }
+        }
+        if (Array.isArray(items) && items.length > 0) {
+            setProductItems(items);
             setTimeout(
                 function () {
                     setLoading(false);
                 }.bind(this),
                 250
             );
+        } else {
+            setProductItems([]);
+            setLoading(false);
         }
     }
 
@@ -34,9 +41,9 @@ const WidgetProductSameBrands = ({ collectionSlug }) => {
     // Views
     let productItemsView;
     if (!loading) {
-        if (productItems && productItems?.length > 0) {
+        if (Array.isArray(productItems) && productItems.length > 0) {
             productItemsView = productItems.map((item) => (
-                <Product product={item} key={item.id} />
+                <Product product={item} key={item.id || item.productRefId} />
             ));
         } else {
             productItemsView = <p>No product found.</p>;

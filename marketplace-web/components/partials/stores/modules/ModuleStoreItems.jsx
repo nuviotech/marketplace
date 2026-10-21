@@ -45,20 +45,27 @@ const ModuleStoreItems = ({ products, columns = 4, pageSize = 12 }) => {
     }
 
     useEffect(() => {
-        if (products) {
-            setProductItems(products);
-            setTotal(products.length);
+        let items = products;
+        if (typeof items === 'string') {
+            try { items = JSON.parse(items); } catch(e) { items = []; }
+        }
+        if (Array.isArray(items) && items.length > 0) {
+            setProductItems(items);
+            setTotal(items.length);
+        } else {
+            setProductItems([]);
         }
         handleSetColumns();
     }, [products]);
 
     // Views
     let productItemsView;
+    const safeItems = Array.isArray(productItems) ? productItems : [];
     if (!loading) {
-        if (productItems && productItems.length > 0) {
+        if (safeItems.length > 0) {
             if (listView) {
-                const items = productItems.map((item) => (
-                    <div className={classes} key={item.id}>
+                const items = safeItems.map((item) => (
+                    <div className={classes} key={item.id || item.productRefId}>
                         <Product product={item} />
                     </div>
                 ));
@@ -68,8 +75,8 @@ const ModuleStoreItems = ({ products, columns = 4, pageSize = 12 }) => {
                     </div>
                 );
             } else {
-                productItemsView = productItems.map((item) => (
-                    <ProductWide product={item} />
+                productItemsView = safeItems.map((item) => (
+                    <ProductWide product={item} key={item.id || item.productRefId} />
                 ));
             }
         } else {

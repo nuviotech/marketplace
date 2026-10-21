@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import menuData from '~/public/static/data/menu.json';
 import Menu from '~/components/elements/menu/Menu';
 
 const MenuCategoriesDropdown = () => {
+   
     return (
         <div className="menu--product-categories">
             <div className="menu__toggle">

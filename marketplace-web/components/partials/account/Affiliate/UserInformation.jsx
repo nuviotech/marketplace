@@ -19,9 +19,15 @@ const UserInformation = () => {
     const accountLinks = [
         {
             text: 'Account Information',
-            url: '/account/user-information',
+            url: '/account/Affiliate_marketing/user-information',
             icon: 'icon-user',
             active: true,
+        },
+        {
+            text: 'Referral Orders',
+            url: '/account/Affiliate_marketing/referral-orders',
+            icon: 'icon-user',
+            active: false,
         }
     ];
 
@@ -51,7 +57,7 @@ const UserInformation = () => {
     */
 
     const copyToClipboard = () => {
-        const textToCopy = `https://nuvio.in/account/register?affiliate_account_id=${user?.reportingAccountId}`;
+        const textToCopy = `${process.env.NEXT_PUBLIC_SELF_WEB_BASE_URL}/account/register?affiliate_account_id=${user?.reportingAccountId}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 notification["success"]({
@@ -65,17 +71,17 @@ const UserInformation = () => {
 
 
     const share = <>
-        <FacebookShareButton url={`https://nuvio.in/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
+        <FacebookShareButton url={`${process.env.NEXT_PUBLIC_SELF_WEB_BASE_URL}/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
             <FacebookIcon size={33} logoFillColor='white' >
 
             </FacebookIcon>
         </FacebookShareButton>
 
-        <WhatsappShareButton url={`https://nuvio.in/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
+        <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_SELF_WEB_BASE_URL}/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
             <WhatsappIcon size={33} logoFillColor='white'></WhatsappIcon>
         </WhatsappShareButton>
 
-        <TelegramShareButton url={`https://nuvio.in/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
+        <TelegramShareButton url={`${process.env.NEXT_PUBLIC_SELF_WEB_BASE_URL}/account/register?affiliate_account_id=${user?.reportingAccountId}`}>
             <TelegramIcon size={33} logoFillColor='white'>
             </TelegramIcon>
         </TelegramShareButton>
@@ -90,7 +96,7 @@ const UserInformation = () => {
         <section className="ps-my-account ps-page--account">
             {
                 userIsLogin() ?
-                    <div className="container">
+                    <div className="container-fluid">
 
                         <div className="row text-left">
                             <div className="col-lg-3">

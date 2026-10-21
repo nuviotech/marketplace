@@ -4,11 +4,11 @@ import Router from 'next/router';
 import axios from 'axios';
 import { login, loginSuccess, saveToken } from '../../../store/auth/action';
 import { marketplaceUrl } from '~/repositories/Repository';
-import { Form, Input, notification, Modal } from 'antd';
+import { Form, Input, notification, Modal, Button, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { AuthContextProvider } from '~/context/loginContext';
 import ReCAPTCHA from "react-google-recaptcha";
-import FacebookLogin from 'react-facebook-login';
+//import FacebookLogin from 'react-facebook-login';
 import { MathCaptcha } from '../commons/MathCaptcha';
 
 
@@ -21,6 +21,7 @@ class Login extends Component {
             login: false,
             store: null,
             cflag: null,
+            googleLoading: false
         };
     }
 
@@ -49,9 +50,56 @@ class Login extends Component {
         this.setState({ cflag: true });
     }
 
-    responseFacebook = (response) => {
-        //alert(JSON.stringify(response.email));
-        // loginAxiosAction("facebook");
+    // responseFacebook = (response) => {
+    //     //alert(JSON.stringify(response.email));
+    //     // loginAxiosAction("facebook");
+    // }
+
+    // Handle Google Sign-In response
+    handleGoogleSignIn = (response) => {
+        if (response.credential) {
+            this.setState({ googleLoading: true });
+
+            axios.post(`${marketplaceUrl}/googleLogin`, {
+                credential: response.credential
+            }).then(
+                (response) => {
+                    var token = response.data.Token;
+                    var status = response.data.status;
+                    if (status == 0) {
+                        saveToken(token, "google_account");
+                        var action;
+                        if (typeof window !== 'undefined') {
+                            action = sessionStorage.getItem("action")
+                        }
+                        if (action == "checkout") {
+                            Router.push('/account/checkout')
+                            sessionStorage.removeItem("action");
+                        } else if (action != null && action?.length > 0) {
+                            Router.push(action);
+                            sessionStorage.removeItem("action");
+                        } else
+                            window.location.assign('/');
+                    } else {
+                        const modal = Modal.error({
+                            centered: true,
+                            title: 'Google Login Failed',
+                            content: response.data.message || 'Unable to login with Google',
+                        });
+                    }
+                    this.setState({ googleLoading: false });
+                },
+                (error) => {
+                    const modal = Modal.error({
+                        centered: true,
+                        title: 'Google Login Error',
+                        content: 'An error occurred during Google login',
+                    });
+                    console.error("Google login error: " + error);
+                    this.setState({ googleLoading: false });
+                }
+            );
+        }
     }
 
     loginAxiosAction = (action) => {
@@ -152,12 +200,56 @@ class Login extends Component {
         } catch (error) {
             console.log(error);
         }
+
+        // Load Google Identity Services script
+        if (!window.google) {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                setTimeout(() => {
+                    this.initializeAndRenderGoogleButton();
+                }, 100);
+            };
+            document.head.appendChild(script);
+        } else {
+            setTimeout(() => {
+                this.initializeAndRenderGoogleButton();
+            }, 100);
+        }
+    }
+
+    initializeAndRenderGoogleButton = () => {
+        const btnContainer = document.getElementById('google_login_btn');
+        if (window.google && btnContainer) {
+            window.google.accounts.id.initialize({
+                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                callback: this.handleGoogleSignIn
+            });
+
+            // Measure container width and clamp to Google GSI bounds (200px - 400px)
+            const containerWidth = btnContainer.offsetWidth || 370;
+            const buttonWidth = Math.min(Math.max(containerWidth, 200), 400);
+
+            // Render Google button with proper width in pixels
+            window.google.accounts.id.renderButton(
+                btnContainer,
+                {
+                    theme: 'outline',
+                    size: 'large',
+                    width: buttonWidth,
+                    text: 'signin_with',
+                    logo_alignment: 'left'
+                }
+            );
+        }
     }
 
 
 
     render() {
-       
+
         return (
 
             <div className="ps-my-account">
@@ -181,7 +273,7 @@ class Login extends Component {
                         <div className="ps-tab active" id="sign-in">
                             <div className="ps-form__content">
                                 <h5>Log In Your Account</h5>
-                               
+
                                 <div className="form-group">
                                     <Form.Item>
                                         <Input
@@ -229,101 +321,32 @@ class Login extends Component {
                                         className="ps-btn ps-btn--fullwidth">
                                         Login
                                     </button>
-
                                 </div>
-                                <div className='text-left'>
+
+                                <div className='text-left mb-3'>
                                     <a href='https://nuvio.in/page/Forgote_password'>forgot password ?</a>
-
                                 </div>
+
+                                <div className='text-center mt-3 mb-3'>
+                                    <p>OR</p>
+                                </div>
+
+                                <div className="form-group mb-2" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                    <div id="google_login_btn" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+                                </div>
+
+                                {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', marginBottom: '30px', width: '100%' }}>
+                                    <FacebookLogin
+                                        appId="1029697068000890"
+                                        autoLoad={false}
+                                        fields="name,email,picture"
+                                        callback={this.responseFacebook}
+                                        icon="fa-facebook"
+                                        cssClass="my-facebook-button-class"
+                                    />
+                                </div> */}
                             </div>
                             <div className="ps-form__footer">
-
-                                {
-                                    //testing -> 157202587927-37scvtgmvqhvp1mv1t42s0libmp5vcrt.apps.googleusercontent.com
-                                    // original ->   510757732144-045oln81q77tci87bkrb9mgrr1n31drh.apps.googleusercontent.com
-                                }
-
-                                {/*} <GoogleOAuthProvider clientId="510757732144-045oln81q77tci87bkrb9mgrr1n31drh.apps.googleusercontent.com">
-
-                                    <GoogleLogin
-                                        onSuccess={credentialResponse => {
-                                            this.setState({ email: jwt_decode(credentialResponse?.credential)?.email })
-                                            this.setState({ password: 'XXXXXX' })
-                                            this.loginAxiosAction("google")
-                                        }}
-                                        onError={() => {
-                                            console.log('Login Failed');
-                                        }}
-                                        width="360"
-                                        size='large'
-                                        logo_alignment="center"
-                                        shape="rectangular"
-
-                                    />
-
-                                </GoogleOAuthProvider>*/}
-
-
-                                <FacebookLogin
-                                    appId="1029697068000890"
-                                    autoLoad={false}
-                                    fields="name,email,picture"
-                                    callback={this.responseFacebook}
-                                    icon="fa-facebook"
-                                    cssClass="my-facebook-button-class"
-
-
-                                />
-
-
-                                {/*
-                                <ul className="ps-list--social">
-                                    <li>
-                                        <a
-                                            className="facebook"
-                                            href="#"
-                                            onClick={e =>
-                                                this.handleFeatureWillUpdate(e)
-                                            }>
-                                            <i className="fa fa-facebook"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            className="google"
-                                            href="#"
-                                            onClick={e =>
-                                                this.handleFeatureWillUpdate(e)
-                                            }>
-                                            <i className="fa fa-google-plus"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            className="twitter"
-                                            href="#"
-                                            onClick={e =>
-                                                this.handleFeatureWillUpdate(e)
-                                            }>
-                                            <i className="fa fa-twitter"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            className="instagram"
-                                            href="#"
-                                            onClick={e =>
-                                                this.handleFeatureWillUpdate(e)
-                                            }>
-                                            <i className="fa fa-instagram"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                                */}
-
-
-
-
                             </div>
                         </div>
                     </Form>
