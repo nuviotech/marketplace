@@ -1,8 +1,8 @@
 # Marketplace
 
-This repository runs the storefront, Strapi CMS, marketplace API, and marketplace admin against one local MySQL database. The root scripts build the checked-in Java projects, install/build the two Node projects, and start all four services with matching local URLs.
+This repository starts the storefront, Strapi CMS, marketplace API, and marketplace admin against one local MySQL database. The Windows and Linux launchers build the checked-in Java projects, install and build the Node projects, start all four services, and wait for their HTTP endpoints to respond.
 
-## Services
+## Service URLs
 
 | Service | URL | Runtime |
 | --- | --- | --- |
@@ -11,11 +11,70 @@ This repository runs the storefront, Strapi CMS, marketplace API, and marketplac
 | Marketplace API | http://localhost:8084 | Spring Boot, Java 21+ |
 | Marketplace admin | http://localhost:9091 | Spring Boot, Java 21+ |
 
-The API and admin share the `marketplace` MySQL database. The storefront uses the API, admin, and CMS URLs above. Strapi keeps its configured SQLite database and uploaded files under `marketplace-cms`.
+The API and admin share the `marketplace` MySQL database. The storefront connects to the API, admin, and CMS above. Strapi uses SQLite under `marketplace-cms`.
 
-## Prerequisites
+## Windows (PowerShell)
 
-Use Ubuntu/Linux with MySQL, Java 21 or newer, Git, `curl`, `unzip`, and `nvm`. The launcher selects Node 14.21.3 for Strapi 3 and Node 16.20.2 for Next.js, and installs Yarn 1 for each version. Install nvm for the account that will run the services. For example:
+In an elevated PowerShell window, install Java 21, MySQL Server, and nvm-windows:
+
+```powershell
+winget install --id EclipseAdoptium.Temurin.21.JDK -e
+winget install --id Oracle.MySQL -e
+winget install --id CoreyButler.NVMforWindows -e
+```
+
+Finish MySQL Server configuration in its installer and note the root password. If the installer does not add MySQL Server's `bin` directory to `PATH`, add it so `mysql.exe` and `mysqladmin.exe` are available. Close and reopen PowerShell after installation. The launcher installs the needed Node 14 and Node 16 versions and Yarn 1 using nvm-windows.
+
+Start the MySQL Windows service from an elevated PowerShell window. The service name varies by MySQL version; find it with:
+
+```powershell
+Get-Service *mysql*
+```
+
+Start the service (replace `MySQL80` with the service name shown above):
+
+```powershell
+Start-Service MySQL80
+```
+
+Then create the local app account (enter the MySQL root password when prompted):
+
+```powershell
+mysql.exe -u root -p -e "CREATE USER IF NOT EXISTS 'marketplace'@'localhost' IDENTIFIED BY 'marketplace'; CREATE USER IF NOT EXISTS 'marketplace'@'127.0.0.1' IDENTIFIED BY 'marketplace'; GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'localhost'; GRANT ALL PRIVILEGES ON marketplace.* TO 'marketplace'@'127.0.0.1'; FLUSH PRIVILEGES;"
+```
+
+Open a new PowerShell window, go to the project root, and start all services:
+
+```powershell
+cd $env:USERPROFILE\marketplace
+Set-ExecutionPolicy -Scope Process Bypass
+.\startup.ps1
+```
+
+If nvm-windows cannot switch Node versions because it cannot update its symlink, reopen PowerShell as Administrator and run the startup command again. The first run downloads dependencies and builds the applications; it may take several minutes. Logs are written to `log\marketplace-<service>.out.log` and `.err.log`.
+
+Stop or restart the services with:
+
+```powershell
+.\shutdown.ps1
+# or
+.\restart.ps1
+```
+
+If your MySQL credentials differ from the defaults, set these before starting:
+
+```powershell
+$env:MYSQL_HOST = '127.0.0.1'
+$env:MYSQL_PORT = '3306'
+$env:MYSQL_DATABASE = 'marketplace'
+$env:MYSQL_USER = 'marketplace'
+$env:MYSQL_PASSWORD = 'marketplace'
+.\startup.ps1
+```
+
+## Linux or Ubuntu on WSL
+
+Install prerequisites and nvm:
 
 ```bash
 sudo apt update
@@ -23,7 +82,7 @@ sudo apt install -y openjdk-21-jdk mysql-server git curl unzip iproute2
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
 
-Start MySQL and create the database account used by default:
+Close and reopen the terminal, start MySQL, then create the database account:
 
 ```bash
 sudo systemctl enable --now mysql
@@ -36,39 +95,16 @@ FLUSH PRIVILEGES;
 SQL
 ```
 
-The launcher creates the `marketplace` database. To use another MySQL account, export the matching `MYSQL_*` values before startup.
-
-## Start all services
-
-From the repository root, configure the database connection if the defaults do not match your MySQL setup, then run:
+From the repository root, start the applications:
 
 ```bash
-export MYSQL_HOST=127.0.0.1
-export MYSQL_PORT=3306
-export MYSQL_DATABASE=marketplace
-export MYSQL_USER=marketplace
-export MYSQL_PASSWORD=marketplace
 bash startup.sh
 ```
 
-`startup.sh` checks MySQL and required ports, creates the database if needed, packages the current API and admin sources with tests skipped, installs/builds the CMS and storefront dependencies, starts all four processes, and waits for each HTTP endpoint to respond. Spring creates or updates its tables on startup. The first run needs network access for Maven, nvm, and Yarn dependencies and may take several minutes.
+Stop or restart them with `bash shutdown.sh` or `bash restart.sh`.
 
-Open the storefront at http://localhost:3003. Strapi's first-run admin account can be created at http://localhost:1337/admin. Logs and process IDs are written under the root `log/` and `.run/` directories.
+## First-run notes
 
-To use different MySQL credentials, export the corresponding `MYSQL_*` values before startup. Keep the service ports at the documented values because the current storefront source uses those ports for its server-side connections.
+Open the storefront at http://localhost:3003. Create a Strapi administrator at http://localhost:1337/admin. The API/admin database starts empty, so add catalog and admin data through the CMS and admin interface. The service ports are fixed because the current storefront source uses those same addresses for server-side connections.
 
-## Restart and stop
-
-```bash
-bash restart.sh
-bash shutdown.sh
-```
-
-`shutdown.sh` stops the processes started by the root startup script. Run these scripts from the repository root or any directory; they resolve their own location.
-
-## Troubleshooting
-
-- Check the service logs in `log/` if a page does not load.
-- If a service port is already occupied, stop the existing process or choose an available port before starting.
-- If Maven or Yarn cannot resolve dependencies, check network access and rerun `bash startup.sh`.
-- The API/admin database is created automatically, but it starts empty. Add catalog and admin data through the CMS and admin interface as needed.
+If a service does not become ready, inspect its log in `log/`. Check that MySQL is running and that ports 3003, 1337, 8084, and 9091 are free. The first run needs network access for Maven, Node, and Yarn dependencies.
